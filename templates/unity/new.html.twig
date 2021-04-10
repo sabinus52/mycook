@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Unity{% endblock %}
+
+{% block body %}
+    <h1>Create new Unity</h1>
+
+    {{ include('unity/_form.html.twig') }}
+
+    <a href="{{ path('unity_index') }}">back to list</a>
+{% endblock %}

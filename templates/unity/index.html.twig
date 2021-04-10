@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Unity index{% endblock %}
+
+{% block body %}
+    <h1>Unity index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Symbol</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for unity in unities %}
+            <tr>
+                <td>{{ unity.id }}</td>
+                <td>{{ unity.name }}</td>
+                <td>{{ unity.symbol }}</td>
+                <td>
+                    <a href="{{ path('unity_show', {'id': unity.id}) }}">show</a>
+                    <a href="{{ path('unity_edit', {'id': unity.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('unity_create') }}">Create new</a>
+{% endblock %}
