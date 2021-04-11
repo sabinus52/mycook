@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="container">
+
+    <div class="jumbotron my-2">
+        <div class="float-left">
+            <img src="{{ asset('images/home-inone.jpg') }}" width="400" class="mx-3">
+        </div>
+        <div>
+            <h1 class="display-4">Mes recettes</h1>
+            <p class="lead">Retrouvez toutes mes recettes favorites</p>
+            <hr class="my-4">
+            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        </div>
+    </div>
+
+    <h2 class="my-3">Recettes</h2>
+    <div class="row my-2">
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette1.jpg') }}" width="300"></div>
+            <div>Salade César au thon</div>
+        </div>
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette2.jpg') }}" width="300"></div>
+            <div>Kebab à l'assiette</div>
+        </div>
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette3.jpg') }}" width="300"></div>
+            <div>Boeuf bourguignon</div>
+        </div>
+    </div>
+
+    <h2 class="my-3">Catégories</h2>
+    <div class="row my-2 text-center">
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat1.jpg') }}" width="100" height="100" class="rounded-circle"><br>Entrées
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat2.jpg') }}" width="100" height="100" class="rounded-circle"><br>Plats
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat3.jpg') }}" width="100" height="100" class="rounded-circle"><br>Désserts
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat1.jpg') }}" width="100" height="100" class="rounded-circle"><br>Pizza
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat2.jpg') }}" width="100" height="100" class="rounded-circle"><br>Pâtes
+        </div>
+        <div class="col-2">
+            <img src="{{ asset('images/home-cat3.jpg') }}" width="100" height="100" class="rounded-circle"><br>Pains
+        </div>
+    </div>
+
+</div>
+{% endblock %}
