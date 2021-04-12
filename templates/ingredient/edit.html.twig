@@ -18,7 +18,7 @@
         <h3 class="my-3"><i class="fas fa-plus-circle"></i>&nbsp;Nouvel ingrédient</h3>
     {% endif %}
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
         {{ form_widget(form) }}
         <div class="text-right">
             <a class="btn btn-sm btn-secondary" href="{{ path('ingredient_index') }}">Retour</a>
