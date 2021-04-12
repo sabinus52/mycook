@@ -9,5 +9,8 @@
 import './styles/app.scss';
 
 const $ = require('jquery');
+window.$ = window.jQuery = $;
 
 require('bootstrap');
+
+import './scripts/global.js';

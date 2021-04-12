@@ -52,10 +52,11 @@ class IngredientController extends AbstractController
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
+            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été ajouté avec succès");
             return $this->redirectToRoute('ingredient_index');
         }
 
-        return $this->render('ingredient/new.html.twig', [
+        return $this->render('ingredient/edit.html.twig', [
             'ingredient' => $ingredient,
             'form' => $form->createView(),
         ]);
@@ -78,9 +79,9 @@ class IngredientController extends AbstractController
     /**
      * Edition d'un ingrédient
      * 
-     * @Route("/{id}/edit", name="ingredient_edit", methods={"GET","POST"})
+     * @Route("/{id}/update", name="ingredient_update", methods={"GET","POST"})
      */
-    public function edit(Request $request, Ingredient $ingredient): Response
+    public function update(Request $request, Ingredient $ingredient): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
@@ -88,6 +89,7 @@ class IngredientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été modifié avec succès");
             return $this->redirectToRoute('ingredient_index');
         }
 
@@ -100,7 +102,7 @@ class IngredientController extends AbstractController
 
     /**
      * Suppression d'un ingrédient
-     * @Route("/{id}", name="ingredient_delete", methods={"POST"})
+     * @Route("/{id}/delete", name="ingredient_delete", methods={"GET","POST"})
      */
     public function delete(Request $request, Ingredient $ingredient): Response
     {
@@ -108,6 +110,7 @@ class IngredientController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($ingredient);
             $entityManager->flush();
+            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été supprimé avec succès");
         }
 
         return $this->redirectToRoute('ingredient_index');
