@@ -77,10 +77,9 @@ class Recipe
     /**
      * Jointure avec les catégories
      * 
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="recipes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
      */
-    private $category;
+    private $categories;
 
     /**
      * Jointure avec les étapes
@@ -96,8 +95,10 @@ class Recipe
      */
     private $ingredients;
 
+
     public function __construct()
     {
+        $this->categories = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
     }
 
@@ -180,14 +181,26 @@ class Recipe
         return $this;
     }
 
-    public function getCategory(): ?Category
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategory(): Collection
     {
-        return $this->category;
+        return $this->categories;
     }
 
-    public function setCategory(?Category $category): self
+    public function addCategory(Category $category): self
     {
-        $this->category = $category;
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
@@ -251,4 +264,5 @@ class Recipe
 
         return $this;
     }
+
 }
