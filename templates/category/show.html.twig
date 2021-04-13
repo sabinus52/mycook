@@ -1,26 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %} - Recettes par catégorie{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ category.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ category.name }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="float-right">
+        <div class="btn-toolbar mb-3" role="toolbar">
+            <div class="btn-group mr-2" role="group">
+                <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la catégorie</a>
+            </div>
+            <div class="input-group mr-2" role="group">
+                <form method="post" action="{{ path('category_delete', {'id': category.id}) }}" onsubmit="return confirm('Suppression de cette catégorie ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <h1 class="my-4">{{ category.name }}</h1>
 
-    <a href="{{ path('category_index') }}">back to list</a>
+    {% include 'include/_flashbag.html.twig' %}
 
-    <a href="{{ path('category_edit', {'id': category.id}) }}">edit</a>
+    <div class="row my-2">
+        <div class="col-5">
+            <h3><strong>xx</strong> recettes</h3>
+        </div>
+        <div class="col-7 text-right">
+            <div class="btn-toolbar justify-content-end" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    <a href="#" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une recette</a>
+                </div>
+                <div class="input-group">
+                    <select class="form-control">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    {{ include('category/_delete_form.html.twig') }}
+
+    <div class="clearfix"></div>
+    <div class="row my-2">
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette1.jpg') }}" width="300"></div>
+            <div>Salade César au thon</div>
+        </div>
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette2.jpg') }}" width="300"></div>
+            <div>Kebab à l'assiette</div>
+        </div>
+        <div class="col-4">
+            <div class="text-center"><img src="{{ asset('images/home-recette3.jpg') }}" width="300"></div>
+            <div>Boeuf bourguignon</div>
+        </div>
+    </div>
+
 {% endblock %}
