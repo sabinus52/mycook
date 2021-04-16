@@ -10,6 +10,8 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use App\Constant\Difficulty;
+use App\Constant\Rate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,8 +33,20 @@ class RecipeType extends AbstractType
                 'label' => 'Nombre de personne',
                 'empty_data' => '',
             ])
-            ->add('difficulty')
-            ->add('rate')
+            ->add('difficulty', ChoiceType::class, [
+                'label' => 'Niveau de difficulté',
+                'choices' => Difficulty::getChoices(),
+                'choice_value' => 'value',
+                'choice_label' => 'label',
+                'empty_data' => '',
+            ])
+            ->add('rate', ChoiceType::class, [
+                'label' => 'Coût',
+                'choices' => Rate::getChoices(),
+                'choice_value' => 'value',
+                'choice_label' => 'label',
+                'empty_data' => '',
+            ])
             ->add('timePreparation', IntegerType::class, [
                 'label' => 'Temps de préparation',
                 'empty_data' => '',

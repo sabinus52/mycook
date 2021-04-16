@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Constant\Difficulty;
+use App\Constant\Rate;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
@@ -50,7 +52,7 @@ class Recipe
      * Niveau de difficulté de la recette
      * 
      * @var Integer
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="difficulty")
      * @Assert\NotNull
      */
     private $difficulty;
@@ -59,7 +61,7 @@ class Recipe
      * Coût de la recette
      * 
      * @var Integer
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="rate")
      * @Assert\NotNull
      */
     private $rate;
@@ -143,24 +145,24 @@ class Recipe
         return $this;
     }
 
-    public function getDifficulty(): ?int
+    public function getDifficulty(): ?Difficulty
     {
         return $this->difficulty;
     }
 
-    public function setDifficulty(int $difficulty): self
+    public function setDifficulty(?Difficulty $difficulty): self
     {
         $this->difficulty = $difficulty;
 
         return $this;
     }
 
-    public function getRate(): ?int
+    public function getRate(): ?Rate
     {
         return $this->rate;
     }
 
-    public function setRate(int $rate): self
+    public function setRate(?Rate $rate): self
     {
         $this->rate = $rate;
 
