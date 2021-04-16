@@ -1,13 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Recipe{% endblock %}
+{% block title %} - Catégorie{% endblock %}
 
 {% block body %}
-    <h1>Edit Recipe</h1>
 
-    {{ include('recipe/_form.html.twig', {'button_label': 'Update'}) }}
+    <h1 class="my-4"><i class="fas fa-utensils"></i>&nbsp;Recettes</h1>
 
-    <a href="{{ path('recipe_index') }}">back to list</a>
+    {% if recipe.id %}
+        <div class="float-right">
+            <form method="post" action="{{ path('recipe_delete', {'id': recipe.id}) }}" onsubmit="return confirm('Suppression de cette recette ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recipe.id) }}">
+                <button class="btn action btn-sm btn-danger"><i class="fas fa-trash"></i>&nbsp;Supprimer</button>
+            </form>
+        </div>
+        <h3 class="my-3"><i class="fas fa-edit"></i>&nbsp;{{ recipe.name }}</h3>
+    {% else %}
+        <h3 class="my-3"><i class="fas fa-plus-circle"></i>&nbsp;Nouvelle recette</h3>
+    {% endif %}
 
-    {{ include('recipe/_delete_form.html.twig') }}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        {{ form_widget(form) }}
+        <div class="text-right">
+            {% if recipe.id %}
+                <a class="btn btn-sm btn-secondary" href="{{ path('recipe_show', {'id': recipe.id}) }}">Retour</a>
+                <button class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier</button>
+            {% else %}
+                <a class="btn btn-sm btn-secondary" href="{{ path('recipe_index') }}">Retour</a>
+                <button class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter</button>
+            {% endif %}
+        </div>
+    {{ form_end(form) }}
+
 {% endblock %}

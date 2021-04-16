@@ -13,6 +13,7 @@ use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
@@ -31,6 +32,7 @@ class Recipe
      * 
      * @var String
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $name;
 
@@ -39,6 +41,8 @@ class Recipe
      * 
      * @var Integer
      * @ORM\Column(type="smallint")
+     * @Assert\NotNull
+     * @Assert\Type(type="integer")
      */
     private $person;
 
@@ -47,6 +51,7 @@ class Recipe
      * 
      * @var Integer
      * @ORM\Column(type="smallint")
+     * @Assert\NotNull
      */
     private $difficulty;
 
@@ -55,6 +60,7 @@ class Recipe
      * 
      * @var Integer
      * @ORM\Column(type="smallint")
+     * @Assert\NotNull
      */
     private $rate;
 
@@ -63,6 +69,8 @@ class Recipe
      * 
      * @var Integer
      * @ORM\Column(name="time_preparation", type="smallint")
+     * @Assert\NotNull
+     * @Assert\Type(type="integer")
      */
     private $timePreparation;
 
@@ -71,6 +79,7 @@ class Recipe
      * 
      * @var Integer
      * @ORM\Column(name="time_cooking", type="smallint", nullable=true)
+     * @Assert\Type(type="integer")
      */
     private $timeCooking;
 
@@ -98,6 +107,7 @@ class Recipe
 
     public function __construct()
     {
+        $this->person = 4;
         $this->categories = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
     }
