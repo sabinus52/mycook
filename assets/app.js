@@ -12,5 +12,7 @@ const $ = require('jquery');
 window.$ = window.jQuery = $;
 
 require('bootstrap');
+require('select2');
+
 
 import './scripts/global.js';

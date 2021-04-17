@@ -18,7 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 class RecipeType extends AbstractType
 {
@@ -54,7 +55,12 @@ class RecipeType extends AbstractType
             ->add('timeCooking', IntegerType::class, [
                 'label' => 'Temps de cuisson',
             ])
-            //->add('category')
+            ->add('category', EntityType::class, [
+                'label' => 'Catégories',
+                'class' => 'App:Category',
+                'choice_label' => 'name',
+                'multiple' => true,
+            ])
         ;
     }
 
