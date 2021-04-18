@@ -20,6 +20,8 @@ $(function() {
         closeOnSelect: !$(this).attr('multiple'),
     });
 
+    $('.collection-widget').olixCollection();
+
 });
 
 

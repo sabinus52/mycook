@@ -5,3 +5,4 @@ twig:
     exception_controller: null
     form_themes: 
         - 'bootstrap_4_horizontal_layout.html.twig'
+        - '_form/custom_types.html.twig'

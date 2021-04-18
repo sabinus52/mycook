@@ -68,12 +68,12 @@ class Step
     }
 
 
-    public function getRecipe(): ?self
+    public function getRecipe(): ?Recipe
     {
         return $this->recipe;
     }
 
-    public function setRecipe(?self $recipe): self
+    public function setRecipe(?Recipe $recipe): self
     {
         $this->recipe = $recipe;
 

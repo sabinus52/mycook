@@ -16,3 +16,4 @@ require('select2');
 
 
 import './scripts/global.js';
+import './scripts/collection.js';

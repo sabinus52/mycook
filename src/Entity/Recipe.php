@@ -95,7 +95,7 @@ class Recipe
     /**
      * Jointure avec les étapes
      * 
-     * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      */
     private $steps;
 
@@ -225,7 +225,7 @@ class Recipe
         return $this->steps;
     }
 
-    public function addStep(Recipe $step): self
+    public function addStep(Step $step): self
     {
         if (!$this->steps->contains($step)) {
             $this->steps[] = $step;
@@ -235,7 +235,7 @@ class Recipe
         return $this;
     }
 
-    public function removeStep(Recipe $step): self
+    public function removeStep(Step $step): self
     {
         if ($this->steps->removeElement($step)) {
             // set the owning side to null (unless already changed)
