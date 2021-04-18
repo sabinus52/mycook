@@ -62,6 +62,19 @@ class RecipeType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => true,
             ])
+            ->add('ingredients', CollectionType::class, [
+                'label' => 'Liste des ingrédients',
+                'entry_type' => RecipeIngredientType::class,
+                'entry_options' => [ 'label' => false ],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'delete_empty' => true,
+                'block_name' => 'recipe_ingredients', // Custom form => _recipe_recipe_ingredients_row
+                'attr' => [
+                    'class' => 'collection-widget',
+                ]
+            ])
             ->add('steps', CollectionType::class, [
                 'label' => 'Etapes de la préparation',
                 'entry_type' => StepType::class,

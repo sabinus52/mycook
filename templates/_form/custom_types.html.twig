@@ -1,6 +1,6 @@
 
 
-{% block _app_collection_row %}
+{% block _app_collection_row -%}
     {%- if expanded is defined and expanded -%}
         {{ block('fieldset_form_row') }}
     {%- else -%}
@@ -19,15 +19,23 @@
             </div>
         </div>
     {%- endif -%}
-{% endblock %}
+{%- endblock %}
 
 
 {# Nom de 'block_name' de la Collection des étapes dans le formualaire "RecipeType" #}
-{% block _recipe_recipe_steps_row %}
+{% block _recipe_recipe_steps_row -%}
     {% with { addButtonLabel: 'Nouvelle étape' } %}
         {{ block ('_app_collection_row') }}
     {% endwith %}
-{% endblock %}
+{%- endblock %}
+
+
+{# Nom de 'block_name' de la Collection des ingrédients dans le formulaire "RecipeType" #}
+{% block _recipe_recipe_ingredients_row -%}
+    {% with { addButtonLabel: 'Nouvel ingrédient' } %}
+        {{ block ('_app_collection_row') }}
+    {% endwith %}
+{%- endblock %}
 
 
 {# Nom de 'block_prefix' du formulaire "StepType" #}
@@ -39,6 +47,37 @@
                     {{ form_widget(form.content, { attr: form.content.vars.attr|merge({'class': form.content.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
                     {{ form_errors(form.content) }}
                     {{ form_help(form.content) }}
+                </div>
+                <div class="col-2 col-lg-1">
+                    <button type="button" class="btn btn-danger btn-sm collection-btn-delete">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endblock %}
+
+
+{# Nom de 'block_prefix' du formulaire "RecipeIngredientType" #}
+{% block recipe_ingredient_row -%}
+    <div class="form-group form-row collection-item">
+        <div class="col-sm-12">
+            <div class="form-group form-row form-control-sm">
+                <div class="col-12 col-lg-7">
+                    {{ form_widget(form.ingredient, { attr: form.ingredient.vars.attr|merge({'class': form.ingredient.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.ingredient) }}
+                    {{ form_help(form.ingredient) }}
+                </div>
+                <div class="col-12 col-lg-2">
+                    {{ form_widget(form.quantity, { attr: form.quantity.vars.attr|merge({'class': form.quantity.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.quantity) }}
+                    {{ form_help(form.quantity) }}
+                </div>
+                <div class="col-12 col-lg-2">
+                    {{ form_widget(form.unity, { attr: form.unity.vars.attr|merge({'class': form.unity.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.unity) }}
+                    {{ form_help(form.unity) }}
                 </div>
                 <div class="col-2 col-lg-1">
                     <button type="button" class="btn btn-danger btn-sm collection-btn-delete">

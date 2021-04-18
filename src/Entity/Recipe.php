@@ -102,7 +102,7 @@ class Recipe
     /**
      * Jointure avec les ingrédients
      * 
-     * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      */
     private $ingredients;
 
