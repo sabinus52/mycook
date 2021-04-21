@@ -9,6 +9,7 @@
 
 namespace App\Form;
 
+use App\Constant\Unity;
 use App\Entity\RecipeIngredient;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,14 +28,13 @@ class RecipeIngredientType extends AbstractType
                 'class' => 'App:Ingredient',
                 'choice_label' => 'name',
             ])
-            ->add('quantity', IntegerType::class, [
-                'empty_data' => '',
+            ->add('quantity', IntegerType::class)
+            ->add('unity', ChoiceType::class, [
+                'choices' => Unity::getChoices(),
+                'choice_value' => 'value',
+                'choice_label' => 'label',
             ])
-            ->add('unity', EntityType::class, [
-                'class' => 'App:Unity',
-                'choice_label' => 'name',
-                'empty_data' => '',
-            ])
+            ->add('note', TextType::class)
         ;
     }
 

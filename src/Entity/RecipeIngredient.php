@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Repository\RecipeIngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Constant\Unity;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeIngredientRepository::class)
@@ -50,9 +51,16 @@ class RecipeIngredient
     /**
      * Jointure avec l'unité de la quantité de l'ingrédient
      * 
-     * @ORM\ManyToOne(targetEntity=Unity::class)
+     * @ORM\Column(type="unity")
      */
     private $unity;
+
+    /**
+     * Note supplémentaire
+     * 
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $note;
 
 
     public function getId(): ?int
@@ -108,6 +116,19 @@ class RecipeIngredient
     public function setUnity(?Unity $unity): self
     {
         $this->unity = $unity;
+
+        return $this;
+    }
+
+    
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }
