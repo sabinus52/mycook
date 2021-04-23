@@ -12,6 +12,7 @@ namespace App\Controller;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
+use App\Service\RecipeUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class RecipeController extends AbstractController
      * 
      * @Route("/create", name="recipe_create", methods={"GET","POST"})
      */
-    public function create(Request $request): Response
+    public function create(Request $request, RecipeUploader $fileUploader): Response
     {
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -52,10 +53,15 @@ class RecipeController extends AbstractController
             $entityManager->persist($recipe);
             $entityManager->flush();
 
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $fileUploader->upload($image, $recipe);
+            }
+
             return $this->redirectToRoute('recipe_index');
         }
 
-        return $this->render('recipe/new.html.twig', [
+        return $this->render('recipe/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form->createView(),
         ]);
@@ -78,14 +84,20 @@ class RecipeController extends AbstractController
     /**
      * Edition d'une recette
      * 
-     * @Route("/{id}/edit", name="recipe_edit", methods={"GET","POST"})
+     * @Route("/{id}/update", name="recipe_update", methods={"GET","POST"})
      */
-    public function edit(Request $request, Recipe $recipe): Response
+    public function update(Request $request, Recipe $recipe, RecipeUploader $fileUploader): Response
     {
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $fileUploader->upload($image, $recipe);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('recipe_index');

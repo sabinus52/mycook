@@ -19,7 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Image;
 
 
 class RecipeType extends AbstractType
@@ -61,6 +63,21 @@ class RecipeType extends AbstractType
                 'class' => 'App:Category',
                 'choice_label' => 'name',
                 'multiple' => true,
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Photo du plat',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Uniquement des photos au format jpg ou png',
+                    ])
+                ],
             ])
             ->add('ingredients', CollectionType::class, [
                 'label' => 'Liste des ingrédients',

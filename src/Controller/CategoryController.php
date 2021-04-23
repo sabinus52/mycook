@@ -12,6 +12,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use App\Service\CategoryUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +42,7 @@ class CategoryController extends AbstractController
      * 
      * @Route("/create", name="category_create", methods={"GET","POST"})
      */
-    public function create(Request $request): Response
+    public function create(Request $request, CategoryUploader $fileUploader): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -51,6 +52,11 @@ class CategoryController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($category);
             $entityManager->flush();
+
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $fileUploader->upload($image, $category);
+            }
 
             return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
@@ -80,12 +86,18 @@ class CategoryController extends AbstractController
      * 
      * @Route("/{id}/update", name="category_update", methods={"GET","POST"})
      */
-    public function update(Request $request, Category $category): Response
+    public function update(Request $request, Category $category, CategoryUploader $fileUploader): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $fileUploader->upload($image, $category);
+            }
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
