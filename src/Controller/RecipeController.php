@@ -13,6 +13,8 @@ use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use App\Service\RecipeUploader;
+use App\Entity\Ingredient;
+use App\Form\IngredientHiddenType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,9 +63,12 @@ class RecipeController extends AbstractController
             return $this->redirectToRoute('recipe_index');
         }
 
+        $formIngredient = $this->createForm(IngredientHiddenType::class, new Ingredient());
+
         return $this->render('recipe/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form->createView(),
+            'formingredient' => $formIngredient->createView(),
         ]);
     }
 
@@ -103,9 +108,13 @@ class RecipeController extends AbstractController
             return $this->redirectToRoute('recipe_index');
         }
 
+        // Formulaire pour la création d'un nouvel ingrédient
+        $formIngredient = $this->createForm(IngredientHiddenType::class, new Ingredient());
+
         return $this->render('recipe/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form->createView(),
+            'formingredient' => $formIngredient->createView(),
         ]);
     }
 

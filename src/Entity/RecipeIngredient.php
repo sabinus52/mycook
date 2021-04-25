@@ -11,6 +11,7 @@ namespace App\Entity;
 
 use App\Repository\RecipeIngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Constant\Unity;
 
 /**
@@ -37,6 +38,7 @@ class RecipeIngredient
      * Jointure avec les ingédients
      * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank
      */
     private $ingredient;
 

@@ -11,11 +11,14 @@ namespace App\Controller;
 
 use App\Entity\Ingredient;
 use App\Form\IngredientType;
+use App\Form\IngredientHiddenType;
 use App\Repository\IngredientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\Query;
 
 /**
  * @Route("/ingredient")
@@ -33,6 +36,58 @@ class IngredientController extends AbstractController
         return $this->render('ingredient/index.html.twig', [
             'ingredients' => $ingredientRepository->findAll(),
         ]);
+    }
+
+
+    /**
+     * Index ou liste des ingrédients
+     * 
+     * @Route("/{term}.json", name="ingredient_json")
+     */
+    public function fetchFormatJSON(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        return new JsonResponse($ingredientRepository->searchByName($request->get('term'), Query::HYDRATE_ARRAY));
+    }
+
+
+    /**
+     * Retourne si un ingredient existe ou pas
+     * 
+     * @Route("/is-exists", name="ingredient_isexists")
+     */
+    public function isExists(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        $ingredient = $ingredientRepository->findOneByName($request->get('term'));
+
+        if ( ! $ingredient ) return new JsonResponse([ 'id' => 0, 'name' => $request->get('term') ]);
+        
+        return new JsonResponse([
+            'id' => $ingredient->getId(),
+            'name' => $ingredient->getName(),
+        ]);
+    }
+
+
+    /**
+     * Création d'un nouvel ingrédient depuis le formulaire de la recette
+     * 
+     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"})
+     */
+    public function createFromRecipe(Request $request): Response
+    {
+        $ingredient = new Ingredient();
+        $form = $this->createForm(IngredientHiddenType::class, $ingredient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($ingredient);
+            $entityManager->flush();
+
+            return new Response('OK');
+        }
+
+        return new Response('ERROR');
     }
 
 

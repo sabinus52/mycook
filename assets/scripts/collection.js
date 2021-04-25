@@ -45,7 +45,8 @@
             // Evènement du bouton 'ADD'
             if (this.options.allow_add) {
                 this.$element.parent().on('click', '.collection-btn-add', function(e) {
-                    plugin.addItem();
+                    e.preventDefault();
+                    plugin.addItem($(e.target).siblings('[data-prototype]'));
                 });
             }
             
@@ -62,18 +63,24 @@
         /**
          * Ajout d'un élément à la collection
          */
-        addItem: function() {
+        addItem: function($elt) {
             // Récupère l'élément ayant l'attribut data-prototype
-            var newItem = this.$element.data('prototype');
+            var newItem = $elt.data('prototype');
             // Remplace '__name__' dans le HTML du prototype par un nombre basé sur la longueur de la collection courante
             newItem = newItem.replace(/__name__/g, this.nextId);
             $newItem = $(newItem);
             
             // Ajoute l'élément
-            this.$element.append($newItem);
+            $elt.append($newItem);
             
             // Incrémente l'index des éléments de la collection
             this.nextId++;
+            console.log('NextID = '+this.nextId);
+
+            if (this.options.onAddItem !== undefined) {
+                console.log('onAddItem');
+                this.options.onAddItem();
+            }
         },
         
         
@@ -87,6 +94,10 @@
                 $elt.closest('.collection-item').fadeOut(500, function () {
                     $(this).remove();
                 });
+                if (this.options.onDeleteItem !== undefined) {
+                    console.log('onDeleteItem');
+                    this.options.onDeleteItem();
+                }
             }
         },
     
@@ -108,6 +119,8 @@
                 }
             });
         }
+
+        return this;
         
     }
 

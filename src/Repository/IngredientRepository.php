@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ingredient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @method Ingredient|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,29 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class IngredientRepository extends ServiceEntityRepository
 {
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Ingredient::class);
+    }
+
+
+    /**
+     * Recherche par nom de l'ingredient
+     * 
+     * @param String $term : Valeur à rechercher
+     * @param String $mode : Hydratation mode de retour du résultat
+     * @return Array
+     */
+    public function searchByName($term, $mode = Query::HYDRATE_OBJECT)
+    {
+        return $this->createQueryBuilder('i')
+            ->where('i.name LIKE :term')
+            ->setParameter('term', '%'.$term.'%')
+            ->orderBy('i.name', 'ASC')
+            ->getQuery()
+            ->getResult($mode)
+        ;
     }
 
     // /**
