@@ -36,3 +36,8 @@
     {% include 'recipe/_constants.js.html.twig' %}
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('recipe') }}
+{% endblock %}

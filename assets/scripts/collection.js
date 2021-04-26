@@ -13,7 +13,9 @@
         
         var defaults = {
             allow_add: true,
-            allow_delete: true
+            allow_delete: true,
+            onAddItem: undefined,
+            onDeleteItem: undefined,
         };
         
         plugin = this;
@@ -34,9 +36,6 @@
          * Initialisation du plugin
          */
         init : function() {
-            //console.log(plugin.options);
-            //console.log(this.element.id);
-            //console.log(this.$element.data('prototype'));
 
             // Prochain Index de la collection
             this.nextId = this.$element.children('div').length;
@@ -44,17 +43,17 @@
             
             // Evènement du bouton 'ADD'
             if (this.options.allow_add) {
-                this.$element.parent().on('click', '.collection-btn-add', function(e) {
+                this.$element.parent().on('click', '.collection-btn-add', this, function(e) {
                     e.preventDefault();
-                    plugin.addItem($(e.target).siblings('[data-prototype]'));
+                    e.data.addItem();
                 });
             }
             
             // Evènement sur les boutons 'DELETE'
             if (this.options.allow_delete) {
-                this.$element.on('click', '.collection-btn-delete', function (e) {
+                this.$element.on('click', '.collection-btn-delete', this, function (e) {
                     e.preventDefault();
-                    plugin.deleteItem($(this));
+                    e.data.deleteItem($(this));
                 })
             }
         },
@@ -63,15 +62,16 @@
         /**
          * Ajout d'un élément à la collection
          */
-        addItem: function($elt) {
+        addItem: function() {
+
             // Récupère l'élément ayant l'attribut data-prototype
-            var newItem = $elt.data('prototype');
+            var newItem = this.$element.data('prototype');
             // Remplace '__name__' dans le HTML du prototype par un nombre basé sur la longueur de la collection courante
             newItem = newItem.replace(/__name__/g, this.nextId);
             $newItem = $(newItem);
             
             // Ajoute l'élément
-            $elt.append($newItem);
+            this.$element.append($newItem);
             
             // Incrémente l'index des éléments de la collection
             this.nextId++;
@@ -111,11 +111,11 @@
         if (options === undefined || typeof options === 'object') {
             return this.each(function() {
                 // Si le plugin n'a pas été assigné
-                if ($.data(this, 'olixCollection') == undefined) {
+                if ( $(this).data('olixCollection') == undefined ) {
                     // on créé un instance
                     var plugin = new $.olixCollection(this, options);
                     // on stocke la référence du plugin
-                    $.data(this, 'olixCollection', plugin);
+                    $(this).data('olixCollection', plugin);
                 }
             });
         }

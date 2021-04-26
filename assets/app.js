@@ -14,6 +14,5 @@ window.$ = window.jQuery = $;
 require('bootstrap');
 require('select2');
 
-
 import './scripts/global.js';
 import './scripts/collection.js';
