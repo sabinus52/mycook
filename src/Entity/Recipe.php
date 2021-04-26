@@ -96,6 +96,7 @@ class Recipe
      * Jointure avec les étapes
      * 
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     * @Assert\Valid()
      */
     private $steps;
 
@@ -103,6 +104,7 @@ class Recipe
      * Jointure avec les ingrédients
      * 
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     * @Assert\Valid()
      */
     private $ingredients;
 
@@ -174,7 +176,7 @@ class Recipe
         return $this->timePreparation;
     }
 
-    public function setTimePreparation(int $timePreparation): self
+    public function setTimePreparation(?int $timePreparation): self
     {
         $this->timePreparation = $timePreparation;
 
@@ -220,7 +222,7 @@ class Recipe
     /**
      * @return Collection|self[]
      */
-    public function getSteps(): Collection
+    public function getSteps(): ?Collection
     {
         return $this->steps;
     }

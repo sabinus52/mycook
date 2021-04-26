@@ -55,6 +55,7 @@ class Ingredient
     
     public function __construct()
     {
+        $this->unity = new Unity(Unity::NUMBER);
         $this->recipes = new ArrayCollection();
     }
 
