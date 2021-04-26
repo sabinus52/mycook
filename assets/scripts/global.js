@@ -75,8 +75,15 @@ function refreshElement() {
                     $('#formCreateIngredient input.ingredient').val(json.name);
                     $('#newIngredient').text(json.name);
                     $('#confirmCreateIngredient').modal('show');
+                } else {
+                    console.log($(_ev.target).closest('div.form-row').find('.unity').first());
+                    console.log('Unité : ' + json.unity);
+                    var obj = $(_ev.target).closest('div.form-row').find('.unity').first(); //.val(json.unity);
+                    obj.val(json.unity);
                 }
             });
+        
+        
     });
     
 };

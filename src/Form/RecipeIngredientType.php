@@ -50,6 +50,9 @@ class RecipeIngredientType extends AbstractType
                 'choices' => Unity::getChoices(),
                 'choice_value' => 'value',
                 'choice_label' => 'label',
+                'attr' => [
+                    'class' => 'unity',
+                ],
             ])
             ->add('note', TextType::class)
         ;

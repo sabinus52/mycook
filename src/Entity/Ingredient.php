@@ -13,10 +13,13 @@ use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Constant\Unity;
 
 /**
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
+ * @UniqueEntity("name")
  */
 class Ingredient
 {
@@ -32,10 +35,15 @@ class Ingredient
      * Nom de l'ingrédient
      * 
      * @var String
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      * @Assert\NotBlank
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="unity")
+     */
+    private $unity;
 
     /**
      * Jointure avec les recettes
@@ -65,6 +73,19 @@ class Ingredient
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+
+    public function getUnity(): ?Unity
+    {
+        return $this->unity;
+    }
+
+    public function setUnity(?Unity $unity): self
+    {
+        $this->unity = $unity;
 
         return $this;
     }

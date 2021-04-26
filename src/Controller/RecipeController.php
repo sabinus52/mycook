@@ -15,6 +15,7 @@ use App\Repository\RecipeRepository;
 use App\Service\RecipeUploader;
 use App\Entity\Ingredient;
 use App\Form\IngredientHiddenType;
+use App\Entity\RecipeIngredient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,6 +60,8 @@ class RecipeController extends AbstractController
             if ($image) {
                 $fileUploader->upload($image, $recipe);
             }
+
+            $this->setPopularityUnityToIngredient();
 
             return $this->redirectToRoute('recipe_index');
         }
@@ -105,6 +108,8 @@ class RecipeController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
+            $this->setPopularityUnityToIngredient();
+
             return $this->redirectToRoute('recipe_index');
         }
 
@@ -133,6 +138,38 @@ class RecipeController extends AbstractController
         }
 
         return $this->redirectToRoute('recipe_index');
+    }
+
+
+    /**
+     * Mets à jour les unités les plus utilisées par ingrédient
+     */
+    private function setPopularityUnityToIngredient()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Récupération des tous les ingrédients
+        $ingredients = $this->getDoctrine()
+            ->getRepository(Ingredient::class)
+            ->findAll();
+
+        // Récupération par ingrédient l'unité la plus utilisée
+        $ingredientsByUnity = $this->getDoctrine()
+            ->getRepository(RecipeIngredient::class)
+            ->findMostPopularityUnityByIngredient();
+        
+        foreach ($ingredients as $ingredient) {
+            // Pas encore d'ingrédient utilisé
+            if ( ! isset($ingredientsByUnity[$ingredient->getId()]) ) continue;
+
+            $unity = $ingredientsByUnity[$ingredient->getId()];
+            // Si changement d'unité, on met à jour l'unité la plus utilisée
+            if ( $unity->getValue() != $ingredient->getUnity()->getValue() ) {
+                $ingredient->setUnity($unity);
+                $entityManager->persist($ingredient);
+            }
+        }
+        $entityManager->flush();
     }
 
 }

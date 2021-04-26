@@ -59,11 +59,12 @@ class IngredientController extends AbstractController
     {
         $ingredient = $ingredientRepository->findOneByName($request->get('term'));
 
-        if ( ! $ingredient ) return new JsonResponse([ 'id' => 0, 'name' => $request->get('term') ]);
+        if ( ! $ingredient ) return new JsonResponse([ 'id' => 0, 'name' => $request->get('term'), 'unity' => '' ]);
         
         return new JsonResponse([
             'id' => $ingredient->getId(),
             'name' => $ingredient->getName(),
+            'unity' => $ingredient->getUnity()->getValue(),
         ]);
     }
 
