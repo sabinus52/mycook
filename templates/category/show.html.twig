@@ -4,19 +4,22 @@
 
 {% block body %}
 
-    <div class="float-right">
-        <div class="btn-toolbar mb-3" role="toolbar">
-            <div class="btn-group mr-2" role="group">
-                <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la catégorie</a>
-            </div>
-            <div class="input-group mr-2" role="group">
-                <form method="post" action="{{ path('category_delete', {'id': category.id}) }}" onsubmit="return confirm('Suppression de cette catégorie ?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                </form>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="float-right">
+            <div class="btn-toolbar mb-3" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la catégorie</a>
+                </div>
+                <div class="input-group mr-2" role="group">
+                    <form method="post" action="{{ path('category_delete', {'id': category.id}) }}" onsubmit="return confirm('Suppression de cette catégorie ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                        <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    {% endif %}
+
     <h1 class="my-4">{{ category.name }}</h1>
 
     {% include 'include/_flashbag.html.twig' %}

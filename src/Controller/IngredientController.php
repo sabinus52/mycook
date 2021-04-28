@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\Query;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/ingredient")
@@ -73,6 +75,7 @@ class IngredientController extends AbstractController
      * Création d'un nouvel ingrédient depuis le formulaire de la recette
      * 
      * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createFromRecipe(Request $request): Response
     {
@@ -96,6 +99,7 @@ class IngredientController extends AbstractController
      * Création d'un nouvel ingrédient
      * 
      * @Route("/create", name="ingredient_create", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request): Response
     {
@@ -136,6 +140,7 @@ class IngredientController extends AbstractController
      * Edition d'un ingrédient
      * 
      * @Route("/{id}/update", name="ingredient_update", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, Ingredient $ingredient): Response
     {
@@ -158,7 +163,9 @@ class IngredientController extends AbstractController
 
     /**
      * Suppression d'un ingrédient
+     * 
      * @Route("/{id}/delete", name="ingredient_delete", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Ingredient $ingredient): Response
     {
