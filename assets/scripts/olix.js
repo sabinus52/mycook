@@ -7,7 +7,6 @@
  * @package Olix
  */
 
-module.exports = olix;
 
 var olix = {
 
@@ -42,5 +41,11 @@ var olix = {
         });
     },
 
+    test: function (params)
+    {
+        alert('ok');
+    },
+
 };
 
+module.exports = olix;

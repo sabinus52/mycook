@@ -6,3 +6,6 @@ twig:
     form_themes: 
         - 'bootstrap_4_horizontal_layout.html.twig'
         - '_form/custom_types.html.twig'
+    globals:
+        uri_recipe: '%recipe_path%'
+        uri_category: '%category_path%'

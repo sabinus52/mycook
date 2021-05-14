@@ -19,7 +19,7 @@
     <div class="row my-2 text-center">
     {% for category in categories %}
         <div class="col-2">
-            <div class="my-2"><a href="{{ path('category_show', {'id': category.id}) }}"><img src="{{ asset('images/home-cat1.jpg') }}" width="100" height="100" class="rounded-circle"></a></div>
+            <div class="my-2"><a href="{{ path('category_show', {'id': category.id}) }}"><img src="{{ asset(uri_category~'/'~category.id~'.png') }}" width="100" height="100" class="rounded-circle"></a></div>
             <h5><a href="{{ path('category_show', {'id': category.id}) }}">{{ category.name }}</a></h5>
         </div>
     {% endfor %}

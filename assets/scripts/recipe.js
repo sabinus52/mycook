@@ -83,6 +83,6 @@ $(function() {
     // Ouvre le modal pour demander si on doit créer un ingrédient
     $('#confirmCreateIngredient').on('click', 'button.btn-primary',  function (_ev) {
         olix.submitFormModalAjax('#confirmCreateIngredient', '#formCreateIngredient', routeCreateIngredient);
-    })
+    });
 
 });
