@@ -43,6 +43,13 @@ class User implements UserInterface
     private $password;
 
     /**
+     * Mot de passe en clair nexessaire pour le changement
+     * 
+     * @var String
+     */
+    private $plainPassword;
+
+    /**
      * @ORM\Column(type="string", length=100)
      */
     private $name;
@@ -103,6 +110,19 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+  
+    public function setPlainPassword(string $password): self
+    {
+        $this->plainPassword = $password;
 
         return $this;
     }
