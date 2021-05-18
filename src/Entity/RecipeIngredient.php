@@ -135,4 +135,13 @@ class RecipeIngredient
         return $this;
     }
 
+
+    /**
+     * Retourne le nombre de calories de l'ingrédient
+     */
+    public function getCalories(): ?int
+    {
+        return $this->getIngredient()->getCalories($this->quantity, $this->unity);
+    }
+
 }

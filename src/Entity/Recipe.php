@@ -19,6 +19,7 @@ use App\Constant\Rate;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Recipe
 {
@@ -45,6 +46,7 @@ class Recipe
      * @ORM\Column(type="smallint")
      * @Assert\NotNull
      * @Assert\Type(type="integer")
+     * @Assert\Range(min = 1, max = 12)
      */
     private $person;
 
@@ -86,6 +88,15 @@ class Recipe
     private $timeCooking;
 
     /**
+     * Nombre de calories de la recette
+     * 
+     * @var Integer
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
+     */
+    private $calorie;
+
+    /**
      * Jointure avec les catégories
      * 
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
@@ -114,6 +125,7 @@ class Recipe
         $this->person = 4;
         $this->categories = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
+        $this->steps = new ArrayCollection();
     }
 
 
@@ -191,6 +203,18 @@ class Recipe
     public function setTimeCooking(?int $timeCooking): self
     {
         $this->timeCooking = $timeCooking;
+
+        return $this;
+    }
+
+    public function getCalorie(): ?int
+    {
+        return $this->calorie;
+    }
+
+    public function setCalorie(?int $calorie): self
+    {
+        $this->calorie = $calorie;
 
         return $this;
     }
@@ -277,6 +301,33 @@ class Recipe
         }
 
         return $this;
+    }
+
+
+    /**
+     * Calcul de nombre de calories de la recette par personne
+     * 
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
+     */
+    public function calculCalories(): ?int
+    {
+        $calories = 0;
+
+        // Pour chaque ingrédient de la recette
+        foreach ($this->ingredients as $ingredient) {
+            $cal = $ingredient->getCalories();
+            if ( $cal === null ) {
+                // Manque les calories d'un élément donc impossible de calculer
+                $this->calorie = null;
+                return null;
+            }
+            $calories+= $cal;
+        }
+
+        // Nombre de calories par personne
+        $this->calorie = round($calories / $this->person);
+        return $this->calorie;
     }
 
 }

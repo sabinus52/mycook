@@ -21,7 +21,9 @@
             <tr>
                 <th>Id</th>
                 <th>Nom</th>
+                <th>Calories</th>
                 <th>Unité</th>
+                <th>Converion</th>
                 <th></th>
             </tr>
         </thead>
@@ -30,7 +32,9 @@
             <tr>
                 <td>{{ ingredient.id }}</td>
                 <td>{{ ingredient.name }}</td>
+                <td>{% if ingredient.calorie %}{{ ingredient.calorie }} kCal{% endif %}</td>
                 <td>{{ ingredient.unity.label }}</td>
+                <td>{% if ingredient.conversion %}1 {{ ingredient.name }} -&gt; {{ ingredient.conversion }} g{% endif %}</td>
                 <td class="text-right">
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier</a>

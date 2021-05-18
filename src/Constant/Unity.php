@@ -35,18 +35,18 @@ class Unity
 
 
     static private $unities = [
-        self::NUMBER        => [ 'type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '' ],
-        self::KILO          => [ 'type' => self::WEIGHT,    'label' => 'kilo(s)',              'symbol' => 'Kg' ],
-        self::GRAM          => [ 'type' => self::WEIGHT,    'label' => 'gramme(s)',            'symbol' => 'g' ],
-        self::OUNCE         => [ 'type' => self::WEIGHT,    'label' => 'ounce(s)',             'symbol' => 'oz' ],
-        self::POUND         => [ 'type' => self::WEIGHT,    'label' => 'pound(s)',             'symbol' => 'lb' ],
-        self::CUP           => [ 'type' => self::WEIGHT,    'label' => 'tasse(s)',             'symbol' => 'c.' ],
-        self::TABLESPOON    => [ 'type' => self::WEIGHT,    'label' => 'cuillère(s) à soupe',  'symbol' => 'T.' ],
-        self::TEASPOON      => [ 'type' => self::WEIGHT,    'label' => 'cuillère(s) à café',   'symbol' => 't.' ],
-        self::LITRE         => [ 'type' => self::CAPACITY,  'label' => 'litre(s)',             'symbol' => 'l' ],
-        self::DLITRE        => [ 'type' => self::CAPACITY,  'label' => 'décilitre(s)',         'symbol' => 'dl' ],
-        self::CLITRE        => [ 'type' => self::CAPACITY,  'label' => 'centilitre(s)',        'symbol' => 'cl' ],
-        self::MLITRE        => [ 'type' => self::CAPACITY,  'label' => 'millilitre(s)',        'symbol' => 'ml' ],
+        self::NUMBER        => [ 'type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '',      'conversion' => null ],
+        self::KILO          => [ 'type' => self::WEIGHT,    'label' => 'kilo(s)',              'symbol' => 'Kg',    'conversion' => 1000 ],
+        self::GRAM          => [ 'type' => self::WEIGHT,    'label' => 'gramme(s)',            'symbol' => 'g',     'conversion' => 1 ],
+        self::OUNCE         => [ 'type' => self::WEIGHT,    'label' => 'ounce(s)',             'symbol' => 'oz',    'conversion' => 28.34 ],
+        self::POUND         => [ 'type' => self::WEIGHT,    'label' => 'pound(s)',             'symbol' => 'lb',    'conversion' => 455 ],
+        self::CUP           => [ 'type' => self::WEIGHT,    'label' => 'tasse(s)',             'symbol' => 'c.',    'conversion' => 250 ],
+        self::TABLESPOON    => [ 'type' => self::WEIGHT,    'label' => 'cuillère(s) à soupe',  'symbol' => 'T.',    'conversion' => 15 ],
+        self::TEASPOON      => [ 'type' => self::WEIGHT,    'label' => 'cuillère(s) à café',   'symbol' => 't.',    'conversion' => 5 ],
+        self::LITRE         => [ 'type' => self::CAPACITY,  'label' => 'litre(s)',             'symbol' => 'l',     'conversion' => 1000 ],
+        self::DLITRE        => [ 'type' => self::CAPACITY,  'label' => 'décilitre(s)',         'symbol' => 'dl',    'conversion' => 100 ],
+        self::CLITRE        => [ 'type' => self::CAPACITY,  'label' => 'centilitre(s)',        'symbol' => 'cl',    'conversion' => 10 ],
+        self::MLITRE        => [ 'type' => self::CAPACITY,  'label' => 'millilitre(s)',        'symbol' => 'ml',    'conversion' => 1 ],
     ];
 
 
@@ -71,6 +71,15 @@ class Unity
     public function __toString()
     {
         return $this->getValue();
+    }
+
+
+    /**
+     * Determine si l'unité est un nombre ou une mesure
+     */
+    public function isNumber(): bool
+    {
+        return ( $this->unity == self::NUMBER );
     }
 
 
@@ -102,6 +111,15 @@ class Unity
 
 
     /**
+     * Retourne la conversion en grammes
+     */
+    public function getConversion(): ?float
+    {
+        return self::$unities[$this->unity]['conversion'];
+    }
+
+
+    /**
      * Retourne la liste des niveaux de cout
      */
     static public function getConstants(): array
@@ -120,6 +138,37 @@ class Unity
             $result[] = new self($key);
         }
         return $result;
+    }
+
+
+    /**
+     * Retourne le grammage à partir d'une quantité
+     * 
+     * @param Float $quantity
+     */
+    public function getInGram(?float $quantity): float
+    {
+        if ( $this->isNumber() )
+            throw new \Exception('Impossible de convertir un nombre en gramme');
+        return $quantity * $this->getConversion();
+    }
+
+
+    /**
+     * Convertit à partir de sa propre unité vers la nouvelle unité
+     * 
+     * @param Float $quantity : Quantité à convertir
+     * @param Const $unity    : Unité cible convertie
+     */
+    public function convert(?float $quantity, $unity): float
+    {
+        $target = new Unity($unity);
+
+        if ( $this->isNumber() || $target->isNumber() )
+            throw new \Exception('Impossible de convertir un nombre');
+        $gram = $this->getInGram($quantity);
+
+        return round($gram / $target->getConversion(), 2);
     }
 
 }

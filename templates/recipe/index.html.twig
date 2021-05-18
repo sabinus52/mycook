@@ -15,6 +15,7 @@
                 <th>Rate</th>
                 <th>TimePreparation</th>
                 <th>TimeCooking</th>
+                <th>Calories</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                 <td>{{ recipe.rate }}</td>
                 <td>{{ recipe.timePreparation }}</td>
                 <td>{{ recipe.timeCooking }}</td>
+                <td>{{ recipe.calorie }}</td>
                 <td>
                     <a href="{{ path('recipe_show', {'id': recipe.id}) }}">show</a>
                     <a href="{{ path('recipe_update', {'id': recipe.id}) }}">edit</a>
