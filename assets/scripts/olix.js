@@ -26,7 +26,7 @@ var olix = {
             cache: false,
             beforeSend: function() {
                 $(modal + ' .modal-body').addClass('text-center').html('<p><img alt="" src="/images/spinner-rectangle.gif"></p>');
-                $(modal + ' .modal-footer').html('');
+                $(modal + ' .modal-footer').hide();
             },
             success: function(data) {
                 if (data == 'OK') {

@@ -46,6 +46,8 @@ var refreshElementIngredientAutoComplete = function() {
             .done(function( json ) {
                 if ( json.id == 0 ) {
                     // L'ingrédient n'existe pas alors on affiche le modal
+                    $('#confirmCreateIngredient .modal-body').removeClass('text-center').html($('#confirmCreateIngredient .modal-body').data('prototype'));
+                    $('#confirmCreateIngredient .modal-footer').show();
                     $('#formCreateIngredient input.ingredient').val(json.name);
                     $('#newIngredient').text(json.name);
                     $('#confirmCreateIngredient').modal('show');
