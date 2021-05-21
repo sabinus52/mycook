@@ -10,6 +10,8 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\Recipe;
+use App\Entity\RecipeIngredient;
 use App\Form\IngredientType;
 use App\Form\IngredientHiddenType;
 use App\Repository\IngredientRepository;
@@ -112,6 +114,8 @@ class IngredientController extends AbstractController
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
+            $this->updateRecipeCalories($ingredient);
+
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été ajouté avec succès");
             return $this->redirectToRoute('ingredient_index');
         }
@@ -148,7 +152,10 @@ class IngredientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $this->getDoctrine()->getManager()->flush();
+
+            $this->updateRecipeCalories($ingredient);
 
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été modifié avec succès");
             return $this->redirectToRoute('ingredient_index');
@@ -177,6 +184,27 @@ class IngredientController extends AbstractController
         }
 
         return $this->redirectToRoute('ingredient_index');
+    }
+
+
+    /**
+     * Mise à jour des calories suite à une mise à jour d'un ingrédient
+     */
+    private function updateRecipeCalories(Ingredient $ingredient): void
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // Récupération des recettes avec l'ingrédient
+        $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient);
+
+        // Pour chaque recette
+        foreach ($recipesIngredients as $recipeIngredient) {
+            $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId());
+            $recipe->setCalorie(null);
+            $entityManager->persist($recipe);
+        }
+
+        $entityManager->flush();
     }
 
 }
