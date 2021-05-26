@@ -26,7 +26,7 @@
 
     <div class="row my-2">
         <div class="col-5">
-            <h3><strong>xx</strong> recettes</h3>
+            <h3><strong>{{ recipes|length }}</strong> recettes</h3>
         </div>
         <div class="col-7 text-right">
             <div class="btn-toolbar justify-content-end" role="toolbar">
@@ -44,18 +44,14 @@
 
     <div class="clearfix"></div>
     <div class="row my-2">
+    {% for item in recipes %}
         <div class="col-4">
-            <div class="text-center"><img src="{{ asset('images/home-recette1.jpg') }}" width="300"></div>
-            <div>Salade César au thon</div>
+            <figure class="figure">
+                <a href="{{ path('recipe_show', { id: item.id }) }}" class="img-hover-zoom"><img  src="{{ asset(uri_recipe~'/'~item.id~'.png') }}" class="figure-img img-fluid rounded"></a>
+                <figcaption><a href="{{ path('recipe_show', { id: item.id }) }}" class="text-dark d-block mt-1 font-weight-bold">{{ item.name }}</a></figcaption>
+            </figure>
         </div>
-        <div class="col-4">
-            <div class="text-center"><img src="{{ asset('images/home-recette2.jpg') }}" width="300"></div>
-            <div>Kebab à l'assiette</div>
-        </div>
-        <div class="col-4">
-            <div class="text-center"><img src="{{ asset('images/home-recette3.jpg') }}" width="300"></div>
-            <div>Boeuf bourguignon</div>
-        </div>
+    {% endfor %}
     </div>
 
 {% endblock %}

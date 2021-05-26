@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Recipe;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,23 @@ class RecipeRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+
+    /**
+     * Recherche les recettes par catégorie
+     * 
+     * @param Category $categorie : Catégorie à filtrer
+     */
+    public function findByCategory(Category $categorie): array
+    {
+        return $this->createQueryBuilder('recipe')
+            ->join('recipe.categories', 'category')
+            ->andWhere('category.id = :id')
+            ->setParameter('id', $categorie->getId())
+            ->getQuery()
+            ->getResult()
         ;
     }
 

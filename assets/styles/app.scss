@@ -8,6 +8,31 @@
 @import "~@ttskch/select2-bootstrap4-theme/src/select2-bootstrap4.scss";
 
 
+.ox-footer {
+  padding: 2.5rem 0;
+  color: #999;
+  background-color: #f9f9f9;
+  border-top: .05rem solid #e5e5e5;
+}
+
+/**
+ * Zoom sur les images
+ */
+.img-hover-zoom {
+  overflow: hidden;
+  display: block;
+}
+
+.img-hover-zoom img {
+  transition: transform .8s ease;
+}
+
+.img-hover-zoom:hover img {
+  transform: scale(1.2);
+}
+
+
+
 .tt-query {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);

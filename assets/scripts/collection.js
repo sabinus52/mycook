@@ -75,11 +75,11 @@
             
             // Incrémente l'index des éléments de la collection
             this.nextId++;
-            console.log('NextID = '+this.nextId);
+            $newItem.find(':input').first().focus();
 
             if (this.options.onAddItem !== undefined) {
                 console.log('onAddItem');
-                this.options.onAddItem();
+                this.options.onAddItem($newItem, $newItem.find(':input').first());
             }
         },
         

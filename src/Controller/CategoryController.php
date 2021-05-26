@@ -10,6 +10,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Recipe;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Service\CategoryUploader;
@@ -78,8 +79,13 @@ class CategoryController extends AbstractController
      */
     public function show(Category $category): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $recipes = $entityManager->getRepository(Recipe::class)->findByCategory($category);
+
         return $this->render('category/show.html.twig', [
             'category' => $category,
+            'recipes'  => $recipes,
         ]);
     }
 

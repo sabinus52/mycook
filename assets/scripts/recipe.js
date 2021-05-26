@@ -74,8 +74,9 @@ $(function() {
 
     // Initialise la collection des ingrédients et des étapes
     $('.collection-widget').olixCollection({
-        onAddItem: function () {
+        onAddItem: function ($prototype, $inputFisrt) {
             refreshElementIngredientAutoComplete();
+            $inputFisrt.focus();
         }
     });
 
