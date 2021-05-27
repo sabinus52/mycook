@@ -34,7 +34,7 @@ services:
 
     App\Service\RecipeUploader:
         arguments:
-            $directory: '%kernel.project_dir%/public/%recipe_path%'
+            $directory: '%recipe_path%'
     App\Service\CategoryUploader:
         arguments:
-            $directory: '%kernel.project_dir%/public/%category_path%'
+            $directory: '%category_path%'

@@ -11,17 +11,31 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\KernelInterface;
+use \Liip\ImagineBundle\Imagine\Cache\CacheManager;
 
 
 abstract class FileUploader
 {
     
     /**
-     * Dossier de destination
+     * Dossier de destination des images
      * 
      * @var String
      */
     private $directory;
+
+    /**
+     * Dossier racine de la zone publique
+     * 
+     * @var String
+     */
+    private $rootDir;
+
+    /**
+     * @var CacheManager
+     */
+    protected $imagineCacheManager;
 
     
     /**
@@ -29,9 +43,11 @@ abstract class FileUploader
      * 
      * @param String $directory : Dossier de destination
      */
-    public function __construct(string $directory)
+    public function __construct(string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
     {
         $this->directory = $directory;
+        $this->rootDir = $kernel->getProjectDir().'/public';
+        $this->imagineCacheManager = $imagineCacheManager;
     }
 
 
@@ -44,11 +60,22 @@ abstract class FileUploader
     protected function move(UploadedFile $sourceFile, string $targetFile): bool
     {
         try {
-            $sourceFile->move($this->directory, $targetFile);
+            $sourceFile->move($this->rootDir.$this->directory, $targetFile);
         } catch (FileException $e) {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * Supprime la vignette en cache
+     * 
+     * @param String $targetFile : Nom du fichier de destination
+     */
+    protected function removeCacheThumb(string $targetFile)
+    {
+        $this->imagineCacheManager->remove($this->directory.'/'.$targetFile);
     }
 
 }
