@@ -17,7 +17,7 @@
     {% for category in categories %}
         <div class="col-lg-3 col-md-4 col-6">
             <figure class="figure">
-                <a href="{{ path('category_show', {'id': category.id}) }}" class="img-hover-zoom rounded-circle"><img  src="{{ asset(uri_category~'/'~category.id~'.png') | imagine_filter('cat') }}" class="figure-img img-fluid"></a>
+                <a href="{{ path('category_show', {'id': category.id}) }}" class="img-hover-zoom rounded-circle"><img src="{{ asset(uri_category~'/'~category.id~'.jpg') | imagine_filter('cat') }}" class="rounded-circle"></a>
                 <figcaption><a href="{{ path('category_show', {'id': category.id}) }}" class="text-dark d-block mt-1 font-weight-bold">{{ category.name }}</a></figcaption>
             </figure>
         </div>

@@ -21,8 +21,8 @@ class CategoryUploader extends FileUploader
      */
     public function upload(UploadedFile $file, Category $category): bool
     {
-        $this->removeCacheThumb($category->getId().'.png');
-        return $this->move($file, $category->getId().'.png');
+        $this->removeCacheThumb($category->getId());
+        return $this->move($file, $category->getId());
     }
     
 }
