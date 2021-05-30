@@ -200,7 +200,7 @@ class IngredientController extends AbstractController
         // Pour chaque recette
         foreach ($recipesIngredients as $recipeIngredient) {
             $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId());
-            $recipe->setCalorie(null);
+            $recipe->setCalorie(0);
             $entityManager->persist($recipe);
         }
 

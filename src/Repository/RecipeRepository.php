@@ -58,4 +58,19 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
 
+
+    /**
+     * Retourne les recettes les plus populaires
+     * 
+     * @param Integer $count : Nombre d'occ à retourner
+     */
+    public function findMostPopular(?int $count = null): array
+    {
+        $query = $this->createQueryBuilder('recipe');
+
+        if ( $count ) $query = $query->setMaxResults(6);
+        
+        return $query->getQuery()->getResult();
+    }
+
 }
