@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -35,10 +36,25 @@ class IngredientController extends AbstractController
      * 
      * @Route("/", name="ingredient_index", methods={"GET"})
      */
-    public function index(IngredientRepository $ingredientRepository): Response
+    public function index(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
     {
+        $session->set('ingredient.filter.route', $request->get('_route'));
         return $this->render('ingredient/index.html.twig', [
             'ingredients' => $ingredientRepository->findAll(),
+        ]);
+    }
+
+
+    /**
+     * Index ou liste des ingrédients avec le champs "calorie" non rempli
+     * 
+     * @Route("/without-calories", name="ingredient_index_without_cal", methods={"GET"})
+     */
+    public function indexWithoutCalories(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
+    {
+        $session->set('ingredient.filter.route', $request->get('_route'));
+        return $this->render('ingredient/index.html.twig', [
+            'ingredients' => $ingredientRepository->findByCalorie(null),
         ]);
     }
 
@@ -103,7 +119,7 @@ class IngredientController extends AbstractController
      * @Route("/create", name="ingredient_create", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request): Response
+    public function create(Request $request, SessionInterface $session): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -117,7 +133,7 @@ class IngredientController extends AbstractController
             $this->updateRecipeCalories($ingredient);
 
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été ajouté avec succès");
-            return $this->redirectToRoute('ingredient_index');
+            return $this->_redirectToRoute($session);
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -146,7 +162,7 @@ class IngredientController extends AbstractController
      * @Route("/{id}/update", name="ingredient_update", methods={"GET","POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Ingredient $ingredient): Response
+    public function update(Request $request, Ingredient $ingredient, SessionInterface $session): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
@@ -158,7 +174,8 @@ class IngredientController extends AbstractController
             $this->updateRecipeCalories($ingredient);
 
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été modifié avec succès");
-            return $this->redirectToRoute('ingredient_index');
+
+            return $this->_redirectToRoute($session);
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -205,6 +222,20 @@ class IngredientController extends AbstractController
         }
 
         $entityManager->flush();
+    }
+
+
+    /**
+     * Redirection de la route en fonction de la route du filtre enregistré dans la session
+     * 
+     * @param SessionInterface
+     * @return Route
+     */
+    private function _redirectToRoute(SessionInterface $session)
+    {
+        $route = $session->get('ingredient.filter.route');
+        $route = (empty($route)) ? 'ingredient_index' : $route; 
+        return $this->redirectToRoute($route);
     }
 
 }

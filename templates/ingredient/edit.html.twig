@@ -21,7 +21,7 @@
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
         {{ form_widget(form) }}
         <div class="text-right">
-            <a class="btn btn-sm btn-secondary" href="{{ path('ingredient_index') }}">Retour</a>
+            <a class="btn btn-sm btn-secondary" href="{{ path(app.session.get('ingredient.filter.route')) }}">Retour</a>
             {% if ingredient.id %}
                 <button class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier</button>
             {% else %}
