@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('index_home') }}"><img src="{{ asset('apple-touch-icon.png') }}" width="32" height="32" class="d-inline-block align-top" alt=""> MyCook</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('index_home') }}">Accueil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('recipe_index') }}">Recettes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('category_index') }}">Catégories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('ingredient_index') }}">Ingrédients</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <img class="rounded-circle" src="{{ asset('images/avatar.png') }}" title="{{ app.user.name }}" width="32" height="32">
+                    {% else %}
+                        <img class="rounded-circle" src="{{ asset('images/avatar.png') }}" width="32" height="32">
+                    {% endif %}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <a class="dropdown-item" href="{{ path('app_change_password') }}">Changer mot de passe</a>
+                        <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a>
+                    {% else %}
+                        <a class="dropdown-item" href="{{ path('app_login') }}">Se connecter</a>
+                    {% endif %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

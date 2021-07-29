@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - Recettes par catégorie{% endblock %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="float-right">
+            <div class="btn-toolbar mb-3" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la catégorie</a>
+                </div>
+                <div class="input-group mr-2" role="group">
+                    <form method="post" action="{{ path('category_delete', {'id': category.id}) }}" onsubmit="return confirm('Suppression de cette catégorie ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                        <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <h1 class="my-4">{{ category.name }}</h1>
+
+    {% include 'include/_flashbag.html.twig' %}
+
+    <div class="row my-2">
+        <div class="col-5">
+            <h3><strong>{{ recipes|length }}</strong> recettes</h3>
+        </div>
+        <div class="col-7 text-right">
+            <div class="btn-toolbar justify-content-end" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    <a href="#" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une recette</a>
+                </div>
+                <div class="input-group">
+                    <select class="form-control">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="clearfix"></div>
+    <div class="row my-2">
+    {% for item in recipes %}
+        <div class="col-4">
+            <figure class="figure">
+                <a href="{{ path('recipe_show', { id: item.id }) }}" class="img-hover-zoom"><img src="{{ asset(uri_recipe~'/'~item.id~'.jpg') | imagine_filter('thumb') }}" class="rounded"></a>
+                <figcaption><a href="{{ path('recipe_show', { id: item.id }) }}" class="text-dark d-block mt-1 font-weight-bold">{{ item.name }}</a></figcaption>
+            </figure>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
