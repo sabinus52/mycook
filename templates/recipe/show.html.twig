@@ -58,6 +58,7 @@
                 <tr>
                     <th>{{ item.quantity }} {{ item.unity }}</th>
                     <td>{{ item.ingredient.name }}</td>
+                    <td>{% if item.note %}<i class="fas fa-info-circle" data-toggle="tooltip" title="{{ item.note|e }}"></i>{% endif %}</td>
                 </tr>
             {% endfor %}
             </table>

@@ -19,4 +19,7 @@ $(function() {
         location.href = this.value;
     });
 
+    // Tooltip
+    $("[data-toggle='tooltip']").tooltip();
+
 });
