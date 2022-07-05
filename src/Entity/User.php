@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Entité des utilisateurs
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -14,8 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-
 /**
+ * Entité des utilisateurs.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -44,9 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * Mot de passe en clair nexessaire pour le changement
-     * 
-     * @var String
+     * Mot de passe en clair nexessaire pour le changement.
+     *
+     * @var string
      */
     private $plainPassword;
 
@@ -54,8 +59,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=100)
      */
     private $name;
-
-
 
     public function getId(): ?int
     {
@@ -91,7 +94,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->username;
     }
 
-
     /**
      * @see UserInterface
      */
@@ -111,7 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
     /**
      * @see UserInterface
      */
@@ -127,19 +128,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
-  
+
     public function setPlainPassword(string $password): self
     {
         $this->plainPassword = $password;
 
         return $this;
     }
-
 
     /**
      * Returning a salt is only needed, if you are not using a modern
@@ -155,12 +154,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
 
     public function getName(): ?string
     {
@@ -173,5 +171,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

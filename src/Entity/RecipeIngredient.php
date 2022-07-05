@@ -1,20 +1,26 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Entité de jointure des ingrédients composant la recette
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
+use App\Constant\Unity;
 use App\Repository\RecipeIngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Constant\Unity;
 
 /**
+ * Entité de jointure des ingrédients composant la recette.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
  * @ORM\Entity(repositoryClass=RecipeIngredientRepository::class)
  */
 class RecipeIngredient
@@ -27,15 +33,16 @@ class RecipeIngredient
     private $id;
 
     /**
-     * Jointure avec les recettes
-     * 
+     * Jointure avec les recettes.
+     *
      * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="ingredients")
      * @ORM\JoinColumn(nullable=false)
      */
     private $recipe;
 
     /**
-     * Jointure avec les ingédients
+     * Jointure avec les ingédients.
+     *
      * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank
@@ -43,33 +50,31 @@ class RecipeIngredient
     private $ingredient;
 
     /**
-     * Quantité de l'ingrédient de la recette
-     * 
-     * @var Integer
+     * Quantité de l'ingrédient de la recette.
+     *
+     * @var int
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $quantity;
 
     /**
-     * Jointure avec l'unité de la quantité de l'ingrédient
-     * 
+     * Jointure avec l'unité de la quantité de l'ingrédient.
+     *
      * @ORM\Column(type="unity")
      */
     private $unity;
 
     /**
-     * Note supplémentaire
-     * 
+     * Note supplémentaire.
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $note;
-
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getRecipe(): ?Recipe
     {
@@ -83,7 +88,6 @@ class RecipeIngredient
         return $this;
     }
 
-
     public function getIngredient(): ?Ingredient
     {
         return $this->ingredient;
@@ -95,7 +99,6 @@ class RecipeIngredient
 
         return $this;
     }
-
 
     public function getQuantity(): ?int
     {
@@ -109,7 +112,6 @@ class RecipeIngredient
         return $this;
     }
 
-
     public function getUnity(): ?Unity
     {
         return $this->unity;
@@ -122,7 +124,6 @@ class RecipeIngredient
         return $this;
     }
 
-    
     public function getNote(): ?string
     {
         return $this->note;
@@ -135,13 +136,11 @@ class RecipeIngredient
         return $this;
     }
 
-
     /**
-     * Retourne le nombre de calories de l'ingrédient
+     * Retourne le nombre de calories de l'ingrédient.
      */
     public function getCalories(): ?int
     {
         return $this->getIngredient()->getCalories($this->quantity, $this->unity);
     }
-
 }

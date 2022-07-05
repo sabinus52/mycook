@@ -1,35 +1,39 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Données initiales de l'applicaton
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
 
+use App\Constant\Unity;
 use App\Entity\Category;
 use App\Entity\Ingredient;
-use App\Constant\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-
+/**
+ * Données initiales de l'applicaton.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ */
 class AppFixtures extends Fixture
 {
-
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->loadCategories($manager);
         $this->loadIngredients($manager);
     }
 
-
     /**
-     * Chargement des catégories
+     * Chargement des catégories.
      */
-    private function loadCategories(ObjectManager $manager)
+    private function loadCategories(ObjectManager $manager): void
     {
         $category = new Category();
         $category->setName('Entrées');
@@ -46,11 +50,10 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
-
     /**
-     * Chargement des ingrédients
+     * Chargement des ingrédients.
      */
-    private function loadIngredients(ObjectManager $manager)
+    private function loadIngredients(ObjectManager $manager): void
     {
         $ingredient = new Ingredient();
         $ingredient->setName('Oeuf')->setCalorie(155)->setUnity(new Unity(Unity::NUMBER))->setConversion(60);
@@ -166,5 +169,4 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
-
 }

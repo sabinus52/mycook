@@ -1,25 +1,31 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Entité d'une recette
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
+use App\Constant\Difficulty;
+use App\Constant\Rate;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Constant\Difficulty;
-use App\Constant\Rate;
 
 /**
+ * Entité d'une recette.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
- * @ORM\HasLifecycleCallbacks()
+ * @ORM\HasLifecycleCallbacks
  */
 class Recipe
 {
@@ -31,47 +37,47 @@ class Recipe
     private $id;
 
     /**
-     * Nom de la recette
-     * 
-     * @var String
+     * Nom de la recette.
+     *
+     * @var string
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
     private $name;
 
     /**
-     * Nombre de personne pour les quantités définies dans la recette
-     * 
-     * @var Integer
+     * Nombre de personne pour les quantités définies dans la recette.
+     *
+     * @var int
      * @ORM\Column(type="smallint")
      * @Assert\NotNull
      * @Assert\Type(type="integer")
-     * @Assert\Range(min = 1, max = 12)
+     * @Assert\Range(min=1, max=12)
      */
     private $person;
 
     /**
-     * Niveau de difficulté de la recette
-     * 
-     * @var Integer
+     * Niveau de difficulté de la recette.
+     *
+     * @var int
      * @ORM\Column(type="difficulty")
      * @Assert\NotNull
      */
     private $difficulty;
 
     /**
-     * Coût de la recette
-     * 
-     * @var Integer
+     * Coût de la recette.
+     *
+     * @var int
      * @ORM\Column(type="rate")
      * @Assert\NotNull
      */
     private $rate;
 
     /**
-     * Temps de préparation en minutes
-     * 
-     * @var Integer
+     * Temps de préparation en minutes.
+     *
+     * @var int
      * @ORM\Column(name="time_preparation", type="smallint")
      * @Assert\NotNull
      * @Assert\Type(type="integer")
@@ -79,46 +85,45 @@ class Recipe
     private $timePreparation;
 
     /**
-     * Temps de cuisson en minutes
-     * 
-     * @var Integer
+     * Temps de cuisson en minutes.
+     *
+     * @var int
      * @ORM\Column(name="time_cooking", type="smallint", nullable=true)
      * @Assert\Type(type="integer")
      */
     private $timeCooking;
 
     /**
-     * Nombre de calories de la recette
-     * 
-     * @var Integer
+     * Nombre de calories de la recette.
+     *
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Type(type="integer")
      */
     private $calorie;
 
     /**
-     * Jointure avec les catégories
-     * 
+     * Jointure avec les catégories.
+     *
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
      */
     private $categories;
 
     /**
-     * Jointure avec les étapes
-     * 
+     * Jointure avec les étapes.
+     *
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
-     * @Assert\Valid()
+     * @Assert\Valid
      */
     private $steps;
 
     /**
-     * Jointure avec les ingrédients
-     * 
+     * Jointure avec les ingrédients.
+     *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
-     * @Assert\Valid()
+     * @Assert\Valid
      */
     private $ingredients;
-
 
     public function __construct()
     {
@@ -127,8 +132,6 @@ class Recipe
         $this->ingredients = new ArrayCollection();
         $this->steps = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -303,10 +306,9 @@ class Recipe
         return $this;
     }
 
-
     /**
-     * Calcul de nombre de calories de la recette par personne
-     * 
+     * Calcul de nombre de calories de la recette par personne.
+     *
      * @ORM\PreUpdate
      * @ORM\PrePersist
      */
@@ -317,17 +319,18 @@ class Recipe
         // Pour chaque ingrédient de la recette
         foreach ($this->ingredients as $ingredient) {
             $cal = $ingredient->getCalories();
-            if ( $cal === null ) {
+            if (null === $cal) {
                 // Manque les calories d'un élément donc impossible de calculer
                 $this->calorie = null;
+
                 return null;
             }
-            $calories+= $cal;
+            $calories += $cal;
         }
 
         // Nombre de calories par personne
         $this->calorie = round($calories / $this->person);
+
         return $this->calorie;
     }
-
 }

@@ -1,32 +1,35 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Controleur de la sécurité de l'application
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Controller;
 
 use App\Form\UserPasswordType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * Controleur de la sécurité de l'application.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ */
 class SecurityController extends AbstractController
 {
-
     /**
-     * Connexion
-     * 
+     * Connexion.
+     *
      * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -43,22 +46,20 @@ class SecurityController extends AbstractController
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-
     /**
-     * Déconnexion
-     * 
+     * Déconnexion.
+     *
      * @Route("/logout", name="app_logout")
      */
-    public function logout()
+    public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-
     /**
-     * Changement du password
-     * 
-     * @Route("/change-password", name="app_change_password", methods={"GET","POST"})
+     * Changement du password.
+     *
+     * @Route("/change-password", name="app_change_password", methods={"GET", "POST"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
@@ -68,12 +69,10 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserPasswordType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {           
-
+        if ($form->isSubmitted() && $form->isValid()) {
             $oldPassword = $form->get('oldPassword')->getData();
 
             if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
-
                 $newEncodedPassword = $passwordEncoder->hashPassword($user, $user->getPlainPassword());
                 $user->setPassword($newEncodedPassword);
 
@@ -81,7 +80,6 @@ class SecurityController extends AbstractController
                 $this->getDoctrine()->getManager()->flush();
 
                 return $this->redirectToRoute('app_change_password');
-
             }
 
             $this->addFlash('danger', 'Votre mot de passe n\'a pas pu être changé !');
@@ -91,5 +89,4 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 }
