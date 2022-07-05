@@ -18,7 +18,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
@@ -60,7 +61,7 @@ class SecurityController extends AbstractController
      * @Route("/change-password", name="app_change_password", methods={"GET","POST"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
         $user = $this->getUser();
 
@@ -69,11 +70,11 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {           
 
-            $oldPassword = $request->request->get('user_password')['oldPassword'];
+            $oldPassword = $form->get('oldPassword')->getData();
 
             if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
 
-                $newEncodedPassword = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+                $newEncodedPassword = $passwordEncoder->hashPassword($user, $user->getPlainPassword());
                 $user->setPassword($newEncodedPassword);
 
                 $this->addFlash('success', 'Votre mot de passe à bien été changé !');
