@@ -59,7 +59,11 @@ class IngredientToNameTransformer implements DataTransformerInterface
      */
     public function reverseTransform($name): ?Ingredient
     {
-        // Recherche l'ingrédient en fonction de son nom
+        /**
+         * Recherche l'ingrédient en fonction de son nom.
+         *
+         * @phpstan-ignore-next-line
+         */
         $ingredient = $this->entityManager
             ->getRepository(Ingredient::class)
             ->findOneByName($name)

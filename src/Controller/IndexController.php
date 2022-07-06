@@ -32,10 +32,10 @@ class IndexController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         // Les catégories où il y a le plus de recettes
-        $categories = $entityManager->getRepository(Category::class)->findMostRecipes(6);
+        $categories = $entityManager->getRepository(Category::class)->findMostRecipes(6); /** @phpstan-ignore-line */
 
         // Les recettes les plus populaires
-        $recipes = $entityManager->getRepository(Recipe::class)->findMostPopular(6);
+        $recipes = $entityManager->getRepository(Recipe::class)->findMostPopular(6); // @phpstan-ignore-line
 
         return $this->render('home.html.twig', [
             'recipes' => $recipes,

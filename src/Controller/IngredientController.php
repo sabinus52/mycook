@@ -21,6 +21,7 @@ use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -59,7 +60,7 @@ class IngredientController extends AbstractController
         $session->set('ingredient.filter.route', $request->get('_route'));
 
         return $this->render('ingredient/index.html.twig', [
-            'ingredients' => $ingredientRepository->findByCalorie(null),
+            'ingredients' => $ingredientRepository->findByCalorie(null), // @phpstan-ignore-line
         ]);
     }
 
@@ -80,7 +81,7 @@ class IngredientController extends AbstractController
      */
     public function isExists(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
-        $ingredient = $ingredientRepository->findOneByName($request->get('term'));
+        $ingredient = $ingredientRepository->findOneByName($request->get('term')); // @phpstan-ignore-line
 
         if (!$ingredient) {
             return new JsonResponse(['id' => 0, 'name' => $request->get('term'), 'unity' => '']);
@@ -135,9 +136,9 @@ class IngredientController extends AbstractController
 
             $this->updateRecipeCalories($ingredient);
 
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été ajouté avec succès');
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été ajouté avec succès');
 
-            return $this->redirectToRoute($session);
+            return $this->redirectToRoute2($session->get('ingredient.filter.route'));
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -174,9 +175,9 @@ class IngredientController extends AbstractController
 
             $this->updateRecipeCalories($ingredient);
 
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été modifié avec succès');
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été modifié avec succès');
 
-            return $this->redirectToRoute($session);
+            return $this->redirectToRoute2($session->get('ingredient.filter.route'));
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -193,14 +194,14 @@ class IngredientController extends AbstractController
      */
     public function delete(Request $request, Ingredient $ingredient): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), (string) $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($ingredient);
             $entityManager->flush();
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été supprimé avec succès');
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été supprimé avec succès');
         }
 
-        return $this->redirectToRoute('ingredient_index');
+        return $this->redirectToRoute2('ingredient_index');
     }
 
     /**
@@ -211,11 +212,11 @@ class IngredientController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         // Récupération des recettes avec l'ingrédient
-        $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient);
+        $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient); // @phpstan-ignore-line
 
         // Pour chaque recette
         foreach ($recipesIngredients as $recipeIngredient) {
-            $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId());
+            $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId()); // @phpstan-ignore-line
             $recipe->setCalorie(0);
             $entityManager->persist($recipe);
         }
@@ -225,14 +226,9 @@ class IngredientController extends AbstractController
 
     /**
      * Redirection de la route en fonction de la route du filtre enregistré dans la session.
-     *
-     * @param SessionInterface
-     *
-     * @return Route
      */
-    private function redirectToRoute(SessionInterface $session)
+    protected function redirectToRoute2(string $route): RedirectResponse
     {
-        $route = $session->get('ingredient.filter.route');
         $route = (empty($route)) ? 'ingredient_index' : $route;
 
         return $this->redirectToRoute($route);

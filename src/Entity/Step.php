@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\StepRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,16 +25,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Step
 {
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $id; /** @phpstan-ignore-line */
 
     /**
      * Contenu ou description de l'étape.
      *
      * @var string
+     *
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      */
@@ -44,6 +46,8 @@ class Step
     /**
      * Jointure avec les recettes.
      *
+     * @var Recipe
+     *
      * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="steps")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -51,7 +55,6 @@ class Step
 
     public function __construct()
     {
-        $this->steps = new ArrayCollection();
     }
 
     public function getId(): ?int

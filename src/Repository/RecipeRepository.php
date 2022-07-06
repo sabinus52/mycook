@@ -52,6 +52,8 @@ class RecipeRepository extends ServiceEntityRepository
      * Recherche les recettes par catégorie.
      *
      * @param Category $categorie : Catégorie à filtrer
+     *
+     * @return Recipe[]
      */
     public function findByCategory(Category $categorie): array
     {
@@ -68,6 +70,8 @@ class RecipeRepository extends ServiceEntityRepository
      * Retourne les recettes les plus populaires.
      *
      * @param int $count : Nombre d'occ à retourner
+     *
+     * @return Recipe[]
      */
     public function findMostPopular(?int $count = null): array
     {

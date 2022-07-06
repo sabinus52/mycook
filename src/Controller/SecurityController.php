@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\UserPasswordType;
 use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -65,6 +66,7 @@ class SecurityController extends AbstractController
      */
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         $form = $this->createForm(UserPasswordType::class, $user);

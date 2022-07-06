@@ -32,12 +32,12 @@ class IngredientRepository extends ServiceEntityRepository
     /**
      * Recherche par nom de l'ingredient.
      *
-     * @param string $term : Valeur à rechercher
-     * @param string $mode : Hydratation mode de retour du résultat
+     * @param string             $term : Valeur à rechercher
+     * @param 1|2|3|4|5|6|string $mode : Hydratation mode de retour du résultat
      *
-     * @return array
+     * @return array<mixed>
      */
-    public function searchByName($term, $mode = Query::HYDRATE_OBJECT)
+    public function searchByName($term, $mode = Query::HYDRATE_OBJECT): array
     {
         return $this->createQueryBuilder('i')
             ->where('i.name LIKE :term')

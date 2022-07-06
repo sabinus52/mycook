@@ -13,7 +13,6 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,16 +26,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Category
 {
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $id; /** @phpstan-ignore-line */
 
     /**
      * Nom de la catégorie.
      *
      * @var string
+     *
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank
      */
@@ -44,6 +46,8 @@ class Category
 
     /**
      * Jointure avec les recettes.
+     *
+     * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="categories")
      */
@@ -72,9 +76,9 @@ class Category
     }
 
     /**
-     * @return Collection|Recipe[]
+     * @return ArrayCollection|Recipe[]
      */
-    public function getRecipes(): Collection
+    public function getRecipes(): ArrayCollection
     {
         return $this->recipes;
     }

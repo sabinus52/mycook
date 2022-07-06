@@ -26,8 +26,8 @@ class RecipeUploader extends FileUploader
      */
     public function upload(UploadedFile $file, Recipe $recipe): bool
     {
-        $this->removeCacheThumb($recipe->getId());
+        $this->removeCacheThumb((string) $recipe->getId());
 
-        return $this->move($file, $recipe->getId());
+        return $this->move($file, (string) $recipe->getId());
     }
 }

@@ -25,6 +25,9 @@ class Difficulty
     public const MEDIUM = 2;
     public const HARD = 3;
 
+    /**
+     * @var array<string>
+     */
     private static $difficulties = [
         self::EASY => 'Facile',
         self::MEDIUM => 'Moyen',
@@ -70,6 +73,8 @@ class Difficulty
 
     /**
      * Retourne la liste des niveaux de difficulté.
+     *
+     * @return array<string>
      */
     public static function getConstants(): array
     {
@@ -78,6 +83,8 @@ class Difficulty
 
     /**
      * Retourne la liste pour les formulaires de type "choices".
+     *
+     * @return array<Difficulty>
      */
     public static function getChoices(): array
     {

@@ -26,21 +26,33 @@ class RateType extends Type
 {
     public const RATE = 'rate';
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'smallint';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return new Rate($value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return $value->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return self::RATE;

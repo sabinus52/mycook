@@ -40,6 +40,9 @@ class Unity
     public const CLITRE = 'cl';
     public const MLITRE = 'ml';
 
+    /**
+     * @var array<mixed>
+     */
     private static $unities = [
         self::NUMBER => ['type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '',      'conversion' => null],
         self::KILO => ['type' => self::WEIGHT,    'label' => 'kilo(s)',              'symbol' => 'Kg',    'conversion' => 1000],
@@ -118,6 +121,8 @@ class Unity
 
     /**
      * Retourne la liste des niveaux de cout.
+     *
+     * @return array<mixed>
      */
     public static function getConstants(): array
     {
@@ -126,6 +131,8 @@ class Unity
 
     /**
      * Retourne la liste pour les formulaires de type "choices".
+     *
+     * @return array<Unity>
      */
     public static function getChoices(): array
     {
@@ -154,8 +161,8 @@ class Unity
     /**
      * Convertit à partir de sa propre unité vers la nouvelle unité.
      *
-     * @param float $quantity : Quantité à convertir
-     * @param Const $unity    : Unité cible convertie
+     * @param float  $quantity : Quantité à convertir
+     * @param string $unity    : Unité cible convertie
      */
     public function convert(?float $quantity, $unity): float
     {

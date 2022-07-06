@@ -14,7 +14,6 @@ namespace App\Entity;
 use App\Constant\Unity;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,27 +29,34 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Ingredient
 {
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $id; /** @phpstan-ignore-line */
 
     /**
      * Nom de l'ingrédient.
      *
      * @var string
+     *
      * @ORM\Column(type="string", length=100, unique=true)
      * @Assert\NotBlank
      */
     private $name;
 
     /**
+     * @var Unity
+     *
      * @ORM\Column(type="unity")
      */
     private $unity;
 
     /**
+     * @var int
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $conversion;
@@ -59,12 +65,15 @@ class Ingredient
      * Nombre de calorie pour 100 gramme.
      *
      * @var int
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $calorie;
 
     /**
      * Jointure avec les recettes.
+     *
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="ingredient")
      */
@@ -105,12 +114,12 @@ class Ingredient
         return $this;
     }
 
-    public function getConversion(): ?string
+    public function getConversion(): ?int
     {
         return $this->conversion;
     }
 
-    public function setConversion(?string $conversion): self
+    public function setConversion(?int $conversion): self
     {
         $this->conversion = $conversion;
 
@@ -130,9 +139,9 @@ class Ingredient
     }
 
     /**
-     * @return Collection|RecipeIngredient[]
+     * @return ArrayCollection|RecipeIngredient[]
      */
-    public function getRecipes(): Collection
+    public function getRecipes(): ArrayCollection
     {
         return $this->recipes;
     }
@@ -165,7 +174,7 @@ class Ingredient
      * @param float $quantity : Quantity de l'ingrédient
      * @param Unity $source   : Unité de la quantité
      */
-    public function getInGram(?float $quantity, Unity $source): ?int
+    public function getInGram(?float $quantity, Unity $source): ?float
     {
         if (!$source->isNumber()) {
             // Si pas un nombre, on peut convertir directement en gramme
@@ -197,6 +206,6 @@ class Ingredient
             return null;
         }
 
-        return round($mass * $this->calorie / 100);
+        return (int) round($mass * $this->calorie / 100);
     }
 }

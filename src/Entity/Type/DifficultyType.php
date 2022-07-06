@@ -26,21 +26,33 @@ class DifficultyType extends Type
 {
     public const DIFFICULTY = 'difficulty';
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'smallint';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return new Difficulty($value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return $value->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return self::DIFFICULTY;

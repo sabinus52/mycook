@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,9 +32,9 @@ class RecipeIngredientRepository extends ServiceEntityRepository
     /**
      * Retourne dans un tableau les unités les plus utilisées par ingredient.
      *
-     * @return array [ID_ingredient] => Unity
+     * @return array<Ingredient>
      */
-    public function findMostPopularityUnityByIngredient()
+    public function findMostPopularityUnityByIngredient(): array
     {
         $query = $this->createQueryBuilder('ri')
             ->addSelect('COUNT(ri.unity)')

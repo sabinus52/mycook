@@ -26,21 +26,33 @@ class UnityType extends Type
 {
     public const UNITY = 'unity';
 
+    /**
+     * {@inheritdoc}
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'VARCHAR(2)';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         return new Unity($value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         return $value->getValue();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return self::UNITY;

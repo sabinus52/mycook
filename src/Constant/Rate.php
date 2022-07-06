@@ -25,6 +25,9 @@ class Rate
     public const MEDIUM = 2;
     public const EXPENSIVE = 3;
 
+    /**
+     * @var array<string>
+     */
     private static $rates = [
         self::CHEAP => 'Bon marché',
         self::MEDIUM => 'Moyen',
@@ -70,6 +73,8 @@ class Rate
 
     /**
      * Retourne la liste des niveaux de cout.
+     *
+     * @return array<string>
      */
     public static function getConstants(): array
     {
@@ -78,6 +83,8 @@ class Rate
 
     /**
      * Retourne la liste pour les formulaires de type "choices".
+     *
+     * @return array<Rate>
      */
     public static function getChoices(): array
     {

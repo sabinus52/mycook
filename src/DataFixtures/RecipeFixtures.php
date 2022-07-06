@@ -51,7 +51,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Chocolat'))
+            ->setIngredient($repo->findOneByName('Chocolat')) // @phpstan-ignore-line
             ->setQuantity(200)
             ->setUnity(new Unity(Unity::GRAM))
         ;
@@ -59,7 +59,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Mascarpone'))
+            ->setIngredient($repo->findOneByName('Mascarpone')) // @phpstan-ignore-line
             ->setQuantity(1)
             ->setUnity(new Unity(Unity::CUP))
         ;
@@ -67,7 +67,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Oeuf'))
+            ->setIngredient($repo->findOneByName('Oeuf')) // @phpstan-ignore-line
             ->setQuantity(4)
             ->setUnity(new Unity(Unity::NUMBER))
         ;
@@ -75,7 +75,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Farine'))
+            ->setIngredient($repo->findOneByName('Farine')) // @phpstan-ignore-line
             ->setQuantity(40)
             ->setUnity(new Unity(Unity::GRAM))
         ;
@@ -83,7 +83,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Sucre'))
+            ->setIngredient($repo->findOneByName('Sucre')) // @phpstan-ignore-line
             ->setQuantity(0)
             ->setUnity(new Unity(Unity::GRAM))
             ->setNote('1 sachet de sucre vanillé')
@@ -127,7 +127,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Saucisse de Morteau'))
+            ->setIngredient($repo->findOneByName('Saucisse de Morteau')) // @phpstan-ignore-line
             ->setQuantity(1)
             ->setUnity(new Unity(Unity::NUMBER))
         ;
@@ -135,7 +135,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Pomme de terre'))
+            ->setIngredient($repo->findOneByName('Pomme de terre')) // @phpstan-ignore-line
             ->setQuantity(800)
             ->setUnity(new Unity(Unity::GRAM))
         ;
@@ -143,7 +143,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Oignon'))
+            ->setIngredient($repo->findOneByName('Oignon')) // @phpstan-ignore-line
             ->setQuantity(2)
             ->setUnity(new Unity(Unity::NUMBER))
         ;
@@ -151,14 +151,14 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Sel'))
+            ->setIngredient($repo->findOneByName('Sel')) // @phpstan-ignore-line
             ->setUnity(new Unity(Unity::GRAM))
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Poivre'))
+            ->setIngredient($repo->findOneByName('Poivre')) // @phpstan-ignore-line
             ->setUnity(new Unity(Unity::GRAM))
         ;
         $recipe->addIngredient($ingredient);
@@ -190,7 +190,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Asperge verte'))
+            ->setIngredient($repo->findOneByName('Asperge verte')) // @phpstan-ignore-line
             ->setQuantity(500)
             ->setUnity(new Unity(Unity::GRAM))
         ;
@@ -198,7 +198,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Jambon'))
+            ->setIngredient($repo->findOneByName('Jambon')) // @phpstan-ignore-line
             ->setQuantity(3)
             ->setUnity(new Unity(Unity::NUMBER))
         ;
@@ -206,7 +206,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Gorgonzola'))
+            ->setIngredient($repo->findOneByName('Gorgonzola')) // @phpstan-ignore-line
             ->setQuantity(150)
             ->setUnity(new Unity(Unity::GRAM))
         ;
@@ -214,7 +214,7 @@ class RecipeFixtures extends Fixture
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Crème fraiche'))
+            ->setIngredient($repo->findOneByName('Crème fraiche')) // @phpstan-ignore-line
             ->setQuantity(20)
             ->setUnity(new Unity(Unity::CLITRE))
         ;

@@ -135,7 +135,7 @@ class RecipeController extends AbstractController
      */
     public function delete(Request $request, Recipe $recipe): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($recipe);
             $entityManager->flush();
@@ -157,7 +157,11 @@ class RecipeController extends AbstractController
             ->findAll()
         ;
 
-        // Récupération par ingrédient l'unité la plus utilisée
+        /**
+         * Récupération par ingrédient l'unité la plus utilisée.
+         *
+         * @phpstan-ignore-next-line
+         */
         $ingredientsByUnity = $this->getDoctrine()
             ->getRepository(RecipeIngredient::class)
             ->findMostPopularityUnityByIngredient()

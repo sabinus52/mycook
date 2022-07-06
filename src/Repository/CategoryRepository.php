@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,6 +33,8 @@ class CategoryRepository extends ServiceEntityRepository
      * Retourne les catégories où il y a le plus de recettes.
      *
      * @param int $count : Nombre d'occ à retourner
+     *
+     * @return array<Recipe>
      */
     public function findMostRecipes(?int $count = null): array
     {

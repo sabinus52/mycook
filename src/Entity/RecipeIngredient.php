@@ -26,14 +26,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RecipeIngredient
 {
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $id; /** @phpstan-ignore-line */
 
     /**
      * Jointure avec les recettes.
+     *
+     * @var Recipe
      *
      * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="ingredients")
      * @ORM\JoinColumn(nullable=false)
@@ -42,6 +46,8 @@ class RecipeIngredient
 
     /**
      * Jointure avec les ingédients.
+     *
+     * @var Ingredient
      *
      * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
@@ -53,6 +59,7 @@ class RecipeIngredient
      * Quantité de l'ingrédient de la recette.
      *
      * @var int
+     *
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $quantity;
@@ -60,12 +67,16 @@ class RecipeIngredient
     /**
      * Jointure avec l'unité de la quantité de l'ingrédient.
      *
+     * @var Unity
+     *
      * @ORM\Column(type="unity")
      */
     private $unity;
 
     /**
      * Note supplémentaire.
+     *
+     * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
      */

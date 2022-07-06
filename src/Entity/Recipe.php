@@ -15,7 +15,6 @@ use App\Constant\Difficulty;
 use App\Constant\Rate;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,16 +29,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Recipe
 {
     /**
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private $id; /** @phpstan-ignore-line */
 
     /**
      * Nom de la recette.
      *
      * @var string
+     *
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
@@ -49,6 +51,7 @@ class Recipe
      * Nombre de personne pour les quantités définies dans la recette.
      *
      * @var int
+     *
      * @ORM\Column(type="smallint")
      * @Assert\NotNull
      * @Assert\Type(type="integer")
@@ -59,7 +62,8 @@ class Recipe
     /**
      * Niveau de difficulté de la recette.
      *
-     * @var int
+     * @var Difficulty
+     *
      * @ORM\Column(type="difficulty")
      * @Assert\NotNull
      */
@@ -68,7 +72,8 @@ class Recipe
     /**
      * Coût de la recette.
      *
-     * @var int
+     * @var Rate
+     *
      * @ORM\Column(type="rate")
      * @Assert\NotNull
      */
@@ -78,6 +83,7 @@ class Recipe
      * Temps de préparation en minutes.
      *
      * @var int
+     *
      * @ORM\Column(name="time_preparation", type="smallint")
      * @Assert\NotNull
      * @Assert\Type(type="integer")
@@ -88,6 +94,7 @@ class Recipe
      * Temps de cuisson en minutes.
      *
      * @var int
+     *
      * @ORM\Column(name="time_cooking", type="smallint", nullable=true)
      * @Assert\Type(type="integer")
      */
@@ -96,7 +103,8 @@ class Recipe
     /**
      * Nombre de calories de la recette.
      *
-     * @var int
+     * @var int|null
+     *
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Type(type="integer")
      */
@@ -105,12 +113,16 @@ class Recipe
     /**
      * Jointure avec les catégories.
      *
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
      */
     private $categories;
 
     /**
      * Jointure avec les étapes.
+     *
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      * @Assert\Valid
@@ -119,6 +131,8 @@ class Recipe
 
     /**
      * Jointure avec les ingrédients.
+     *
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      * @Assert\Valid
@@ -223,9 +237,9 @@ class Recipe
     }
 
     /**
-     * @return Collection|Category[]
+     * @return ArrayCollection|Category[]
      */
-    public function getCategory(): Collection
+    public function getCategory(): ArrayCollection
     {
         return $this->categories;
     }
@@ -247,9 +261,9 @@ class Recipe
     }
 
     /**
-     * @return Collection|self[]
+     * @return ArrayCollection|Step[]
      */
-    public function getSteps(): ?Collection
+    public function getSteps(): ?ArrayCollection
     {
         return $this->steps;
     }
@@ -277,9 +291,9 @@ class Recipe
     }
 
     /**
-     * @return Collection|RecipeIngredient[]
+     * @return ArrayCollection|RecipeIngredient[]
      */
-    public function getIngredients(): Collection
+    public function getIngredients(): ArrayCollection
     {
         return $this->ingredients;
     }
@@ -329,7 +343,7 @@ class Recipe
         }
 
         // Nombre de calories par personne
-        $this->calorie = round($calories / $this->person);
+        $this->calorie = (int) round($calories / $this->person);
 
         return $this->calorie;
     }
