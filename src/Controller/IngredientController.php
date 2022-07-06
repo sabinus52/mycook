@@ -137,7 +137,7 @@ class IngredientController extends AbstractController
 
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été ajouté avec succès');
 
-            return $this->_redirectToRoute($session);
+            return $this->redirectToRoute($session);
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -176,7 +176,7 @@ class IngredientController extends AbstractController
 
             $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été modifié avec succès');
 
-            return $this->_redirectToRoute($session);
+            return $this->redirectToRoute($session);
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -230,7 +230,7 @@ class IngredientController extends AbstractController
      *
      * @return Route
      */
-    private function _redirectToRoute(SessionInterface $session)
+    private function redirectToRoute(SessionInterface $session)
     {
         $route = $session->get('ingredient.filter.route');
         $route = (empty($route)) ? 'ingredient_index' : $route;

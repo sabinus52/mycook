@@ -96,6 +96,10 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "phpmd": [
+            "phpmd src ansi ruleset.xml",
+            "phpmd tests ansi ruleset.xml"
+        ],
         "codestyle": "php-cs-fixer fix --dry-run --verbose --diff",
         "codestyle-fix": "php-cs-fixer fix"
     },

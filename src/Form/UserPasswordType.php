@@ -23,6 +23,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire du changement de mot de passe.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class UserPasswordType extends AbstractType
 {

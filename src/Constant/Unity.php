@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Constant;
 
+use Exception;
+
 /**
  * Classe statique sur les unités des quantités.
  *
@@ -128,7 +130,7 @@ class Unity
     public static function getChoices(): array
     {
         $result = [];
-        foreach (self::$unities as $key => $value) {
+        foreach (array_keys(self::$unities) as $key) {
             $result[] = new self($key);
         }
 
@@ -143,7 +145,7 @@ class Unity
     public function getInGram(?float $quantity): float
     {
         if ($this->isNumber()) {
-            throw new \Exception('Impossible de convertir un nombre en gramme');
+            throw new Exception('Impossible de convertir un nombre en gramme');
         }
 
         return $quantity * $this->getConversion();
@@ -160,7 +162,7 @@ class Unity
         $target = new self($unity);
 
         if ($this->isNumber() || $target->isNumber()) {
-            throw new \Exception('Impossible de convertir un nombre');
+            throw new Exception('Impossible de convertir un nombre');
         }
         $gram = $this->getInGram($quantity);
 

@@ -21,6 +21,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire des étapes de la recette.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class StepType extends AbstractType
 {

@@ -29,6 +29,9 @@ use Symfony\Component\Validator\Constraints\Image;
  * Formulaire d'une recette.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RecipeType extends AbstractType
 {

@@ -25,6 +25,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class IngredientType extends AbstractType
 {

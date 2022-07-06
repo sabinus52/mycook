@@ -19,6 +19,8 @@ use Doctrine\DBAL\Types\Type;
  * Type personnalisé de mapping pour des unités dea quantités des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class UnityType extends Type
 {

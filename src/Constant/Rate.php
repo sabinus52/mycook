@@ -82,7 +82,7 @@ class Rate
     public static function getChoices(): array
     {
         $result = [];
-        foreach (self::$rates as $key => $value) {
+        foreach (array_keys(self::$rates) as $key) {
             $result[] = new self($key);
         }
 

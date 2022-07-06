@@ -19,6 +19,8 @@ use Doctrine\DBAL\Types\Type;
  * Type personnalisé de mapping pour les niveaux de difficulté d'une recette.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class DifficultyType extends Type
 {

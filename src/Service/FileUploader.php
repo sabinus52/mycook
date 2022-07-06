@@ -84,7 +84,11 @@ abstract class FileUploader
     {
         $imagine = new Imagine();
         $imagine->open($source)->save($target, ['jpeg_quality' => 85]);
-        @unlink($source);
+        try {
+            unlink($source);
+        } catch (\Throwable $th) {
+            return;
+        }
     }
 
     /**

@@ -23,6 +23,8 @@ use Symfony\Component\Validator\Constraints\Image;
  * Formulaire des catégories de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class CategoryType extends AbstractType
 {

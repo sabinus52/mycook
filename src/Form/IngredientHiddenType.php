@@ -21,6 +21,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire des ingrédients pour la création en AJAX.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class IngredientHiddenType extends AbstractType
 {

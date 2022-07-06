@@ -25,6 +25,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire de la liste des ingrédients de la recette.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
 class RecipeIngredientType extends AbstractType
 {

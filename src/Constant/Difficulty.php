@@ -82,7 +82,7 @@ class Difficulty
     public static function getChoices(): array
     {
         $result = [];
-        foreach (self::$difficulties as $key => $value) {
+        foreach (array_keys(self::$difficulties) as $key) {
             $result[] = new self($key);
         }
 
