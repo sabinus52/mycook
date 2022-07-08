@@ -39,7 +39,11 @@ class DifficultyType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new Difficulty($value);
+        if (null === $value) {
+            return null;
+        }
+
+        return new Difficulty((int) $value);
     }
 
     /**
@@ -47,6 +51,10 @@ class DifficultyType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if (null === $value) {
+            return null;
+        }
+
         return $value->getValue();
     }
 

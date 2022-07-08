@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace App\Constant;
 
+use Exception;
+
 /**
  * Classe statique sur les niveaux de couts.
  *
@@ -44,6 +46,9 @@ class Rate
      */
     public function __construct(int $rate)
     {
+        if (!array_key_exists($rate, self::$rates)) {
+            throw new Exception('La valeur "'.$rate.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$rates)));
+        }
         $this->rate = $rate;
     }
 

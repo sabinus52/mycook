@@ -39,7 +39,11 @@ class RateType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new Rate($value);
+        if (null === $value) {
+            return null;
+        }
+
+        return new Rate((int) $value);
     }
 
     /**
@@ -47,6 +51,10 @@ class RateType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if (null === $value) {
+            return null;
+        }
+
         return $value->getValue();
     }
 

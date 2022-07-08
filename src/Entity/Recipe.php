@@ -113,7 +113,7 @@ class Recipe
     /**
      * Jointure avec les catégories.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<Category>
      *
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
      */
@@ -122,7 +122,7 @@ class Recipe
     /**
      * Jointure avec les étapes.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<Step>
      *
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      * @Assert\Valid
@@ -132,7 +132,7 @@ class Recipe
     /**
      * Jointure avec les ingrédients.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<RecipeIngredient>
      *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      * @Assert\Valid
@@ -237,9 +237,9 @@ class Recipe
     }
 
     /**
-     * @return ArrayCollection|Category[]
+     * @return ArrayCollection<Category>|null
      */
-    public function getCategory(): ArrayCollection
+    public function getCategory()
     {
         return $this->categories;
     }
@@ -261,9 +261,9 @@ class Recipe
     }
 
     /**
-     * @return ArrayCollection|Step[]
+     * @return ArrayCollection<Step>|null
      */
-    public function getSteps(): ?ArrayCollection
+    public function getSteps()
     {
         return $this->steps;
     }
@@ -291,9 +291,9 @@ class Recipe
     }
 
     /**
-     * @return ArrayCollection|RecipeIngredient[]
+     * @return ArrayCollection<RecipeIngredient>|null
      */
-    public function getIngredients(): ArrayCollection
+    public function getIngredients()
     {
         return $this->ingredients;
     }

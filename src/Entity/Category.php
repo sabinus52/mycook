@@ -47,7 +47,7 @@ class Category
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<Recipe>
      *
      * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="categories")
      */
@@ -76,9 +76,9 @@ class Category
     }
 
     /**
-     * @return ArrayCollection|Recipe[]
+     * @return ArrayCollection<Recipe>|null
      */
-    public function getRecipes(): ArrayCollection
+    public function getRecipes()
     {
         return $this->recipes;
     }

@@ -68,6 +68,9 @@ class Unity
      */
     public function __construct(string $unity)
     {
+        if (!array_key_exists($unity, self::$unities)) {
+            throw new Exception('La valeur "'.$unity.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$unities)));
+        }
         $this->unity = $unity;
     }
 

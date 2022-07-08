@@ -73,7 +73,7 @@ class Ingredient
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection
+     * @var ArrayCollection<RecipeIngredient>
      *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="ingredient")
      */
@@ -139,9 +139,9 @@ class Ingredient
     }
 
     /**
-     * @return ArrayCollection|RecipeIngredient[]
+     * @return ArrayCollection<RecipeIngredient>|null
      */
-    public function getRecipes(): ArrayCollection
+    public function getRecipes()
     {
         return $this->recipes;
     }

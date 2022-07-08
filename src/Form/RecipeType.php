@@ -13,6 +13,7 @@ namespace App\Form;
 
 use App\Constant\Difficulty;
 use App\Constant\Rate;
+use App\Entity\Category;
 use App\Entity\Recipe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -69,7 +70,7 @@ class RecipeType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'label' => 'Catégories',
-                'class' => 'App:Category',
+                'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => true,
             ])
