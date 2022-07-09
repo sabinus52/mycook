@@ -29,13 +29,15 @@ class UnityType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return 'VARCHAR(2)';
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return Unity|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -48,6 +50,8 @@ class UnityType extends Type
 
     /**
      * {@inheritdoc}
+     *
+     * @return string|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -61,7 +65,7 @@ class UnityType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return self::UNITY;
     }

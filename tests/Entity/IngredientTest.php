@@ -34,6 +34,7 @@ final class IngredientTest extends KernelTestCase
     {
         $kernel = self::bootKernel();
 
+        // @phpstan-ignore-next-line
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager()
@@ -50,8 +51,8 @@ final class IngredientTest extends KernelTestCase
         $this->AssertFalse($unity->isNumber());
         static::assertSame($unity->getSymbol(), 'g');
         static::assertSame($unity->getLabel(), 'gramme(s)');
-        static::assertSame($unity->getInGram(100), 100);
-        static::assertSame($unity->convert(250, Unity::CUP), 1);
+        static::assertSame($unity->getInGram(100), 100.0);
+        static::assertSame($unity->convert(250, Unity::CUP), 1.0);
         static::assertSame($unity->convert(250, Unity::OUNCE), 8.82);
     }
 
@@ -77,42 +78,44 @@ final class IngredientTest extends KernelTestCase
      */
     public function testConversionInGramAndCalories($ingredient, $quantity, Unity $source, $mass, $calorie): void
     {
-        $ingredient = $this->entityManager->getRepository(Ingredient::class)->findOneByName($ingredient);
+        $ingredient = $this->entityManager->getRepository(Ingredient::class)->findOneByName($ingredient); // @phpstan-ignore-line
         static::assertSame($ingredient->getInGram($quantity, $source), $mass);
         static::assertSame($ingredient->getCalories($quantity, $source), $calorie);
     }
 
     /**
      * Données des ingrédients.
+     *
+     * @return array<mixed>
      */
     public function additionProvider(): array
     {
         return [
             // Ingredient, qt,     unité,                    poids, calories
-            ['Oeuf',     100,    new Unity(Unity::GRAM),     100, 155],  // 0
-            ['Beurre',   100,    new Unity(Unity::GRAM),     100, 717],
-            ['Lait',     100,    new Unity(Unity::GRAM),     100, 46],
-            ['Sucre',    100,    new Unity(Unity::GRAM),     100, 400],
-            ['Sel',      null,   new Unity(Unity::GRAM),     0,   null],
-            ['Oignon',   100,    new Unity(Unity::GRAM),     100, 37],  // 5
-            ['Poivre',   null,   new Unity(Unity::GRAM),     0,   0],
-            ['Banane',   100,    new Unity(Unity::GRAM),     100, 90],
-            ['Oeuf',     1,      new Unity(Unity::CUP),      250, 388],
-            ['Beurre',   1,      new Unity(Unity::CUP),      250, 1793],
-            ['Lait',     1,      new Unity(Unity::CUP),      250, 115],  // 10
-            ['Sucre',    1,      new Unity(Unity::CUP),      250, 1000],
-            ['Sel',      null,   new Unity(Unity::CUP),      0,   null],
-            ['Oignon',   1,      new Unity(Unity::CUP),      250, 93],
-            ['Poivre',   null,   new Unity(Unity::CUP),      0,   0],
-            ['Banane',   1,      new Unity(Unity::CUP),      250, 225],  // 15
-            ['Oeuf',     1,      new Unity(Unity::NUMBER),   60, 93],
+            ['Oeuf',     100,    new Unity(Unity::GRAM),     100.0, 155],  // 0
+            ['Beurre',   100,    new Unity(Unity::GRAM),     100.0, 717],
+            ['Lait',     100,    new Unity(Unity::GRAM),     100.0, 46],
+            ['Sucre',    100,    new Unity(Unity::GRAM),     100.0, 400],
+            ['Sel',      null,   new Unity(Unity::GRAM),     0.0,   null],
+            ['Oignon',   100,    new Unity(Unity::GRAM),     100.0, 37],  // 5
+            ['Poivre',   null,   new Unity(Unity::GRAM),     0.0,   0],
+            ['Banane',   100,    new Unity(Unity::GRAM),     100.0, 90],
+            ['Oeuf',     1,      new Unity(Unity::CUP),      250.0, 388],
+            ['Beurre',   1,      new Unity(Unity::CUP),      250.0, 1793],
+            ['Lait',     1,      new Unity(Unity::CUP),      250.0, 115],  // 10
+            ['Sucre',    1,      new Unity(Unity::CUP),      250.0, 1000],
+            ['Sel',      null,   new Unity(Unity::CUP),      0.0,   null],
+            ['Oignon',   1,      new Unity(Unity::CUP),      250.0, 93],
+            ['Poivre',   null,   new Unity(Unity::CUP),      0.0,   0],
+            ['Banane',   1,      new Unity(Unity::CUP),      250.0, 225],  // 15
+            ['Oeuf',     1,      new Unity(Unity::NUMBER),   60.0, 93],
             ['Beurre',   1,      new Unity(Unity::NUMBER),   null, null],
             ['Lait',     1,      new Unity(Unity::NUMBER),   null, null],
             ['Sucre',    1,      new Unity(Unity::NUMBER),   null, null],
             ['Sel',      null,   new Unity(Unity::NUMBER),   null, null], // 20
             ['Poivre',   null,   new Unity(Unity::NUMBER),   null, null],
-            ['Oignon',   1,      new Unity(Unity::NUMBER),   100, 37],
-            ['Banane',   1,      new Unity(Unity::NUMBER),   120, 108],
+            ['Oignon',   1,      new Unity(Unity::NUMBER),   100.0, 37],
+            ['Banane',   1,      new Unity(Unity::NUMBER),   120.0, 108],
         ];
     }
 
@@ -122,6 +125,5 @@ final class IngredientTest extends KernelTestCase
 
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

@@ -33,6 +33,7 @@ final class RecipeTest extends KernelTestCase
     {
         $kernel = self::bootKernel();
 
+        // @phpstan-ignore-next-line
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager()
@@ -47,12 +48,15 @@ final class RecipeTest extends KernelTestCase
      */
     public function testCalculCalories($recipe, $calorie): void
     {
+        /** @phpstan-ignore-next-line */
         $recipe = $this->entityManager->getRepository(Recipe::class)->findOneByName($recipe);
         static::assertSame($recipe->calculCalories(), $calorie);
     }
 
     /**
      * Données pour test des calculs de calories.
+     *
+     * @return array<mixed>
      */
     public function additionProviderCalorie(): array
     {
@@ -69,6 +73,5 @@ final class RecipeTest extends KernelTestCase
 
         // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

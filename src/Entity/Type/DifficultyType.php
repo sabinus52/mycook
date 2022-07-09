@@ -29,13 +29,15 @@ class DifficultyType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return 'smallint';
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return Difficulty|null
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
@@ -48,6 +50,8 @@ class DifficultyType extends Type
 
     /**
      * {@inheritdoc}
+     *
+     * @return int|null
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
@@ -61,7 +65,7 @@ class DifficultyType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return self::DIFFICULTY;
     }
