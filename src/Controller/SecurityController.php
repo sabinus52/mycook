@@ -12,13 +12,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserPasswordType;
 use LogicException;
+use Olix\BackOfficeBundle\Helper\Gravatar;
+use Olix\BackOfficeBundle\Security\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -36,16 +37,15 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
     }
 
     /**
@@ -59,37 +59,77 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * Changement des informations du profil.
+     *
+     * @Route("/profile", name="app_profile", methods={"GET", "POST"})
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
+     */
+    public function changeProfile(Request $request, UserManager $manager): Response
+    {
+        // Utilisation de la classe UserManager
+        /** @var User $user */
+        $user = $this->getUser();
+        $manager->setUser($user);
+        $gravatar = new Gravatar();
+
+        // Création du formulaire
+        $form = $manager->createFormProfileUser();
+
+        // Validation du formulaire de profile de l'utilisateur
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Update datas of this user
+            $user->setAvatar($gravatar->get($user->getEmail()));
+            $manager->setUser($form->getData())->update();
+            $this->addFlash('success', 'La modification des informations a bien été prise en compte');
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->renderForm('security/profile.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    /**
      * Changement du password.
      *
      * @Route("/change-password", name="app_change_password", methods={"GET", "POST"})
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
-    public function changePassword(Request $request, UserPasswordHasherInterface $passwordEncoder): Response
+    public function changePassword(Request $request, UserManager $manager): Response
     {
+        // Utilisation de la classe UserManager
         /** @var User $user */
         $user = $this->getUser();
+        $manager->setUser($user);
 
-        $form = $this->createForm(UserPasswordType::class, $user);
+        // Création du formulaire
+        $form = $manager->createFormProfilePassword();
+
         $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $isError = false;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $oldPassword = $form->get('oldPassword')->getData();
-
-            if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
-                $newEncodedPassword = $passwordEncoder->hashPassword($user, $user->getPlainPassword());
-                $user->setPassword($newEncodedPassword);
-
-                $this->addFlash('success', 'Votre mot de passe à bien été changé !');
-                $this->getDoctrine()->getManager()->flush();
+            if (!$form->isValid()) {
+                $form->addError(new FormError('Nouveau mot de passe incorrect'));
+                $isError = true;
+            }
+            if (!$manager->isPasswordValid($form->get('oldPassword')->getData())) {
+                $form->addError(new FormError('Ancien mot de passe incorrect'));
+                $isError = true;
+            }
+            if (!$isError) {
+                // Change password for this user
+                $manager->update($form->get('password')->getData());
+                $this->addFlash('success', 'La modification du mot de passe a bien été prise en compte');
 
                 return $this->redirectToRoute('app_change_password');
             }
-
-            $this->addFlash('danger', 'Votre mot de passe n\'a pas pu être changé !');
         }
 
-        return $this->render('security/password.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('security/password.html.twig', [
+            'form' => $form,
         ]);
     }
 }
