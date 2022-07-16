@@ -3,7 +3,7 @@ twig:
     #debug: '%kernel.debug%'
     #exception_controller: null
     form_themes: 
-        - 'bootstrap_4_horizontal_layout.html.twig'
+        - '@OlixBackOffice/Twig/form-theme-horizontal-layout.html.twig'
         - '_form/custom_types.html.twig'
     globals:
         uri_recipe: '%recipe_path%'
