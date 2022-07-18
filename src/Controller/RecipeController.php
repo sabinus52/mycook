@@ -18,6 +18,7 @@ use App\Form\IngredientHiddenType;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use App\Service\RecipeUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RecipeController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
     /**
      * Index ou liste des recettes.
      *
@@ -51,16 +57,17 @@ class RecipeController extends AbstractController
      * @Route("/create", name="recipe_create", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request, RecipeUploader $fileUploader): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
+        $this->entityManager = $entityManager;
+
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($recipe);
-            $entityManager->flush();
+            $this->entityManager->persist($recipe);
+            $this->entityManager->flush();
 
             $image = $form->get('image')->getData();
             if ($image) {
@@ -99,8 +106,10 @@ class RecipeController extends AbstractController
      * @Route("/{id}/update", name="recipe_update", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Recipe $recipe, RecipeUploader $fileUploader): Response
+    public function update(Request $request, Recipe $recipe, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
+        $this->entityManager = $entityManager;
+
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
@@ -110,7 +119,7 @@ class RecipeController extends AbstractController
                 $fileUploader->upload($image, $recipe);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $this->setPopularityUnityToIngredient();
 
@@ -133,10 +142,9 @@ class RecipeController extends AbstractController
      * @Route("/{id}", name="recipe_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, Recipe $recipe): Response
+    public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($recipe);
             $entityManager->flush();
         }
@@ -149,10 +157,8 @@ class RecipeController extends AbstractController
      */
     private function setPopularityUnityToIngredient(): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         // Récupération des tous les ingrédients
-        $ingredients = $this->getDoctrine()
+        $ingredients = $this->entityManager
             ->getRepository(Ingredient::class)
             ->findAll()
         ;
@@ -162,7 +168,7 @@ class RecipeController extends AbstractController
          *
          * @phpstan-ignore-next-line
          */
-        $ingredientsByUnity = $this->getDoctrine()
+        $ingredientsByUnity = $this->entityManager
             ->getRepository(RecipeIngredient::class)
             ->findMostPopularityUnityByIngredient()
         ;
@@ -177,9 +183,9 @@ class RecipeController extends AbstractController
             // Si changement d'unité, on met à jour l'unité la plus utilisée
             if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {
                 $ingredient->setUnity($unity);
-                $entityManager->persist($ingredient);
+                $this->entityManager->persist($ingredient);
             }
         }
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
 }

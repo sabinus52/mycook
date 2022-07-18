@@ -17,7 +17,9 @@ use App\Entity\RecipeIngredient;
 use App\Form\IngredientHiddenType;
 use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,6 +33,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * Controleur de la gestion des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  * @Route("/ingredient")
  */
@@ -100,14 +104,13 @@ class IngredientController extends AbstractController
      * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function createFromRecipe(Request $request): Response
+    public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientHiddenType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
@@ -123,18 +126,17 @@ class IngredientController extends AbstractController
      * @Route("/create", name="ingredient_create", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request, SessionInterface $session): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
-            $this->updateRecipeCalories($ingredient);
+            $this->updateRecipeCalories($ingredient, $entityManager);
 
             $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été ajouté avec succès');
 
@@ -165,15 +167,15 @@ class IngredientController extends AbstractController
      * @Route("/{id}/update", name="ingredient_update", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Ingredient $ingredient, SessionInterface $session): Response
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
-            $this->updateRecipeCalories($ingredient);
+            $this->updateRecipeCalories($ingredient, $entityManager);
 
             $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été modifié avec succès');
 
@@ -192,25 +194,30 @@ class IngredientController extends AbstractController
      * @Route("/{id}/delete", name="ingredient_delete", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, Ingredient $ingredient): Response
+    public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), (string) $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($ingredient);
-            $entityManager->flush();
+
+            try {
+                $entityManager->flush();
+            } catch (Exception $th) {
+                $this->addFlash('danger', "L'ingrédient <strong>".$ingredient->getName().'</strong> ne peut pas être supprimé');
+
+                return $this->redirectToRoute('ingredient_index');
+            }
+
             $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été supprimé avec succès');
         }
 
-        return $this->redirectToRoute2('ingredient_index');
+        return $this->redirectToRoute('ingredient_index');
     }
 
     /**
      * Mise à jour des calories suite à une mise à jour d'un ingrédient.
      */
-    private function updateRecipeCalories(Ingredient $ingredient): void
+    private function updateRecipeCalories(Ingredient $ingredient, EntityManagerInterface $entityManager): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         // Récupération des recettes avec l'ingrédient
         $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient); // @phpstan-ignore-line
 

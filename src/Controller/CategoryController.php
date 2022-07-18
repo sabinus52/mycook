@@ -16,6 +16,7 @@ use App\Entity\Recipe;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Service\CategoryUploader;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,14 +50,13 @@ class CategoryController extends AbstractController
      * @Route("/create", name="category_create", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request, CategoryUploader $fileUploader): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($category);
             $entityManager->flush();
 
@@ -79,10 +79,8 @@ class CategoryController extends AbstractController
      *
      * @Route("/{id}", name="category_show", methods={"GET"})
      */
-    public function show(Category $category): Response
+    public function show(Category $category, EntityManagerInterface $entityManager): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         $recipes = $entityManager->getRepository(Recipe::class)->findByCategory($category); // @phpstan-ignore-line
 
         return $this->render('category/show.html.twig', [
@@ -97,7 +95,7 @@ class CategoryController extends AbstractController
      * @Route("/{id}/update", name="category_update", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Category $category, CategoryUploader $fileUploader): Response
+    public function update(Request $request, Category $category, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
@@ -108,7 +106,7 @@ class CategoryController extends AbstractController
                 $fileUploader->upload($image, $category);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
@@ -125,12 +123,12 @@ class CategoryController extends AbstractController
      * @Route("/{id}", name="category_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, Category $category): Response
+    public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), (string) $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($category);
             $entityManager->flush();
+            $this->addFlash('success', 'La catégorie <strong>'.$category->getName().'</strong> a été supprimé avec succès');
         }
 
         return $this->redirectToRoute('category_index');
