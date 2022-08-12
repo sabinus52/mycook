@@ -8,11 +8,9 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 
-const $ = require('jquery');
+import $ from 'jquery';
 window.$ = window.jQuery = $;
 
 require('bootstrap');
-require('select2');
 
 import './scripts/global.js';
-import './scripts/collection.js';

@@ -15,10 +15,10 @@ use App\Constant\Difficulty;
 use App\Constant\Rate;
 use App\Entity\Category;
 use App\Entity\Recipe;
+use Olix\BackOfficeBundle\Form\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -91,6 +91,7 @@ class RecipeType extends AbstractType
             ])
             ->add('ingredients', CollectionType::class, [
                 'label' => 'Liste des ingrédients',
+                'button_label_add' => 'Nouvel ingrédient',
                 'entry_type' => RecipeIngredientType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
@@ -104,6 +105,7 @@ class RecipeType extends AbstractType
             ])
             ->add('steps', CollectionType::class, [
                 'label' => 'Etapes de la préparation',
+                'button_label_add' => 'Nouvelle étape',
                 'entry_type' => StepType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,

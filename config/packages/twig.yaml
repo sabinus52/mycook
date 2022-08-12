@@ -4,7 +4,6 @@ twig:
     #exception_controller: null
     form_themes: 
         - '@OlixBackOffice/Twig/form-theme-horizontal-layout.html.twig'
-        - '_form/custom_types.html.twig'
     globals:
         uri_recipe: '%recipe_path%'
         uri_category: '%category_path%'
