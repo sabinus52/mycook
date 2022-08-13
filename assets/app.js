@@ -13,4 +13,8 @@ window.$ = window.jQuery = $;
 
 require('bootstrap');
 
+// Setting Routing as global there
+import Routing from "./scripts/routing.js";
+global.Routing = Routing;
+
 import './scripts/global.js';
