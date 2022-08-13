@@ -13,7 +13,12 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Recipe;
+use App\Repository\RecipeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,10 +32,8 @@ class IndexController extends AbstractController
     /**
      * @Route("/", name="index_home")
      */
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         // Les catégories où il y a le plus de recettes
         $categories = $entityManager->getRepository(Category::class)->findMostRecipes(6); /** @phpstan-ignore-line */
 
@@ -41,5 +44,25 @@ class IndexController extends AbstractController
             'recipes' => $recipes,
             'categories' => $categories,
         ]);
+    }
+
+    /**
+     * Auto completion de recherche des recettes.
+     *
+     * @Route("/autocomplete/{term}", options={"expose": true}, name="autocomplete-search")
+     */
+    public function autocompleteRecipe(Request $request, RecipeRepository $recipeRepository): JsonResponse
+    {
+        $term = $request->get('term');
+
+        $query = $recipeRepository->createQueryBuilder('r')
+            ->andWhere('r.name LIKE :val')
+            ->setParameter('val', '%'.$term.'%')
+            ->getQuery()
+        ;
+
+        $result = $query->getResult(Query::HYDRATE_ARRAY);
+
+        return $this->json($result);
     }
 }

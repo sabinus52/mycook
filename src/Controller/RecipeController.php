@@ -91,7 +91,7 @@ class RecipeController extends AbstractController
     /**
      * Visualisation d'une recette.
      *
-     * @Route("/{id}", name="recipe_show", methods={"GET"})
+     * @Route("/{id}", name="recipe_show", methods={"GET"}, options={"expose": true})
      */
     public function show(Recipe $recipe): Response
     {
