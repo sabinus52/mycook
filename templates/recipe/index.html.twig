@@ -18,7 +18,7 @@
     {% for item in recipes %}
         <div class="col-4">
             <figure class="figure">
-                <a href="{{ path('recipe_show', { id: item.id }) }}" class="img-hover-zoom"><img  src="{{ asset(uri_recipe~'/'~item.id~'.jpg') | imagine_filter('thumb') }}" class="rounded"></a>
+                <a href="{{ path('recipe_show', { id: item.id }) }}" class="img-hover-zoom"><img  src="{{ asset(uri_recipe~'/'~item.id~'.jpg') | imagine_filter('thumb') }}" class="figure-img img-fluid rounded"></a>
                 <figcaption><a href="{{ path('recipe_show', { id: item.id }) }}" class="text-dark d-block mt-1 font-weight-bold">{{ item.name }}</a></figcaption>
             </figure>
         </div>

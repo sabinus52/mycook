@@ -83,4 +83,21 @@ class RecipeRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
+    /**
+     * Retourne une recette au hasard.
+     *
+     * @return Recipe
+     */
+    public function findOneRandom(): Recipe
+    {
+        $query = $this->createQueryBuilder('recipe')
+            ->addSelect('RANDOM() as HIDDEN rand')
+            ->orderBy('rand')
+            ->setMaxResults(1)
+            ->getQuery()
+        ;
+
+        return $query->getSingleResult();
+    }
 }
