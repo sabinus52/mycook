@@ -19,7 +19,7 @@ var refreshElementIngredientAutoComplete = function() {
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
-            url: routefetchJsonIngredient,
+            url: Routing.generate('ingredient_json', { term: 'QQUERY' }),
             wildcard: 'QQUERY'
           }
     });
@@ -45,7 +45,7 @@ var refreshElementIngredientAutoComplete = function() {
         if ($(this).val() == '') return;
 
         //Test si l'ingrédient existe
-        $.getJSON(routeIsExistIngredient, { term: $(this).val() })
+        $.getJSON(Routing.generate('ingredient_isexists'), { term: $(this).val() })
             .done(function( json ) {
                 if ( json.id == 0 ) {
                     // L'ingrédient n'existe pas alors on affiche le modal
@@ -88,7 +88,7 @@ $(function() {
 
     // Ouvre le modal pour demander si on doit créer un ingrédient
     $('#confirmCreateIngredient').on('click', 'button.btn-primary',  function (_ev) {
-        olix.submitFormModalAjax('#confirmCreateIngredient', '#formCreateIngredient', routeCreateIngredient);
+        olix.submitFormModalAjax('#confirmCreateIngredient', '#formCreateIngredient', Routing.generate('ingredient_create_from_recipe'));
     });
 
 });

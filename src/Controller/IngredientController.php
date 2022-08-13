@@ -71,7 +71,7 @@ class IngredientController extends AbstractController
     /**
      * Index ou liste des ingrédients.
      *
-     * @Route("/{term}.json", name="ingredient_json")
+     * @Route("/{term}.json", name="ingredient_json", options={"expose": true})
      */
     public function fetchFormatJSON(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
@@ -81,7 +81,7 @@ class IngredientController extends AbstractController
     /**
      * Retourne si un ingredient existe ou pas.
      *
-     * @Route("/is-exists", name="ingredient_isexists")
+     * @Route("/is-exists", name="ingredient_isexists", options={"expose": true})
      */
     public function isExists(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
@@ -101,7 +101,7 @@ class IngredientController extends AbstractController
     /**
      * Création d'un nouvel ingrédient depuis le formulaire de la recette.
      *
-     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"})
+     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"}, options={"expose": true})
      * @IsGranted("ROLE_ADMIN")
      */
     public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
