@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - Les idées de recettes à tester{% endblock %}
+
+{% block body %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="float-right">
+            <a href="{{ path('idea_create') }}" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une idée de recette</a>
+        </div>
+    {% endif %}
+    <h1 class="my-4"><i class="fas fa-tag"></i>&nbsp;Les idées de recettes à tester</h1>
+
+    {% include 'include/_flashbag.html.twig' %}
+
+    <div class="row my-2">
+    {% for idea in ideas %}
+        <div class="col-6">
+            <a href="{{ idea.link }}" target="_blank" class=""><img src="{{ asset(idea.image) }}" class="float-left mr-2" style="width:128px"></a>
+            {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-primary btn-sm float-right"><i class="fas fa-edit"></i></a>{% endif %}
+            <a href="{{ idea.link }}" class="text-dark font-weight-bold">{{ idea.name }}</a>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
