@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace App\Constant;
 
-use Exception;
-
 /**
  * Classe statique sur les niveaux de couts.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
-class Rate
+class Rate implements \Stringable
 {
     /**
      * Constantes des niveaux de difficulté.
@@ -47,7 +45,7 @@ class Rate
     public function __construct(int $rate)
     {
         if (!array_key_exists($rate, self::$rates)) {
-            throw new Exception('La valeur "'.$rate.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$rates)));
+            throw new \Exception('La valeur "'.$rate.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$rates)));
         }
         $this->rate = $rate;
     }
@@ -55,7 +53,7 @@ class Rate
     /**
      * Retourne le label.
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLabel();
     }

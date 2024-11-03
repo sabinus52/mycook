@@ -15,7 +15,6 @@ use App\Entity\Idea;
 use App\Form\IdeaType;
 use App\Repository\IdeaRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +46,7 @@ class IdeaController extends AbstractController
      * Création d'un nouvelle idée de recette.
      *
      * @Route("/create", name="idea_create", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request, EntityManagerInterface $entityManager): Response
@@ -74,6 +74,7 @@ class IdeaController extends AbstractController
      * Edition d'une idée de recette.
      *
      * @Route("/{id}/update", name="idea_update", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
@@ -99,6 +100,7 @@ class IdeaController extends AbstractController
      * Suppression d'une idée de recette.
      *
      * @Route("/{id}/delete", name="idea_delete", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
@@ -108,7 +110,7 @@ class IdeaController extends AbstractController
 
             try {
                 $entityManager->flush();
-            } catch (Exception $th) {
+            } catch (\Exception) {
                 $this->addFlash('danger', 'L\'idée recette <strong>'.$idea->getName().'</strong> ne peut pas être supprimé');
 
                 return $this->redirectToRoute('idea_index');

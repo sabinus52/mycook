@@ -21,6 +21,7 @@ use Doctrine\Persistence\ObjectManager;
  * Données initiales de l'applicaton.
  *
  * @author Olivier <sabinus52@gmail.com>
+ *
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class AppFixtures extends Fixture

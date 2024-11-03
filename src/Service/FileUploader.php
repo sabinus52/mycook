@@ -25,13 +25,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 abstract class FileUploader
 {
     /**
-     * Dossier de destination des images.
-     *
-     * @var string
-     */
-    private $directory;
-
-    /**
      * Dossier racine de la zone publique.
      *
      * @var string
@@ -46,11 +39,10 @@ abstract class FileUploader
     /**
      * Constructeur.
      *
-     * @param string $directory : Dossier de destination
+     * @param string $directory : Dossier de destination des images
      */
-    public function __construct(string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
+    public function __construct(private readonly string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
     {
-        $this->directory = $directory;
         $this->rootDir = $kernel->getProjectDir().'/public';
         $this->imagineCacheManager = $imagineCacheManager;
     }
@@ -67,7 +59,7 @@ abstract class FileUploader
         try {
             $sourceFile->move(sys_get_temp_dir(), $fileTmp);
             $this->transformToJPEG(sys_get_temp_dir().'/'.$fileTmp, $this->rootDir.$this->directory.'/'.$targetFile.'.jpg');
-        } catch (FileException $e) {
+        } catch (FileException) {
             return false;
         }
 
@@ -86,7 +78,7 @@ abstract class FileUploader
         $imagine->open($source)->save($target, ['jpeg_quality' => 85]);
         try {
             unlink($source);
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return;
         }
     }

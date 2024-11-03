@@ -27,17 +27,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class RecipeIngredientType extends AbstractType
 {
-    /**
-     * @var IngredientToNameTransformer
-     */
-    private $transformer;
-
-    public function __construct(IngredientToNameTransformer $transformer)
+    public function __construct(private readonly IngredientToNameTransformer $transformer)
     {
-        $this->transformer = $transformer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

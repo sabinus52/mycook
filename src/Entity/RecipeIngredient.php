@@ -29,7 +29,9 @@ class RecipeIngredient
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -40,6 +42,7 @@ class RecipeIngredient
      * @var Recipe
      *
      * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="ingredients")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private $recipe;
@@ -50,7 +53,9 @@ class RecipeIngredient
      * @var Ingredient
      *
      * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="recipes")
+     *
      * @ORM\JoinColumn(nullable=false)
+     *
      * @Assert\NotBlank
      */
     private $ingredient;

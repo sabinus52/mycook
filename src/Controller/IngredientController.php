@@ -19,7 +19,6 @@ use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -102,6 +101,7 @@ class IngredientController extends AbstractController
      * Création d'un nouvel ingrédient depuis le formulaire de la recette.
      *
      * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"}, options={"expose": true})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
@@ -124,6 +124,7 @@ class IngredientController extends AbstractController
      * Création d'un nouvel ingrédient.
      *
      * @Route("/create", name="ingredient_create", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
@@ -165,6 +166,7 @@ class IngredientController extends AbstractController
      * Edition d'un ingrédient.
      *
      * @Route("/{id}/update", name="ingredient_update", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
@@ -192,6 +194,7 @@ class IngredientController extends AbstractController
      * Suppression d'un ingrédient.
      *
      * @Route("/{id}/delete", name="ingredient_delete", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
@@ -201,7 +204,7 @@ class IngredientController extends AbstractController
 
             try {
                 $entityManager->flush();
-            } catch (Exception $th) {
+            } catch (\Exception) {
                 $this->addFlash('danger', "L'ingrédient <strong>".$ingredient->getName().'</strong> ne peut pas être supprimé');
 
                 return $this->redirectToRoute('ingredient_index');

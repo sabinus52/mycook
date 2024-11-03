@@ -28,7 +28,9 @@ class Step
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -39,6 +41,7 @@ class Step
      * @var string
      *
      * @ORM\Column(type="text")
+     *
      * @Assert\NotBlank
      */
     private $content;
@@ -49,6 +52,7 @@ class Step
      * @var Recipe
      *
      * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="steps")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private $recipe;

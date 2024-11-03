@@ -48,6 +48,7 @@ class CategoryController extends AbstractController
      * Ajout d'une nouvelle catégorie.
      *
      * @Route("/create", name="category_create", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
@@ -93,6 +94,7 @@ class CategoryController extends AbstractController
      * Editer la catégorie.
      *
      * @Route("/{id}/update", name="category_update", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, Category $category, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
@@ -121,6 +123,7 @@ class CategoryController extends AbstractController
      * Supprime une catégorie.
      *
      * @Route("/{id}", name="category_delete", methods={"POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response

@@ -27,6 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class IngredientType extends AbstractType
 {

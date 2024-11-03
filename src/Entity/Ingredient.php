@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
+ *
  * @UniqueEntity("name")
  */
 class Ingredient
@@ -32,7 +33,9 @@ class Ingredient
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -43,6 +46,7 @@ class Ingredient
      * @var string
      *
      * @ORM\Column(type="string", length=100, unique=true)
+     *
      * @Assert\NotBlank
      */
     private $name;

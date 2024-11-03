@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace App\Constant;
 
-use Exception;
-
 /**
  * Classe statique sur les niveaux de difficultés.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
-class Difficulty
+class Difficulty implements \Stringable
 {
     /**
      * Constantes des niveaux de difficulté.
@@ -47,7 +45,7 @@ class Difficulty
     public function __construct(int $difficulty)
     {
         if (!array_key_exists($difficulty, self::$difficulties)) {
-            throw new Exception('La valeur "'.$difficulty.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$difficulties)));
+            throw new \Exception('La valeur "'.$difficulty.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$difficulties)));
         }
         $this->difficulty = $difficulty;
     }
@@ -55,7 +53,7 @@ class Difficulty
     /**
      * Retourne le label.
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getLabel();
     }

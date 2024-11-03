@@ -11,14 +11,12 @@ declare(strict_types=1);
 
 namespace App\Constant;
 
-use Exception;
-
 /**
  * Classe statique sur les unités des quantités.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
-class Unity
+class Unity implements \Stringable
 {
     /**
      * Constantes des niveaux de difficulté.
@@ -69,7 +67,7 @@ class Unity
     public function __construct(string $unity)
     {
         if (!array_key_exists($unity, self::$unities)) {
-            throw new Exception('La valeur "'.$unity.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$unities)));
+            throw new \Exception('La valeur "'.$unity.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$unities)));
         }
         $this->unity = $unity;
     }
@@ -77,7 +75,7 @@ class Unity
     /**
      * Retourne le label.
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getValue();
     }
@@ -155,7 +153,7 @@ class Unity
     public function getInGram(?float $quantity): float
     {
         if ($this->isNumber()) {
-            throw new Exception('Impossible de convertir un nombre en gramme');
+            throw new \Exception('Impossible de convertir un nombre en gramme');
         }
 
         return $quantity * $this->getConversion();
@@ -172,7 +170,7 @@ class Unity
         $target = new self($unity);
 
         if ($this->isNumber() || $target->isNumber()) {
-            throw new Exception('Impossible de convertir un nombre');
+            throw new \Exception('Impossible de convertir un nombre');
         }
         $gram = $this->getInGram($quantity);
 

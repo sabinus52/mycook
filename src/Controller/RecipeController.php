@@ -55,6 +55,7 @@ class RecipeController extends AbstractController
      * Création d'une recette.
      *
      * @Route("/create", name="recipe_create", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
@@ -104,6 +105,7 @@ class RecipeController extends AbstractController
      * Edition d'une recette.
      *
      * @Route("/{id}/update", name="recipe_update", methods={"GET", "POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function update(Request $request, Recipe $recipe, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
@@ -140,6 +142,7 @@ class RecipeController extends AbstractController
      * Suppression d'une recette.
      *
      * @Route("/{id}", name="recipe_delete", methods={"POST"})
+     *
      * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response

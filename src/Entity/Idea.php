@@ -26,7 +26,9 @@ class Idea
 {
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -37,6 +39,7 @@ class Idea
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank
      */
     private $name;
@@ -47,7 +50,9 @@ class Idea
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank
+     *
      * @Assert\Url
      */
     private $link;
@@ -65,7 +70,9 @@ class Idea
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank
+     *
      * @Assert\Url
      */
     private $image;

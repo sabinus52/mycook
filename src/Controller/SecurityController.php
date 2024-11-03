@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
-use LogicException;
 use Olix\BackOfficeBundle\Helper\Gravatar;
 use Olix\BackOfficeBundle\Security\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -55,13 +54,14 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     /**
      * Changement des informations du profil.
      *
      * @Route("/profile", name="app_profile", methods={"GET", "POST"})
+     *
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function changeProfile(Request $request, UserManager $manager): Response
@@ -95,6 +95,7 @@ class SecurityController extends AbstractController
      * Changement du password.
      *
      * @Route("/change-password", name="app_change_password", methods={"GET", "POST"})
+     *
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function changePassword(Request $request, UserManager $manager): Response

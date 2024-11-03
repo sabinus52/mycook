@@ -33,6 +33,7 @@ use Symfony\Component\Validator\Constraints\Image;
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class RecipeType extends AbstractType
 {

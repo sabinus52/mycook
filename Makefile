@@ -104,33 +104,33 @@ test: ## Tests unitaires avec PHPINIT
 
 .PHONY: phpmd
 phpmd: ## Analyse de la qualité du code
-	@phpmd src ansi ruleset.xml
-	@phpmd tests ansi ruleset.xml
+	@./vendor/bin/phpmd src ansi ruleset.xml
+	@./vendor/bin/phpmd tests ansi ruleset.xml
 
 
 .PHONY: phpstan
 phpstan: ## Analyse statique du code PHP
-	@phpstan analyse src --level=7 --configuration=phpstan.neon
+	@./vendor/bin/phpstan analyse src --level=7 --configuration=phpstan.neon
 
 
 .PHONY: codestyle
 codestyle: ## Analyse si le code suit le standard de Symfony
-	@php-cs-fixer fix --dry-run --verbose --diff
+	@./vendor/bin/php-cs-fixer fix --dry-run --verbose --diff
 
 
 .PHONY: codestyle-fix
 codestyle-fix: ## Corrige les erreurs de standard de dev de Symfony
-	@php-cs-fixer fix
+	@./vendor/bin/php-cs-fixer fix
 
 
 .PHONY: rector
 rector: ## Analyse de la qualité du code en suivant les recommandations
-	@rector process --dry-run
+	@./vendor/bin/rector process --dry-run
 
 
 .PHONY: rector-fix
 rector-fix: # Corrige de la qualité du code en suivant les recommandations
-	@rector process
+	@./vendor/bin/rector process
 
 ##
 ##

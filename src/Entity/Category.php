@@ -29,7 +29,9 @@ class Category
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -40,6 +42,7 @@ class Category
      * @var string
      *
      * @ORM\Column(type="string", length=100)
+     *
      * @Assert\NotBlank
      */
     private $name;

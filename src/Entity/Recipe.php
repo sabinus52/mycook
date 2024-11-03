@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class Recipe
@@ -32,7 +33,9 @@ class Recipe
      * @var int
      *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     private $id; /** @phpstan-ignore-line */
@@ -43,6 +46,7 @@ class Recipe
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
      * @Assert\NotBlank
      */
     private $name;
@@ -53,8 +57,11 @@ class Recipe
      * @var int
      *
      * @ORM\Column(type="smallint")
+     *
      * @Assert\NotNull
+     *
      * @Assert\Type(type="integer")
+     *
      * @Assert\Range(min=1, max=12)
      */
     private $person;
@@ -65,6 +72,7 @@ class Recipe
      * @var Difficulty
      *
      * @ORM\Column(type="difficulty")
+     *
      * @Assert\NotNull
      */
     private $difficulty;
@@ -75,6 +83,7 @@ class Recipe
      * @var Rate
      *
      * @ORM\Column(type="rate")
+     *
      * @Assert\NotNull
      */
     private $rate;
@@ -85,7 +94,9 @@ class Recipe
      * @var int
      *
      * @ORM\Column(name="time_preparation", type="smallint")
+     *
      * @Assert\NotNull
+     *
      * @Assert\Type(type="integer")
      */
     private $timePreparation;
@@ -96,6 +107,7 @@ class Recipe
      * @var int
      *
      * @ORM\Column(name="time_cooking", type="smallint", nullable=true)
+     *
      * @Assert\Type(type="integer")
      */
     private $timeCooking;
@@ -106,6 +118,7 @@ class Recipe
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
+     *
      * @Assert\Type(type="integer")
      */
     private $calorie;
@@ -125,6 +138,7 @@ class Recipe
      * @var ArrayCollection<Step>
      *
      * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     *
      * @Assert\Valid
      */
     private $steps;
@@ -135,6 +149,7 @@ class Recipe
      * @var ArrayCollection<RecipeIngredient>
      *
      * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     *
      * @Assert\Valid
      */
     private $ingredients;
@@ -324,6 +339,7 @@ class Recipe
      * Calcul de nombre de calories de la recette par personne.
      *
      * @ORM\PreUpdate
+     *
      * @ORM\PrePersist
      */
     public function calculCalories(): ?int
