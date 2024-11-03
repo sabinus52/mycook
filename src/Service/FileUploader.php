@@ -1,35 +1,40 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Classe abstraite pour le téléchargement de fichier
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Service;
 
+use Imagine\Gd\Imagine;
+use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
-use \Liip\ImagineBundle\Imagine\Cache\CacheManager;
-use \Imagine\Gd\Imagine;
 
-
+/**
+ * Classe abstraite pour le téléchargement de fichier.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ */
 abstract class FileUploader
 {
-    
     /**
-     * Dossier de destination des images
-     * 
-     * @var String
+     * Dossier de destination des images.
+     *
+     * @var string
      */
     private $directory;
 
     /**
-     * Dossier racine de la zone publique
-     * 
-     * @var String
+     * Dossier racine de la zone publique.
+     *
+     * @var string
      */
     private $rootDir;
 
@@ -38,11 +43,10 @@ abstract class FileUploader
      */
     protected $imagineCacheManager;
 
-    
     /**
-     * Constructeur
-     * 
-     * @param String $directory : Dossier de destination
+     * Constructeur.
+     *
+     * @param string $directory : Dossier de destination
      */
     public function __construct(string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
     {
@@ -51,12 +55,11 @@ abstract class FileUploader
         $this->imagineCacheManager = $imagineCacheManager;
     }
 
-
     /**
-     * Déplacement du fichier téléchargé dans le dossier cible
-     * 
+     * Déplacement du fichier téléchargé dans le dossier cible.
+     *
      * @param UploadedFile $sourceFile : Objet du fichier source
-     * @param String $targetFile : Nom du fichier de destination
+     * @param string       $targetFile : Nom du fichier de destination
      */
     protected function move(UploadedFile $sourceFile, string $targetFile): bool
     {
@@ -67,32 +70,34 @@ abstract class FileUploader
         } catch (FileException $e) {
             return false;
         }
+
         return true;
     }
 
-
     /**
-     * Enregistre l'image au format JPEG
-     * 
-     * @param String $source : Chemin complet du fichier source
-     * @param String $target : Chemin complet du fichier destination
+     * Enregistre l'image au format JPEG.
+     *
+     * @param string $source : Chemin complet du fichier source
+     * @param string $target : Chemin complet du fichier destination
      */
     public function transformToJPEG(string $source, string $target): void
     {
         $imagine = new Imagine();
-        $imagine->open($source)->save($target, [ 'jpeg_quality' => 85 ]);
-        @unlink($source);
+        $imagine->open($source)->save($target, ['jpeg_quality' => 85]);
+        try {
+            unlink($source);
+        } catch (\Throwable $th) {
+            return;
+        }
     }
 
-
     /**
-     * Supprime la vignette en cache
-     * 
-     * @param String $targetFile : Nom du fichier de destination
+     * Supprime la vignette en cache.
+     *
+     * @param string $targetFile : Nom du fichier de destination
      */
     protected function removeCacheThumb(string $targetFile): void
     {
         $this->imagineCacheManager->remove($this->directory.'/'.$targetFile.'.jpg');
     }
-
 }

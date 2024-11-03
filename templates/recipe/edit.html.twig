@@ -1,5 +1,64 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme form _self %}
+
+{# Nom de 'block_prefix' du formulaire "StepType" #}
+{% block recipe_step_row -%}
+    <div class="form-group form-row collection-item">
+        <div class="col-sm-12">
+            <div class="form-group form-row form-control-sm">
+                <div class="col-12 col-lg-11">
+                    {{ form_widget(form.content, { attr: form.content.vars.attr|merge({'class': form.content.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.content) }}
+                    {{ form_help(form.content) }}
+                </div>
+                <div class="col-2 col-lg-1">
+                    <button type="button" class="btn btn-danger btn-sm collection-btn-delete">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endblock %}
+
+
+{# Nom de 'block_prefix' du formulaire "RecipeIngredientType" #}
+{% block recipe_ingredient_row -%}
+    <div class="form-group form-row collection-item">
+        <div class="col-sm-12">
+            <div class="form-group form-row form-control-sm">
+                <div class="col-12 col-lg-4">
+                    {{ form_widget(form.ingredient, { attr: form.ingredient.vars.attr|merge({'class': form.ingredient.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.ingredient) }}
+                    {{ form_help(form.ingredient) }}
+                </div>
+                <div class="col-12 col-lg-1">
+                    {{ form_widget(form.quantity, { attr: form.quantity.vars.attr|merge({'class': form.quantity.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.quantity) }}
+                    {{ form_help(form.quantity) }}
+                </div>
+                <div class="col-12 col-lg-2">
+                    {{ form_widget(form.unity, { attr: form.unity.vars.attr|merge({'class': form.unity.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.unity) }}
+                    {{ form_help(form.unity) }}
+                </div>
+                <div class="col-12 col-lg-4">
+                    {{ form_widget(form.note, { attr: form.note.vars.attr|merge({'class': form.note.vars.attr['class']|default('') ~ ' form-control-sm' }) }) }}
+                    {{ form_errors(form.note) }}
+                    {{ form_help(form.note) }}
+                </div>
+                <div class="col-2 col-lg-1">
+                    <button type="button" class="btn btn-danger btn-sm collection-btn-delete">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endblock %}
+
+
 {% block title %} - Catégorie{% endblock %}
 
 {% block body %}
@@ -32,8 +91,6 @@
     {{ form_end(form) }}
 
     {% include 'recipe/_create-ingredient.modal.html.twig' %}
-
-    {% include 'recipe/_constants.js.html.twig' %}
 
 {% endblock %}
 

@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Controleur de la gestion des ingrédients
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -12,75 +14,83 @@ namespace App\Controller;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
-use App\Form\IngredientType;
 use App\Form\IngredientHiddenType;
+use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
+use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\Query;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
 
 /**
+ * Controleur de la gestion des ingrédients.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @Route("/ingredient")
  */
 class IngredientController extends AbstractController
 {
-
     /**
-     * Index ou liste des ingrédients
-     * 
+     * Index ou liste des ingrédients.
+     *
      * @Route("/", name="ingredient_index", methods={"GET"})
      */
     public function index(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
     {
         $session->set('ingredient.filter.route', $request->get('_route'));
+
         return $this->render('ingredient/index.html.twig', [
             'ingredients' => $ingredientRepository->findAll(),
         ]);
     }
 
-
     /**
-     * Index ou liste des ingrédients avec le champs "calorie" non rempli
-     * 
+     * Index ou liste des ingrédients avec le champs "calorie" non rempli.
+     *
      * @Route("/without-calories", name="ingredient_index_without_cal", methods={"GET"})
      */
     public function indexWithoutCalories(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
     {
         $session->set('ingredient.filter.route', $request->get('_route'));
+
         return $this->render('ingredient/index.html.twig', [
-            'ingredients' => $ingredientRepository->findByCalorie(null),
+            'ingredients' => $ingredientRepository->findByCalorie(null), // @phpstan-ignore-line
         ]);
     }
 
-
     /**
-     * Index ou liste des ingrédients
-     * 
-     * @Route("/{term}.json", name="ingredient_json")
+     * Index ou liste des ingrédients.
+     *
+     * @Route("/{term}.json", name="ingredient_json", options={"expose": true})
      */
     public function fetchFormatJSON(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         return new JsonResponse($ingredientRepository->searchByName($request->get('term'), Query::HYDRATE_ARRAY));
     }
 
-
     /**
-     * Retourne si un ingredient existe ou pas
-     * 
-     * @Route("/is-exists", name="ingredient_isexists")
+     * Retourne si un ingredient existe ou pas.
+     *
+     * @Route("/is-exists", name="ingredient_isexists", options={"expose": true})
      */
     public function isExists(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
-        $ingredient = $ingredientRepository->findOneByName($request->get('term'));
+        $ingredient = $ingredientRepository->findOneByName($request->get('term')); // @phpstan-ignore-line
 
-        if ( ! $ingredient ) return new JsonResponse([ 'id' => 0, 'name' => $request->get('term'), 'unity' => '' ]);
-        
+        if (!$ingredient) {
+            return new JsonResponse(['id' => 0, 'name' => $request->get('term'), 'unity' => '']);
+        }
+
         return new JsonResponse([
             'id' => $ingredient->getId(),
             'name' => $ingredient->getName(),
@@ -88,21 +98,19 @@ class IngredientController extends AbstractController
         ]);
     }
 
-
     /**
-     * Création d'un nouvel ingrédient depuis le formulaire de la recette
-     * 
-     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"})
+     * Création d'un nouvel ingrédient depuis le formulaire de la recette.
+     *
+     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"}, options={"expose": true})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function createFromRecipe(Request $request): Response
+    public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientHiddenType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
@@ -112,28 +120,27 @@ class IngredientController extends AbstractController
         return new Response('ERROR');
     }
 
-
     /**
-     * Création d'un nouvel ingrédient
-     * 
-     * @Route("/create", name="ingredient_create", methods={"GET","POST"})
+     * Création d'un nouvel ingrédient.
+     *
+     * @Route("/create", name="ingredient_create", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request, SessionInterface $session): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ingredient);
             $entityManager->flush();
 
-            $this->updateRecipeCalories($ingredient);
+            $this->updateRecipeCalories($ingredient, $entityManager);
 
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été ajouté avec succès");
-            return $this->_redirectToRoute($session);
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été ajouté avec succès');
+
+            return $this->redirectToRoute2($session->get('ingredient.filter.route'));
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -142,10 +149,9 @@ class IngredientController extends AbstractController
         ]);
     }
 
-
     /**
-     * Visualisation d'un ingrédient
-     * 
+     * Visualisation d'un ingrédient.
+     *
      * @Route("/{id}", name="ingredient_show", methods={"GET"})
      */
     public function show(Ingredient $ingredient): Response
@@ -155,27 +161,25 @@ class IngredientController extends AbstractController
         ]);
     }
 
-
     /**
-     * Edition d'un ingrédient
-     * 
-     * @Route("/{id}/update", name="ingredient_update", methods={"GET","POST"})
+     * Edition d'un ingrédient.
+     *
+     * @Route("/{id}/update", name="ingredient_update", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Ingredient $ingredient, SessionInterface $session): Response
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
-            $this->updateRecipeCalories($ingredient);
+            $this->updateRecipeCalories($ingredient, $entityManager);
 
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été modifié avec succès");
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été modifié avec succès');
 
-            return $this->_redirectToRoute($session);
+            return $this->redirectToRoute2($session->get('ingredient.filter.route'));
         }
 
         return $this->render('ingredient/edit.html.twig', [
@@ -184,39 +188,42 @@ class IngredientController extends AbstractController
         ]);
     }
 
-
     /**
-     * Suppression d'un ingrédient
-     * 
-     * @Route("/{id}/delete", name="ingredient_delete", methods={"GET","POST"})
+     * Suppression d'un ingrédient.
+     *
+     * @Route("/{id}/delete", name="ingredient_delete", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, Ingredient $ingredient): Response
+    public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+        if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($ingredient);
-            $entityManager->flush();
-            $this->get('session')->getFlashBag()->add('success', "L'ingrédient <strong>".$ingredient->getName()."</strong> a été supprimé avec succès");
+
+            try {
+                $entityManager->flush();
+            } catch (Exception $th) {
+                $this->addFlash('danger', "L'ingrédient <strong>".$ingredient->getName().'</strong> ne peut pas être supprimé');
+
+                return $this->redirectToRoute('ingredient_index');
+            }
+
+            $this->addFlash('success', "L'ingrédient <strong>".$ingredient->getName().'</strong> a été supprimé avec succès');
         }
 
         return $this->redirectToRoute('ingredient_index');
     }
 
-
     /**
-     * Mise à jour des calories suite à une mise à jour d'un ingrédient
+     * Mise à jour des calories suite à une mise à jour d'un ingrédient.
      */
-    private function updateRecipeCalories(Ingredient $ingredient): void
+    private function updateRecipeCalories(Ingredient $ingredient, EntityManagerInterface $entityManager): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         // Récupération des recettes avec l'ingrédient
-        $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient);
+        $recipesIngredients = $entityManager->getRepository(RecipeIngredient::class)->findByIngredient($ingredient); // @phpstan-ignore-line
 
         // Pour chaque recette
         foreach ($recipesIngredients as $recipeIngredient) {
-            $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId());
+            $recipe = $entityManager->getRepository(Recipe::class)->findWithIngredients($recipeIngredient->getRecipe()->getId()); // @phpstan-ignore-line
             $recipe->setCalorie(0);
             $entityManager->persist($recipe);
         }
@@ -224,18 +231,13 @@ class IngredientController extends AbstractController
         $entityManager->flush();
     }
 
-
     /**
-     * Redirection de la route en fonction de la route du filtre enregistré dans la session
-     * 
-     * @param SessionInterface
-     * @return Route
+     * Redirection de la route en fonction de la route du filtre enregistré dans la session.
      */
-    private function _redirectToRoute(SessionInterface $session)
+    protected function redirectToRoute2(string $route): RedirectResponse
     {
-        $route = $session->get('ingredient.filter.route');
-        $route = (empty($route)) ? 'ingredient_index' : $route; 
+        $route = (empty($route)) ? 'ingredient_index' : $route;
+
         return $this->redirectToRoute($route);
     }
-
 }

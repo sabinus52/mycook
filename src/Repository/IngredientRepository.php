@@ -1,11 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace App\Repository;
 
 use App\Entity\Ingredient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Ingredient|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,21 +24,20 @@ use Doctrine\ORM\Query;
  */
 class IngredientRepository extends ServiceEntityRepository
 {
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Ingredient::class);
     }
 
-
     /**
-     * Recherche par nom de l'ingredient
-     * 
-     * @param String $term : Valeur à rechercher
-     * @param String $mode : Hydratation mode de retour du résultat
-     * @return Array
+     * Recherche par nom de l'ingredient.
+     *
+     * @param string             $term : Valeur à rechercher
+     * @param 1|2|3|4|5|6|string $mode : Hydratation mode de retour du résultat
+     *
+     * @return array<mixed>
      */
-    public function searchByName($term, $mode = Query::HYDRATE_OBJECT)
+    public function searchByName($term, $mode = Query::HYDRATE_OBJECT): array
     {
         return $this->createQueryBuilder('i')
             ->where('i.name LIKE :term')

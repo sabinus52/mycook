@@ -1,37 +1,47 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Controleur de la gestion des recettes
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Controller;
 
+use App\Entity\Ingredient;
 use App\Entity\Recipe;
+use App\Entity\RecipeIngredient;
+use App\Form\IngredientHiddenType;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use App\Service\RecipeUploader;
-use App\Entity\Ingredient;
-use App\Form\IngredientHiddenType;
-use App\Entity\RecipeIngredient;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-
 
 /**
+ * Controleur de la gestion des recettes.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
  * @Route("/recipe")
  */
 class RecipeController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     /**
-     * Index ou liste des recettes
-     * 
+     * Index ou liste des recettes.
+     *
      * @Route("/", name="recipe_index", methods={"GET"})
      */
     public function index(RecipeRepository $recipeRepository): Response
@@ -41,23 +51,23 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
     /**
-     * Création d'une recette
-     * 
-     * @Route("/create", name="recipe_create", methods={"GET","POST"})
+     * Création d'une recette.
+     *
+     * @Route("/create", name="recipe_create", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function create(Request $request, RecipeUploader $fileUploader): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
+        $this->entityManager = $entityManager;
+
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($recipe);
-            $entityManager->flush();
+            $this->entityManager->persist($recipe);
+            $this->entityManager->flush();
 
             $image = $form->get('image')->getData();
             if ($image) {
@@ -78,11 +88,10 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
     /**
-     * Visualisation d'une recette
-     * 
-     * @Route("/{id}", name="recipe_show", methods={"GET"})
+     * Visualisation d'une recette.
+     *
+     * @Route("/{id}", name="recipe_show", methods={"GET"}, options={"expose": true})
      */
     public function show(Recipe $recipe): Response
     {
@@ -91,26 +100,26 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
     /**
-     * Edition d'une recette
-     * 
-     * @Route("/{id}/update", name="recipe_update", methods={"GET","POST"})
+     * Edition d'une recette.
+     *
+     * @Route("/{id}/update", name="recipe_update", methods={"GET", "POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function update(Request $request, Recipe $recipe, RecipeUploader $fileUploader): Response
+    public function update(Request $request, Recipe $recipe, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
+        $this->entityManager = $entityManager;
+
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $image = $form->get('image')->getData();
             if ($image) {
                 $fileUploader->upload($image, $recipe);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->flush();
 
             $this->setPopularityUnityToIngredient();
 
@@ -127,17 +136,15 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
     /**
-     * Suppression d'une recette
-     * 
+     * Suppression d'une recette.
+     *
      * @Route("/{id}", name="recipe_delete", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function delete(Request $request, Recipe $recipe): Response
+    public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($recipe);
             $entityManager->flush();
         }
@@ -145,36 +152,40 @@ class RecipeController extends AbstractController
         return $this->redirectToRoute('recipe_index');
     }
 
-
     /**
-     * Mets à jour les unités les plus utilisées par ingrédient
+     * Mets à jour les unités les plus utilisées par ingrédient.
      */
-    private function setPopularityUnityToIngredient()
+    private function setPopularityUnityToIngredient(): void
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         // Récupération des tous les ingrédients
-        $ingredients = $this->getDoctrine()
+        $ingredients = $this->entityManager
             ->getRepository(Ingredient::class)
-            ->findAll();
+            ->findAll()
+        ;
 
-        // Récupération par ingrédient l'unité la plus utilisée
-        $ingredientsByUnity = $this->getDoctrine()
+        /**
+         * Récupération par ingrédient l'unité la plus utilisée.
+         *
+         * @phpstan-ignore-next-line
+         */
+        $ingredientsByUnity = $this->entityManager
             ->getRepository(RecipeIngredient::class)
-            ->findMostPopularityUnityByIngredient();
-        
+            ->findMostPopularityUnityByIngredient()
+        ;
+
         foreach ($ingredients as $ingredient) {
             // Pas encore d'ingrédient utilisé
-            if ( ! isset($ingredientsByUnity[$ingredient->getId()]) ) continue;
+            if (!isset($ingredientsByUnity[$ingredient->getId()])) {
+                continue;
+            }
 
             $unity = $ingredientsByUnity[$ingredient->getId()];
             // Si changement d'unité, on met à jour l'unité la plus utilisée
-            if ( $unity->getValue() != $ingredient->getUnity()->getValue() ) {
+            if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {
                 $ingredient->setUnity($unity);
-                $entityManager->persist($ingredient);
+                $this->entityManager->persist($ingredient);
             }
         }
-        $entityManager->flush();
+        $this->entityManager->flush();
     }
-
 }

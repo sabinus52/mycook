@@ -1,9 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace App\Repository;
 
-use App\Entity\Recipe;
 use App\Entity\Category;
+use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,17 +24,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RecipeRepository extends ServiceEntityRepository
 {
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Recipe::class);
     }
 
-
     /**
-     * Retourne la recette avec tous ses ingrédients
-     * 
-     * @param Integer $id : Identifiant de la recette
+     * Retourne la recette avec tous ses ingrédients.
+     *
+     * @param int $id : Identifiant de la recette
      */
     public function findWithIngredients($id): ?Recipe
     {
@@ -41,11 +48,12 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-     * Recherche les recettes par catégorie
-     * 
+     * Recherche les recettes par catégorie.
+     *
      * @param Category $categorie : Catégorie à filtrer
+     *
+     * @return Recipe[]
      */
     public function findByCategory(Category $categorie): array
     {
@@ -58,19 +66,38 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-     * Retourne les recettes les plus populaires
-     * 
-     * @param Integer $count : Nombre d'occ à retourner
+     * Retourne les recettes les plus populaires.
+     *
+     * @param int $count : Nombre d'occ à retourner
+     *
+     * @return Recipe[]
      */
     public function findMostPopular(?int $count = null): array
     {
         $query = $this->createQueryBuilder('recipe');
 
-        if ( $count ) $query = $query->setMaxResults(6);
-        
+        if ($count) {
+            $query = $query->setMaxResults(6);
+        }
+
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * Retourne une recette au hasard.
+     *
+     * @return Recipe
+     */
+    public function findOneRandom(): Recipe
+    {
+        $query = $this->createQueryBuilder('recipe')
+            ->addSelect('RANDOM() as HIDDEN rand')
+            ->orderBy('rand')
+            ->setMaxResults(1)
+            ->getQuery()
+        ;
+
+        return $query->getSingleResult();
+    }
 }

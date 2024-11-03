@@ -1,0 +1,4 @@
+olix_back_office:
+    options:
+    security:
+        delay_activity: 65535

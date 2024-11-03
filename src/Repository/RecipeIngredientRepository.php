@@ -1,7 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace App\Repository;
 
+use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,19 +24,17 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class RecipeIngredientRepository extends ServiceEntityRepository
 {
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RecipeIngredient::class);
     }
 
-
     /**
-     * Retourne dans un tableau les unités les plus utilisées par ingredient
-     * 
-     * @return Array [ID_ingredient] => Unity
+     * Retourne dans un tableau les unités les plus utilisées par ingredient.
+     *
+     * @return array<Ingredient>
      */
-    public function findMostPopularityUnityByIngredient()
+    public function findMostPopularityUnityByIngredient(): array
     {
         $query = $this->createQueryBuilder('ri')
             ->addSelect('COUNT(ri.unity)')
@@ -44,5 +52,4 @@ class RecipeIngredientRepository extends ServiceEntityRepository
 
         return $result;
     }
-
 }

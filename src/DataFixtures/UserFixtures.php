@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Données initiales des utilisateurs
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
@@ -14,29 +16,30 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
+/**
+ * Données initiales des utilisateurs.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ */
 class UserFixtures extends Fixture
 {
-
     /**
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
 
-
     /**
-     * Constructeur
+     * Constructeur.
      */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->passwordEncoder = $passwordEncoder;
     }
 
-
     /**
-     * Chargement des utilisateurs
+     * Chargement des utilisateurs.
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $user = new User();
         $user->setUsername('admin');
@@ -54,5 +57,4 @@ class UserFixtures extends Fixture
 
         $manager->flush();
     }
-
 }

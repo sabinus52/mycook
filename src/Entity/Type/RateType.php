@@ -1,46 +1,72 @@
 <?php
+
+declare(strict_types=1);
+
 /**
- * Type personnalisé de mapping pour les niveaux de coût d'une recette
- *
- * @author Olivier <sabinus52@gmail.com>
- *
- * @package MyCook
+ *  This file is part of MyCook Application.
+ *  (c) Sabinus52 <sabinus52@gmail.com>
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
  */
 
 namespace App\Entity\Type;
 
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use App\Constant\Rate;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 
-
+/**
+ * Type personnalisé de mapping pour les niveaux de coût d'une recette.
+ *
+ * @author Olivier <sabinus52@gmail.com>
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ */
 class RateType extends Type
 {
+    public const RATE = 'rate';
 
-    const RATE = 'rate';
-
-
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    /**
+     * {@inheritdoc}
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return 'smallint';
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return Rate|null
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return new Rate($value);
+        if (null === $value) {
+            return null;
+        }
+
+        return new Rate((int) $value);
     }
 
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return int|null
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
+        if (null === $value) {
+            return null;
+        }
+
         return $value->getValue();
     }
 
-
-    public function getName()
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
     {
         return self::RATE;
     }
-
 }
