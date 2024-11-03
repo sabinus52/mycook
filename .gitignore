@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -34,9 +33,11 @@ yarn-error.log
 /public/datas/cache/
 ###< liip/imagine-bundle ###
 
-/public/images/home*
-#/public/datas/**
-#!/public/datas/.gitkeep
-#!/public/datas/categories/.gitkeep
-#!/public/datas/recipes/.gitkeep
+###> My configuration ###
+/.vscode
 /DEVELOP*.md
+/*.code-workspace
+/*.conf
+/*.cache
+/.sync.ffs_db
+###< My configuration ###
