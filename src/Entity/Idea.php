@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\IdeaRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,63 +20,43 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des idées de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=IdeaRepository::class)
  */
+#[ORM\Entity(repositoryClass: IdeaRepository::class)]
 class Idea
 {
-    /**
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de la recette.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     *
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
      * Lien vers le site.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     *
-     * @Assert\NotBlank
-     *
-     * @Assert\Url
      */
-    private $link;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $link = null;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="blob", nullable=true)
+     * Commentaire.
      */
-    private $comment;
+    #[ORM\Column(type: Types::BLOB, nullable: true)]
+    private ?string $comment = null;
 
     /**
      * Url de l'image du site.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     *
-     * @Assert\NotBlank
-     *
-     * @Assert\Url
      */
-    private $image;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Url]
+    private ?string $image = null;
 
     public function getId(): ?int
     {
@@ -87,7 +68,7 @@ class Idea
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -99,7 +80,7 @@ class Idea
         return $this->link;
     }
 
-    public function setLink(string $link): self
+    public function setLink(string $link): static
     {
         $this->link = $link;
 
@@ -111,7 +92,7 @@ class Idea
         return $this->comment;
     }
 
-    public function setComment(string $comment): self
+    public function setComment(string $comment): static
     {
         $this->comment = $comment;
 
@@ -123,7 +104,7 @@ class Idea
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(string $image): static
     {
         $this->image = $image;
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\StepRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,43 +20,28 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des étapes composant la recette.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=StepRepository::class)
  */
+#[ORM\Entity(repositoryClass: StepRepository::class)]
 class Step
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Contenu ou description de l'étape.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     *
-     * @Assert\NotBlank
      */
-    private $content;
+    #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    private ?string $content = null;
 
     /**
      * Jointure avec les recettes.
-     *
-     * @var Recipe
-     *
-     * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="steps")
-     *
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $recipe;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Recipe::class, inversedBy: 'steps')]
+    private ?Recipe $recipe = null;
 
     public function __construct()
     {
@@ -71,7 +57,7 @@ class Step
         return $this->content;
     }
 
-    public function setContent(string $content): self
+    public function setContent(string $content): static
     {
         $this->content = $content;
 
@@ -83,7 +69,7 @@ class Step
         return $this->recipe;
     }
 
-    public function setRecipe(?Recipe $recipe): self
+    public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
 

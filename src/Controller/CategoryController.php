@@ -27,16 +27,14 @@ use Symfony\Component\Routing\Annotation\Route;
  * Controleur de gestion des catégories.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @Route("/category")
  */
+#[Route(path: '/category')]
 class CategoryController extends AbstractController
 {
     /**
      * Liste des catégories.
-     *
-     * @Route("/", name="category_index", methods={"GET"})
      */
+    #[Route(path: '/', name: 'category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
         return $this->render('category/index.html.twig', [
@@ -46,11 +44,9 @@ class CategoryController extends AbstractController
 
     /**
      * Ajout d'une nouvelle catégorie.
-     *
-     * @Route("/create", name="category_create", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/create', name: 'category_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
     {
         $category = new Category();
@@ -77,9 +73,8 @@ class CategoryController extends AbstractController
 
     /**
      * Visualiser la catégorie.
-     *
-     * @Route("/{id}", name="category_show", methods={"GET"})
      */
+    #[Route(path: '/{id}', name: 'category_show', methods: ['GET'])]
     public function show(Category $category, EntityManagerInterface $entityManager): Response
     {
         $recipes = $entityManager->getRepository(Recipe::class)->findByCategory($category); // @phpstan-ignore-line
@@ -92,11 +87,9 @@ class CategoryController extends AbstractController
 
     /**
      * Editer la catégorie.
-     *
-     * @Route("/{id}/update", name="category_update", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/update', name: 'category_update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(Request $request, Category $category, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
@@ -121,11 +114,9 @@ class CategoryController extends AbstractController
 
     /**
      * Supprime une catégorie.
-     *
-     * @Route("/{id}", name="category_delete", methods={"POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}', name: 'category_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), (string) $request->request->get('_token'))) {

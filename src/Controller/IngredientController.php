@@ -34,16 +34,14 @@ use Symfony\Component\Routing\Annotation\Route;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- *
- * @Route("/ingredient")
  */
+#[Route(path: '/ingredient')]
 class IngredientController extends AbstractController
 {
     /**
      * Index ou liste des ingrédients.
-     *
-     * @Route("/", name="ingredient_index", methods={"GET"})
      */
+    #[Route(path: '/', name: 'ingredient_index', methods: ['GET'])]
     public function index(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
     {
         $session->set('ingredient.filter.route', $request->get('_route'));
@@ -55,9 +53,8 @@ class IngredientController extends AbstractController
 
     /**
      * Index ou liste des ingrédients avec le champs "calorie" non rempli.
-     *
-     * @Route("/without-calories", name="ingredient_index_without_cal", methods={"GET"})
      */
+    #[Route(path: '/without-calories', name: 'ingredient_index_without_cal', methods: ['GET'])]
     public function indexWithoutCalories(IngredientRepository $ingredientRepository, SessionInterface $session, Request $request): Response
     {
         $session->set('ingredient.filter.route', $request->get('_route'));
@@ -69,9 +66,8 @@ class IngredientController extends AbstractController
 
     /**
      * Index ou liste des ingrédients.
-     *
-     * @Route("/{term}.json", name="ingredient_json", options={"expose": true})
      */
+    #[Route(path: '/{term}.json', name: 'ingredient_json', options: ['expose' => true])]
     public function fetchFormatJSON(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         return new JsonResponse($ingredientRepository->searchByName($request->get('term'), Query::HYDRATE_ARRAY));
@@ -79,9 +75,8 @@ class IngredientController extends AbstractController
 
     /**
      * Retourne si un ingredient existe ou pas.
-     *
-     * @Route("/is-exists", name="ingredient_isexists", options={"expose": true})
      */
+    #[Route(path: '/is-exists', name: 'ingredient_isexists', options: ['expose' => true])]
     public function isExists(Request $request, IngredientRepository $ingredientRepository): JsonResponse
     {
         $ingredient = $ingredientRepository->findOneByName($request->get('term')); // @phpstan-ignore-line
@@ -99,11 +94,9 @@ class IngredientController extends AbstractController
 
     /**
      * Création d'un nouvel ingrédient depuis le formulaire de la recette.
-     *
-     * @Route("/create-ajax", name="ingredient_create_from_recipe", methods={"POST"}, options={"expose": true})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/create-ajax', name: 'ingredient_create_from_recipe', methods: ['POST'], options: ['expose' => true])]
+    #[IsGranted('ROLE_ADMIN')]
     public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
@@ -122,11 +115,9 @@ class IngredientController extends AbstractController
 
     /**
      * Création d'un nouvel ingrédient.
-     *
-     * @Route("/create", name="ingredient_create", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/create', name: 'ingredient_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $ingredient = new Ingredient();
@@ -152,9 +143,8 @@ class IngredientController extends AbstractController
 
     /**
      * Visualisation d'un ingrédient.
-     *
-     * @Route("/{id}", name="ingredient_show", methods={"GET"})
      */
+    #[Route(path: '/{id}', name: 'ingredient_show', methods: ['GET'])]
     public function show(Ingredient $ingredient): Response
     {
         return $this->render('ingredient/show.html.twig', [
@@ -164,11 +154,9 @@ class IngredientController extends AbstractController
 
     /**
      * Edition d'un ingrédient.
-     *
-     * @Route("/{id}/update", name="ingredient_update", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/update', name: 'ingredient_update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -192,11 +180,9 @@ class IngredientController extends AbstractController
 
     /**
      * Suppression d'un ingrédient.
-     *
-     * @Route("/{id}/delete", name="ingredient_delete", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/delete', name: 'ingredient_delete', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), (string) $request->request->get('_token'))) {

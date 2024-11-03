@@ -19,9 +19,8 @@ use Olix\BackOfficeBundle\Model\User as BaseUser;
  * Entité des utilisateurs.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=UserRepository::class)
  */
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User extends BaseUser
 {
 }

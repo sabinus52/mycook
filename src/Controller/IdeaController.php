@@ -25,16 +25,14 @@ use Symfony\Component\Routing\Annotation\Route;
  * Controleur de la gestion des idées de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @Route("/idea")
  */
+#[Route(path: '/idea')]
 class IdeaController extends AbstractController
 {
     /**
      * Index ou liste des ingrédients.
-     *
-     * @Route("/", name="idea_index", methods={"GET"})
      */
+    #[Route(path: '/', name: 'idea_index', methods: ['GET'])]
     public function index(IdeaRepository $ideaRepository): Response
     {
         return $this->render('idea/index.html.twig', [
@@ -44,11 +42,9 @@ class IdeaController extends AbstractController
 
     /**
      * Création d'un nouvelle idée de recette.
-     *
-     * @Route("/create", name="idea_create", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/create', name: 'idea_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $idea = new Idea();
@@ -72,11 +68,9 @@ class IdeaController extends AbstractController
 
     /**
      * Edition d'une idée de recette.
-     *
-     * @Route("/{id}/update", name="idea_update", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/update', name: 'idea_update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(IdeaType::class, $idea);
@@ -98,11 +92,9 @@ class IdeaController extends AbstractController
 
     /**
      * Suppression d'une idée de recette.
-     *
-     * @Route("/{id}/delete", name="idea_delete", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/delete', name: 'idea_delete', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$idea->getId(), (string) $request->request->get('_token'))) {

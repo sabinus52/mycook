@@ -20,6 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @internal
+ *
  * @coversNothing
  */
 final class RecipeTest extends KernelTestCase
@@ -41,7 +42,7 @@ final class RecipeTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider additionProviderCalorie
+     * @dataProvider provideCalculCaloriesCases
      *
      * @param mixed $recipe
      * @param mixed $calorie
@@ -50,7 +51,7 @@ final class RecipeTest extends KernelTestCase
     {
         /** @phpstan-ignore-next-line */
         $recipe = $this->entityManager->getRepository(Recipe::class)->findOneByName($recipe);
-        static::assertSame($recipe->calculCalories(), $calorie);
+        self::assertSame($recipe->calculCalories(), $calorie);
     }
 
     /**
@@ -58,7 +59,7 @@ final class RecipeTest extends KernelTestCase
      *
      * @return array<mixed>
      */
-    public function additionProviderCalorie(): array
+    public static function provideCalculCaloriesCases(): iterable
     {
         return [
             ['Fondant chocolat mascarpone', 205],

@@ -31,9 +31,8 @@ class SecurityController extends AbstractController
 {
     /**
      * Connexion.
-     *
-     * @Route("/login", name="app_login")
      */
+    #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -49,9 +48,8 @@ class SecurityController extends AbstractController
 
     /**
      * Déconnexion.
-     *
-     * @Route("/logout", name="app_logout")
      */
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
@@ -59,11 +57,9 @@ class SecurityController extends AbstractController
 
     /**
      * Changement des informations du profil.
-     *
-     * @Route("/profile", name="app_profile", methods={"GET", "POST"})
-     *
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
+    #[Route(path: '/profile', name: 'app_profile', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function changeProfile(Request $request, UserManager $manager): Response
     {
         // Utilisation de la classe UserManager
@@ -93,11 +89,9 @@ class SecurityController extends AbstractController
 
     /**
      * Changement du password.
-     *
-     * @Route("/change-password", name="app_change_password", methods={"GET", "POST"})
-     *
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
+    #[Route(path: '/change-password', name: 'app_change_password', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function changePassword(Request $request, UserManager $manager): Response
     {
         // Utilisation de la classe UserManager

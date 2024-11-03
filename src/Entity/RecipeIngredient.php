@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Constant\Unity;
 use App\Repository\RecipeIngredientRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,72 +21,47 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité de jointure des ingrédients composant la recette.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=RecipeIngredientRepository::class)
  */
+#[ORM\Entity(repositoryClass: RecipeIngredientRepository::class)]
 class RecipeIngredient
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Jointure avec les recettes.
-     *
-     * @var Recipe
-     *
-     * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="ingredients")
-     *
-     * @ORM\JoinColumn(nullable=false)
      */
-    private $recipe;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Recipe::class, inversedBy: 'ingredients')]
+    private ?Recipe $recipe = null;
 
     /**
      * Jointure avec les ingédients.
-     *
-     * @var Ingredient
-     *
-     * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="recipes")
-     *
-     * @ORM\JoinColumn(nullable=false)
-     *
-     * @Assert\NotBlank
      */
-    private $ingredient;
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Ingredient::class, inversedBy: 'recipes')]
+    #[Assert\NotBlank]
+    private ?Ingredient $ingredient = null;
 
     /**
      * Quantité de l'ingrédient de la recette.
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint", nullable=true)
      */
-    private $quantity;
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $quantity = null;
 
     /**
      * Jointure avec l'unité de la quantité de l'ingrédient.
-     *
-     * @var Unity
-     *
-     * @ORM\Column(type="unity")
      */
-    private $unity;
+    #[ORM\Column(type: 'unity')]
+    private ?Unity $unity = null;
 
     /**
      * Note supplémentaire.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $note;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $note = null;
 
     public function getId(): ?int
     {
@@ -97,7 +73,7 @@ class RecipeIngredient
         return $this->recipe;
     }
 
-    public function setRecipe(?Recipe $recipe): self
+    public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
 
@@ -109,7 +85,7 @@ class RecipeIngredient
         return $this->ingredient;
     }
 
-    public function setIngredient(?Ingredient $ingredient): self
+    public function setIngredient(?Ingredient $ingredient): static
     {
         $this->ingredient = $ingredient;
 
@@ -121,7 +97,7 @@ class RecipeIngredient
         return $this->quantity;
     }
 
-    public function setQuantity(?int $quantity): self
+    public function setQuantity(?int $quantity): static
     {
         $this->quantity = $quantity;
 
@@ -133,7 +109,7 @@ class RecipeIngredient
         return $this->unity;
     }
 
-    public function setUnity(?Unity $unity): self
+    public function setUnity(?Unity $unity): static
     {
         $this->unity = $unity;
 
@@ -145,7 +121,7 @@ class RecipeIngredient
         return $this->note;
     }
 
-    public function setNote(?string $note): self
+    public function setNote(?string $note): static
     {
         $this->note = $note;
 

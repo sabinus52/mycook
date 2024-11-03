@@ -14,6 +14,7 @@ namespace App\Entity;
 use App\Constant\Unity;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,66 +23,48 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=IngredientRepository::class)
- *
- * @UniqueEntity("name")
  */
+#[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[UniqueEntity('name')]
 class Ingredient
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de l'ingrédient.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100, unique=true)
-     *
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 100, unique: true)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
-     * @var Unity
-     *
-     * @ORM\Column(type="unity")
+     * Unité par défaur.
      */
-    private $unity;
+    #[ORM\Column(type: 'unity')]
+    private ?Unity $unity = null;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
+     * Conversion.
      */
-    private $conversion;
+    #[ORM\Column(nullable: true)]
+    private ?int $conversion = null;
 
     /**
      * Nombre de calorie pour 100 gramme.
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
-    private $calorie;
+    #[ORM\Column(nullable: true)]
+    private ?int $calorie = null;
 
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection<RecipeIngredient>
-     *
-     * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="ingredient")
+     * @var Collection|RecipeIngredient[]
      */
-    private $recipes;
+    #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'ingredient')]
+    private Collection $recipes;
 
     public function __construct()
     {
@@ -99,7 +82,7 @@ class Ingredient
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -111,7 +94,7 @@ class Ingredient
         return $this->unity;
     }
 
-    public function setUnity(?Unity $unity): self
+    public function setUnity(?Unity $unity): static
     {
         $this->unity = $unity;
 
@@ -123,7 +106,7 @@ class Ingredient
         return $this->conversion;
     }
 
-    public function setConversion(?int $conversion): self
+    public function setConversion(?int $conversion): static
     {
         $this->conversion = $conversion;
 
@@ -135,7 +118,7 @@ class Ingredient
         return $this->calorie;
     }
 
-    public function setCalorie(?int $calorie): self
+    public function setCalorie(?int $calorie): static
     {
         $this->calorie = $calorie;
 
@@ -143,14 +126,14 @@ class Ingredient
     }
 
     /**
-     * @return ArrayCollection<RecipeIngredient>|null
+     * @return Collection|RecipeIngredient[]
      */
-    public function getRecipes()
+    public function getRecipes(): Collection
     {
         return $this->recipes;
     }
 
-    public function addRecipe(RecipeIngredient $recipe): self
+    public function addRecipe(RecipeIngredient $recipe): static
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes[] = $recipe;
@@ -160,7 +143,7 @@ class Ingredient
         return $this;
     }
 
-    public function removeRecipe(RecipeIngredient $recipe): self
+    public function removeRecipe(RecipeIngredient $recipe): static
     {
         if ($this->recipes->removeElement($recipe)) {
             // set the owning side to null (unless already changed)

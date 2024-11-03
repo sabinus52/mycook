@@ -29,9 +29,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * Controleur de la gestion des recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @Route("/recipe")
  */
+#[Route(path: '/recipe')]
 class RecipeController extends AbstractController
 {
     /**
@@ -41,9 +40,8 @@ class RecipeController extends AbstractController
 
     /**
      * Index ou liste des recettes.
-     *
-     * @Route("/", name="recipe_index", methods={"GET"})
      */
+    #[Route(path: '/', name: 'recipe_index', methods: ['GET'])]
     public function index(RecipeRepository $recipeRepository): Response
     {
         return $this->render('recipe/index.html.twig', [
@@ -53,11 +51,9 @@ class RecipeController extends AbstractController
 
     /**
      * Création d'une recette.
-     *
-     * @Route("/create", name="recipe_create", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/create', name: 'recipe_create', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
         $this->entityManager = $entityManager;
@@ -91,9 +87,8 @@ class RecipeController extends AbstractController
 
     /**
      * Visualisation d'une recette.
-     *
-     * @Route("/{id}", name="recipe_show", methods={"GET"}, options={"expose": true})
      */
+    #[Route(path: '/{id}', name: 'recipe_show', methods: ['GET'], options: ['expose' => true])]
     public function show(Recipe $recipe): Response
     {
         return $this->render('recipe/show.html.twig', [
@@ -103,11 +98,9 @@ class RecipeController extends AbstractController
 
     /**
      * Edition d'une recette.
-     *
-     * @Route("/{id}/update", name="recipe_update", methods={"GET", "POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}/update', name: 'recipe_update', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(Request $request, Recipe $recipe, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
         $this->entityManager = $entityManager;
@@ -140,11 +133,9 @@ class RecipeController extends AbstractController
 
     /**
      * Suppression d'une recette.
-     *
-     * @Route("/{id}", name="recipe_delete", methods={"POST"})
-     *
-     * @IsGranted("ROLE_ADMIN")
      */
+    #[Route(path: '/{id}', name: 'recipe_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {

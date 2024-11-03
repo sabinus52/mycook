@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @internal
+ *
  * @coversNothing
  */
 final class IngredientTest extends KernelTestCase
@@ -49,11 +50,11 @@ final class IngredientTest extends KernelTestCase
         $unity = new Unity(Unity::GRAM);
 
         $this->AssertFalse($unity->isNumber());
-        static::assertSame($unity->getSymbol(), 'g');
-        static::assertSame($unity->getLabel(), 'gramme(s)');
-        static::assertSame($unity->getInGram(100), 100.0);
-        static::assertSame($unity->convert(250, Unity::CUP), 1.0);
-        static::assertSame($unity->convert(250, Unity::OUNCE), 8.82);
+        self::assertSame($unity->getSymbol(), 'g');
+        self::assertSame($unity->getLabel(), 'gramme(s)');
+        self::assertSame($unity->getInGram(100), 100.0);
+        self::assertSame($unity->convert(250, Unity::CUP), 1.0);
+        self::assertSame($unity->convert(250, Unity::OUNCE), 8.82);
     }
 
     /**
@@ -64,12 +65,12 @@ final class IngredientTest extends KernelTestCase
         $unity = new Unity(Unity::NUMBER);
 
         $this->AssertTrue($unity->isNumber());
-        static::assertSame($unity->getSymbol(), '');
-        static::assertSame($unity->getLabel(), 'nombre');
+        self::assertSame($unity->getSymbol(), '');
+        self::assertSame($unity->getLabel(), 'nombre');
     }
 
     /**
-     * @dataProvider additionProvider
+     * @dataProvider provideConversionInGramAndCaloriesCases
      *
      * @param mixed $ingredient
      * @param mixed $quantity
@@ -79,8 +80,8 @@ final class IngredientTest extends KernelTestCase
     public function testConversionInGramAndCalories($ingredient, $quantity, Unity $source, $mass, $calorie): void
     {
         $ingredient = $this->entityManager->getRepository(Ingredient::class)->findOneByName($ingredient); // @phpstan-ignore-line
-        static::assertSame($ingredient->getInGram($quantity, $source), $mass);
-        static::assertSame($ingredient->getCalories($quantity, $source), $calorie);
+        self::assertSame($ingredient->getInGram($quantity, $source), $mass);
+        self::assertSame($ingredient->getCalories($quantity, $source), $calorie);
     }
 
     /**
@@ -88,7 +89,7 @@ final class IngredientTest extends KernelTestCase
      *
      * @return array<mixed>
      */
-    public function additionProvider(): array
+    public static function provideConversionInGramAndCaloriesCases(): iterable
     {
         return [
             // Ingredient, qt,     unité,                    poids, calories

@@ -29,9 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class IndexController extends AbstractController
 {
-    /**
-     * @Route("/", name="index_home")
-     */
+    #[Route(path: '/', name: 'index_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         // Les catégories où il y a le plus de recettes
@@ -52,9 +50,8 @@ class IndexController extends AbstractController
 
     /**
      * Auto completion de recherche des recettes.
-     *
-     * @Route("/autocomplete/{term}", options={"expose": true}, name="autocomplete-search")
      */
+    #[Route(path: '/autocomplete/{term}', options: ['expose' => true], name: 'autocomplete-search')]
     public function autocompleteRecipe(Request $request, RecipeRepository $recipeRepository): JsonResponse
     {
         $term = $request->get('term');

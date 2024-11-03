@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,41 +21,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des catégories de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de la catégorie.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100)
-     *
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection<Recipe>
-     *
-     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="categories")
+     * @var Collection|Recipe[]
      */
-    private $recipes;
+    #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'categories')]
+    private Collection $recipes;
 
     public function __construct()
     {
@@ -71,7 +60,7 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -79,14 +68,14 @@ class Category
     }
 
     /**
-     * @return ArrayCollection<Recipe>|null
+     * @return Collection|Recipe>[]
      */
     public function getRecipes()
     {
         return $this->recipes;
     }
 
-    public function addRecipe(Recipe $recipe): self
+    public function addRecipe(Recipe $recipe): static
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes[] = $recipe;
@@ -96,7 +85,7 @@ class Category
         return $this;
     }
 
-    public function removeRecipe(Recipe $recipe): self
+    public function removeRecipe(Recipe $recipe): static
     {
         if ($this->recipes->removeElement($recipe)) {
             $recipe->removeCategory($this);
