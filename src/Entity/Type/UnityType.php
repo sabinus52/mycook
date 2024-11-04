@@ -36,10 +36,8 @@ class UnityType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return Unity|null
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Unity
     {
         if (null === $value) {
             return null;
@@ -50,10 +48,8 @@ class UnityType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return string|null
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
             return null;

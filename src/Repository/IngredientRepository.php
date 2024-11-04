@@ -37,7 +37,7 @@ class IngredientRepository extends ServiceEntityRepository
      *
      * @return array<mixed>
      */
-    public function searchByName($term, $mode = Query::HYDRATE_OBJECT): array
+    public function searchByName(string $term, $mode = Query::HYDRATE_OBJECT): array
     {
         return $this->createQueryBuilder('i')
             ->where('i.name LIKE :term')

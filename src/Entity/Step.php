@@ -43,10 +43,6 @@ class Step
     #[ORM\ManyToOne(targetEntity: Recipe::class, inversedBy: 'steps')]
     private ?Recipe $recipe = null;
 
-    public function __construct()
-    {
-    }
-
     public function getId(): ?int
     {
         return $this->id;

@@ -73,21 +73,16 @@ class RecipeRepository extends ServiceEntityRepository
      *
      * @return Recipe[]
      */
-    public function findMostPopular(?int $count = null): array
+    public function findMostPopular(int $count = 6): array
     {
         $query = $this->createQueryBuilder('recipe');
-
-        if ($count) {
-            $query = $query->setMaxResults(6);
-        }
+        $query = $query->setMaxResults($count);
 
         return $query->getQuery()->getResult();
     }
 
     /**
      * Retourne une recette au hasard.
-     *
-     * @return Recipe
      */
     public function findOneRandom(): Recipe
     {

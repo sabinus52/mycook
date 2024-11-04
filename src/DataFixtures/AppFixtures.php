@@ -39,14 +39,17 @@ class AppFixtures extends Fixture
     {
         $category = new Category();
         $category->setName('Entrées');
+
         $manager->persist($category);
 
         $category = new Category();
         $category->setName('Plats');
+
         $manager->persist($category);
 
         $category = new Category();
         $category->setName('Desserts');
+
         $manager->persist($category);
 
         $manager->flush();
@@ -130,7 +133,7 @@ class AppFixtures extends Fixture
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
-        $ingredient->setName('Gousse d\'Ail')->setCalorie(111)->setUnity(new Unity(Unity::NUMBER))->setConversion(7);
+        $ingredient->setName("Gousse d'Ail")->setCalorie(111)->setUnity(new Unity(Unity::NUMBER))->setConversion(7);
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();

@@ -36,18 +36,15 @@ class CategoryRepository extends ServiceEntityRepository
      *
      * @return array<Recipe>
      */
-    public function findMostRecipes(?int $count = null): array
+    public function findMostRecipes(int $count = 6): array
     {
         $query = $this->createQueryBuilder('cat')
             ->addSelect('COUNT(recipe) AS nb')
             ->join('cat.recipes', 'recipe')
             ->groupBy('cat.id')
             ->orderBy('nb', 'DESC')
+            ->setMaxResults($count)
         ;
-
-        if ($count) {
-            $query = $query->setMaxResults(6);
-        }
 
         return $query->getQuery()->getResult();
     }

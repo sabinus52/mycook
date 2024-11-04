@@ -36,10 +36,8 @@ class RateType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return Rate|null
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Rate
     {
         if (null === $value) {
             return null;
@@ -50,10 +48,8 @@ class RateType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return int|null
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
         if (null === $value) {
             return null;

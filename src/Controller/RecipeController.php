@@ -34,11 +34,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class RecipeController extends AbstractController
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
      * Index ou liste des recettes.
      */
     #[Route(path: '/', name: 'recipe_index', methods: ['GET'])]
@@ -56,22 +51,20 @@ class RecipeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
-        $this->entityManager = $entityManager;
-
         $recipe = new Recipe();
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($recipe);
-            $this->entityManager->flush();
+            $entityManager->persist($recipe);
+            $entityManager->flush();
 
             $image = $form->get('image')->getData();
             if ($image) {
                 $fileUploader->upload($image, $recipe);
             }
 
-            $this->setPopularityUnityToIngredient();
+            $this->setPopularityUnityToIngredient($entityManager);
 
             return $this->redirectToRoute('recipe_index');
         }
@@ -103,8 +96,6 @@ class RecipeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function update(Request $request, Recipe $recipe, EntityManagerInterface $entityManager, RecipeUploader $fileUploader): Response
     {
-        $this->entityManager = $entityManager;
-
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
@@ -114,9 +105,9 @@ class RecipeController extends AbstractController
                 $fileUploader->upload($image, $recipe);
             }
 
-            $this->entityManager->flush();
+            $entityManager->flush();
 
-            $this->setPopularityUnityToIngredient();
+            $this->setPopularityUnityToIngredient($entityManager);
 
             return $this->redirectToRoute('recipe_index');
         }
@@ -149,10 +140,10 @@ class RecipeController extends AbstractController
     /**
      * Mets à jour les unités les plus utilisées par ingrédient.
      */
-    private function setPopularityUnityToIngredient(): void
+    private function setPopularityUnityToIngredient(EntityManagerInterface $entityManager): void
     {
         // Récupération des tous les ingrédients
-        $ingredients = $this->entityManager
+        $ingredients = $entityManager
             ->getRepository(Ingredient::class)
             ->findAll()
         ;
@@ -162,7 +153,7 @@ class RecipeController extends AbstractController
          *
          * @phpstan-ignore-next-line
          */
-        $ingredientsByUnity = $this->entityManager
+        $ingredientsByUnity = $entityManager
             ->getRepository(RecipeIngredient::class)
             ->findMostPopularityUnityByIngredient()
         ;
@@ -177,9 +168,9 @@ class RecipeController extends AbstractController
             // Si changement d'unité, on met à jour l'unité la plus utilisée
             if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {
                 $ingredient->setUnity($unity);
-                $this->entityManager->persist($ingredient);
+                $entityManager->persist($ingredient);
             }
         }
-        $this->entityManager->flush();
+        $entityManager->flush();
     }
 }

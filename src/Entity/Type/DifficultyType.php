@@ -36,10 +36,8 @@ class DifficultyType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return Difficulty|null
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Difficulty
     {
         if (null === $value) {
             return null;
@@ -50,10 +48,8 @@ class DifficultyType extends Type
 
     /**
      * {@inheritdoc}
-     *
-     * @return int|null
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
         if (null === $value) {
             return null;

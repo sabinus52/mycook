@@ -26,25 +26,17 @@ abstract class FileUploader
 {
     /**
      * Dossier racine de la zone publique.
-     *
-     * @var string
      */
-    private $rootDir;
-
-    /**
-     * @var CacheManager
-     */
-    protected $imagineCacheManager;
+    private readonly string $rootDir;
 
     /**
      * Constructeur.
      *
      * @param string $directory : Dossier de destination des images
      */
-    public function __construct(private readonly string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
+    public function __construct(private readonly string $directory, KernelInterface $kernel, protected CacheManager $imagineCacheManager)
     {
         $this->rootDir = $kernel->getProjectDir().'/public';
-        $this->imagineCacheManager = $imagineCacheManager;
     }
 
     /**

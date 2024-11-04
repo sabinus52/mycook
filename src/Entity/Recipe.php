@@ -48,7 +48,7 @@ class Recipe
     #[Assert\NotNull]
     #[Assert\Type(type: 'integer')]
     #[Assert\Range(min: 1, max: 12)]
-    private ?int $person = null;
+    private ?int $person = 4;
 
     /**
      * Niveau de difficulté de la recette.
@@ -114,7 +114,6 @@ class Recipe
 
     public function __construct()
     {
-        $this->person = 4;
         $this->categories = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
         $this->steps = new ArrayCollection();
@@ -253,11 +252,8 @@ class Recipe
 
     public function removeStep(Step $step): static
     {
-        if ($this->steps->removeElement($step)) {
-            // set the owning side to null (unless already changed)
-            if ($step->getRecipe() === $this) {
-                $step->setRecipe(null);
-            }
+        if ($this->steps->removeElement($step) && $step->getRecipe() === $this) {
+            $step->setRecipe(null);
         }
 
         return $this;
@@ -283,11 +279,8 @@ class Recipe
 
     public function removeIngredient(RecipeIngredient $ingredient): static
     {
-        if ($this->ingredients->removeElement($ingredient)) {
-            // set the owning side to null (unless already changed)
-            if ($ingredient->getRecipe() === $this) {
-                $ingredient->setRecipe(null);
-            }
+        if ($this->ingredients->removeElement($ingredient) && $ingredient->getRecipe() === $this) {
+            $ingredient->setRecipe(null);
         }
 
         return $this;
