@@ -101,4 +101,16 @@ return [
         'version' => '1.0.7',
         'type' => 'css',
     ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
+    '@symfony/stimulus-bundle' => [
+        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
+    ],
+    'tom-select' => [
+        'version' => '2.3.1',
+    ],
+    'chart.js' => [
+        'version' => '3.9.1',
+    ],
 ];
