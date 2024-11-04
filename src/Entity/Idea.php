@@ -47,7 +47,7 @@ class Idea
     /**
      * Commentaire.
      */
-    #[ORM\Column(type: Types::BLOB, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 
     /**

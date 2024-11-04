@@ -113,4 +113,8 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
+    'tom-select/dist/css/tom-select.default.css' => [
+        'version' => '2.3.1',
+        'type' => 'css',
+    ],
 ];
