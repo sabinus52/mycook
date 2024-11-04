@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Constant\Unity;
 use App\Entity\Ingredient;
+use App\Values\Unity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -31,6 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class IngredientType extends AbstractType
 {
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -54,6 +55,7 @@ class IngredientType extends AbstractType
         ;
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -11,13 +11,13 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
-use App\Constant\Unity;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
 use App\Entity\Step;
+use App\Values\Difficulty;
+use App\Values\Rate;
+use App\Values\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -28,6 +28,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 class RecipeFixtures extends Fixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $this->loadRecipe1($manager);

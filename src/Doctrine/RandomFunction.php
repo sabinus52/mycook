@@ -25,6 +25,7 @@ use Doctrine\ORM\Query\TokenType;
  */
 class RandomFunction extends FunctionNode
 {
+    #[\Override]
     public function parse(Parser $parser): void
     {
         $parser->match(TokenType::T_IDENTIFIER);
@@ -32,6 +33,7 @@ class RandomFunction extends FunctionNode
         $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
+    #[\Override]
     public function getSql(SqlWalker $sqlWalker): string
     {
         return 'RANDOM()';

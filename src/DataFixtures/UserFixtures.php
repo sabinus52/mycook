@@ -30,9 +30,7 @@ class UserFixtures extends Fixture
     {
     }
 
-    /**
-     * Chargement des utilisateurs.
-     */
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $user = new User();

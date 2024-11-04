@@ -9,7 +9,7 @@ declare(strict_types=1);
  *  file that was distributed with this source code.
  */
 
-namespace App\Constant;
+namespace App\Values;
 
 /**
  * Classe statique sur les unités des quantités.
@@ -41,7 +41,7 @@ class Unity implements \Stringable
     /**
      * @var array<mixed>
      */
-    private static $unities = [
+    private static array $unities = [
         self::NUMBER => ['type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '',      'conversion' => null],
         self::KILO => ['type' => self::WEIGHT,    'label' => 'kilo(s)',              'symbol' => 'Kg',    'conversion' => 1000],
         self::GRAM => ['type' => self::WEIGHT,    'label' => 'gramme(s)',            'symbol' => 'g',     'conversion' => 1],
@@ -56,10 +56,7 @@ class Unity implements \Stringable
         self::MLITRE => ['type' => self::CAPACITY,  'label' => 'millilitre(s)',        'symbol' => 'ml',    'conversion' => 1],
     ];
 
-    /**
-     * @var string
-     */
-    private $unity;
+    private readonly string $unity;
 
     /**
      * Constructeur.
@@ -75,6 +72,7 @@ class Unity implements \Stringable
     /**
      * Retourne le label.
      */
+    #[\Override]
     public function __toString(): string
     {
         return $this->getValue();

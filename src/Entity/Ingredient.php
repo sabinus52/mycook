@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Constant\Unity;
 use App\Repository\IngredientRepository;
+use App\Values\Unity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -61,7 +61,7 @@ class Ingredient
     /**
      * Jointure avec les recettes.
      *
-     * @var Collection|RecipeIngredient[]
+     * @var Collection<int, RecipeIngredient>
      */
     #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'ingredient')]
     private Collection $recipes;

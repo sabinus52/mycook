@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
 use App\Entity\Category;
 use App\Entity\Recipe;
+use App\Values\Difficulty;
+use App\Values\Rate;
 use Olix\BackOfficeBundle\Form\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Constraints\Image;
  */
 class RecipeType extends AbstractType
 {
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -121,6 +122,7 @@ class RecipeType extends AbstractType
         ;
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

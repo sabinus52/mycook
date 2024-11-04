@@ -9,9 +9,9 @@ declare(strict_types=1);
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Type;
+namespace App\Doctrine\Type;
 
-use App\Constant\Rate;
+use App\Values\Rate;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -26,17 +26,13 @@ class RateType extends Type
 {
     public const RATE = 'rate';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return 'smallint';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToPHPValue($value, AbstractPlatform $platform): ?Rate
     {
         if (null === $value) {
@@ -46,9 +42,7 @@ class RateType extends Type
         return new Rate((int) $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
         if (null === $value) {
@@ -58,9 +52,7 @@ class RateType extends Type
         return $value->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName(): string
     {
         return self::RATE;

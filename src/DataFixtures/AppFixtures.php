@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use App\Constant\Unity;
 use App\Entity\Category;
 use App\Entity\Ingredient;
+use App\Values\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -26,6 +26,7 @@ use Doctrine\Persistence\ObjectManager;
  */
 class AppFixtures extends Fixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $this->loadCategories($manager);

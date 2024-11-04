@@ -9,47 +9,41 @@ declare(strict_types=1);
  *  file that was distributed with this source code.
  */
 
-namespace App\Entity\Type;
+namespace App\Doctrine\Type;
 
-use App\Constant\Unity;
+use App\Values\Difficulty;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
 /**
- * Type personnalisé de mapping pour des unités dea quantités des ingrédients.
+ * Type personnalisé de mapping pour les niveaux de difficulté d'une recette.
  *
  * @author Olivier <sabinus52@gmail.com>
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  */
-class UnityType extends Type
+class DifficultyType extends Type
 {
-    public const UNITY = 'unity';
+    public const DIFFICULTY = 'difficulty';
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
-        return 'VARCHAR(2)';
+        return 'smallint';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform): ?Unity
+    #[\Override]
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Difficulty
     {
         if (null === $value) {
             return null;
         }
 
-        return new Unity($value);
+        return new Difficulty((int) $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
+    #[\Override]
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
         if (null === $value) {
             return null;
@@ -58,11 +52,9 @@ class UnityType extends Type
         return $value->getValue();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName(): string
     {
-        return self::UNITY;
+        return self::DIFFICULTY;
     }
 }

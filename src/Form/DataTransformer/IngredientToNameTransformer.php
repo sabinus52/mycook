@@ -35,6 +35,7 @@ class IngredientToNameTransformer implements DataTransformerInterface
      *
      * @param Ingredient|null $ingredient
      */
+    #[\Override]
     public function transform($ingredient): string
     {
         if (null === $ingredient) {
@@ -51,6 +52,7 @@ class IngredientToNameTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException si l'objet n'a pas été trouvé
      */
+    #[\Override]
     public function reverseTransform($name): ?Ingredient
     {
         /**

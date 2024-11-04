@@ -40,7 +40,7 @@ class Category
     /**
      * Jointure avec les recettes.
      *
-     * @var Collection|Recipe[]
+     * @var Collection<int, Recipe>
      */
     #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'categories')]
     private Collection $recipes;

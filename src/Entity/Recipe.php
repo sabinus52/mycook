@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
 use App\Repository\RecipeRepository;
+use App\Values\Difficulty;
+use App\Values\Rate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -89,7 +89,7 @@ class Recipe
     /**
      * Jointure avec les catégories.
      *
-     * @var Collection|Category[]
+     * @var Collection<int, Category>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'recipes')]
     private Collection $categories;
@@ -97,7 +97,7 @@ class Recipe
     /**
      * Jointure avec les étapes.
      *
-     * @var Collection|Step[]
+     * @var Collection<int, Step>
      */
     #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
     #[Assert\Valid]
@@ -106,7 +106,7 @@ class Recipe
     /**
      * Jointure avec les ingrédients.
      *
-     * @var Collection|RecipeIngredient[]
+     * @var Collection<int, RecipeIngredient>
      */
     #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
     #[Assert\Valid]
