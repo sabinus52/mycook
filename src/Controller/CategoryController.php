@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Controleur de gestion des catégories.
+ * Contrôleur de gestion des catégories.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -59,7 +59,7 @@ class CategoryController extends AbstractController
 
             $image = $form->get('image')->getData();
             if ($image) {
-                $fileUploader->upload($image, $category);
+                $fileUploader->upload($image, $category); // @phpstan-ignore argument.type
             }
 
             return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
 
         return $this->render('category/edit.html.twig', [
             'category' => $category,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
@@ -77,7 +77,7 @@ class CategoryController extends AbstractController
     #[Route(path: '/{id}', name: 'category_show', methods: ['GET'])]
     public function show(Category $category, EntityManagerInterface $entityManager): Response
     {
-        $recipes = $entityManager->getRepository(Recipe::class)->findByCategory($category); // @phpstan-ignore-line
+        $recipes = $entityManager->getRepository(Recipe::class)->findBy(['category' => $category]);
 
         return $this->render('category/show.html.twig', [
             'category' => $category,
@@ -86,7 +86,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Editer la catégorie.
+     * Éditer la catégorie.
      */
     #[Route(path: '/{id}/update', name: 'category_update', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -98,7 +98,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $image = $form->get('image')->getData();
             if ($image) {
-                $fileUploader->upload($image, $category);
+                $fileUploader->upload($image, $category); // @phpstan-ignore argument.type
             }
 
             $entityManager->flush();
@@ -108,7 +108,7 @@ class CategoryController extends AbstractController
 
         return $this->render('category/edit.html.twig', [
             'category' => $category,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 
@@ -119,10 +119,11 @@ class CategoryController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
+        /** @psalm-suppress PossiblyNullOperand */
         if ($this->isCsrfTokenValid('delete'.$category->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($category);
             $entityManager->flush();
-            $this->addFlash('success', 'La catégorie <strong>'.$category->getName().'</strong> a été supprimé avec succès');
+            $this->addFlash('success', sprintf('La catégorie <strong>%s</strong> a été supprimée avec succès', (string) $category->getName()));
         }
 
         return $this->redirectToRoute('category_index');

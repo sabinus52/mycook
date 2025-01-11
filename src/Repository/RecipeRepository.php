@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Repository;
@@ -21,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Recipe|null findOneBy(array $criteria, array $orderBy = null)
  * @method Recipe[]    findAll()
  * @method Recipe[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Recipe>
  */
 class RecipeRepository extends ServiceEntityRepository
 {
@@ -30,37 +32,17 @@ class RecipeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne la recette avec tous ses ingrédients.
-     *
-     * @param int $id : Identifiant de la recette
-     */
-    public function findWithIngredients($id): ?Recipe
-    {
-        return $this->createQueryBuilder('r')
-            ->addSelect('ri')
-            ->addSelect('i')
-            ->leftJoin('r.ingredients', 'ri')
-            ->leftJoin('ri.ingredient', 'i')
-            ->andWhere('r.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
-    /**
      * Recherche les recettes par catégorie.
-     *
-     * @param Category $categorie : Catégorie à filtrer
      *
      * @return Recipe[]
      */
-    public function findByCategory(Category $categorie): array
+    public function findByCategory(Category $category): array
     {
+        // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
             ->join('recipe.categories', 'category')
             ->andWhere('category.id = :id')
-            ->setParameter('id', $categorie->getId())
+            ->setParameter('id', $category->getId())
             ->getQuery()
             ->getResult()
         ;
@@ -69,16 +51,16 @@ class RecipeRepository extends ServiceEntityRepository
     /**
      * Retourne les recettes les plus populaires.
      *
-     * @param int $count : Nombre d'occ à retourner
-     *
      * @return Recipe[]
      */
     public function findMostPopular(int $count = 6): array
     {
-        $query = $this->createQueryBuilder('recipe');
-        $query = $query->setMaxResults($count);
-
-        return $query->getQuery()->getResult();
+        // @phpstan-ignore return.type
+        return $this->createQueryBuilder('recipe')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     /**
@@ -86,13 +68,13 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function findOneRandom(): Recipe
     {
-        $query = $this->createQueryBuilder('recipe')
+        /** @phpstan-ignore return.type */
+        return $this->createQueryBuilder('recipe')
             ->addSelect('RANDOM() as HIDDEN rand')
             ->orderBy('rand')
             ->setMaxResults(1)
             ->getQuery()
+            ->getSingleResult()
         ;
-
-        return $query->getSingleResult();
     }
 }

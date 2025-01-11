@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
 use App\Repository\RecipeIngredientRepository;
-use App\Values\Unity;
+use App\ValuesList\Unity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -38,7 +38,7 @@ class RecipeIngredient
     private ?Recipe $recipe = null;
 
     /**
-     * Jointure avec les ingédients.
+     * Jointure avec les ingrédients.
      */
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(targetEntity: Ingredient::class, inversedBy: 'recipes')]
@@ -55,13 +55,18 @@ class RecipeIngredient
      * Jointure avec l'unité de la quantité de l'ingrédient.
      */
     #[ORM\Column(type: 'unity')]
-    private ?Unity $unity = null;
+    private Unity $unity;
 
     /**
      * Note supplémentaire.
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $note = null;
+
+    public function __construct()
+    {
+        $this->unity = new Unity(Unity::GRAM);
+    }
 
     public function getId(): ?int
     {
@@ -78,6 +83,15 @@ class RecipeIngredient
         $this->recipe = $recipe;
 
         return $this;
+    }
+
+    public function getIngredient2(): Ingredient
+    {
+        if (!$this->ingredient instanceof Ingredient) {
+            throw new \Exception('La recette n\'a pas d\'ingrédient');
+        }
+
+        return $this->ingredient;
     }
 
     public function getIngredient(): ?Ingredient
@@ -104,12 +118,12 @@ class RecipeIngredient
         return $this;
     }
 
-    public function getUnity(): ?Unity
+    public function getUnity(): Unity
     {
         return $this->unity;
     }
 
-    public function setUnity(?Unity $unity): static
+    public function setUnity(Unity $unity): static
     {
         $this->unity = $unity;
 
@@ -129,10 +143,41 @@ class RecipeIngredient
     }
 
     /**
-     * Retourne le nombre de calories de l'ingrédient.
+     * Retourne le nombre de calories de l'ingrédient inclus dans le recette.
      */
     public function getCalories(): ?int
     {
-        return $this->getIngredient()->getCalories($this->quantity, $this->unity);
+        // Si on peut pas calculer le poids total de l'ingrédient dans le recette, on ne peut pas calculer
+        $weight = $this->getWeightInGram();
+        if (null === $weight) {
+            return null;
+        }
+
+        // Si l'ingrédient n'a pas de calorie, on ne peut pas calculer
+        if (null === $this->getIngredient2()->getCalorie()) {
+            return null;
+        }
+
+        /** @psalm-suppress PossiblyNullOperand */
+        return (int) round($this->getIngredient2()->getCalorie() * $weight / 100);
+    }
+
+    /**
+     * Retourne le poids en gramme la quantité de l'ingrédient inclus dans le recette.
+     */
+    public function getWeightInGram(): ?int
+    {
+        if (!$this->unity->isNumber()) {
+            // Si l'unité choisie n'est pas un nombre, on peut convertir directement en gramme
+            return (int) round($this->unity->getInGram((float) $this->quantity));
+        }
+
+        // Si un nombre, on vérifie si on peut convertir
+        if (null === $this->getIngredient2()->getConversion()) {
+            return null;
+        }
+
+        /** @psalm-suppress PossiblyNullOperand */
+        return (int) round($this->getIngredient2()->getConversion() * (int) $this->quantity);
     }
 }

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Doctrine\Type;
 
-use App\Values\Unity;
+use App\ValuesList\Unity;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -27,7 +27,7 @@ class UnityType extends Type
     public const UNITY = 'unity';
 
     #[\Override]
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return 'VARCHAR(2)';
     }
@@ -39,13 +39,13 @@ class UnityType extends Type
             return null;
         }
 
-        return new Unity($value);
+        return new Unity((string) $value); // @phpstan-ignore cast.string
     }
 
     #[\Override]
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if (null === $value) {
+        if (!$value instanceof Unity) {
             return null;
         }
 

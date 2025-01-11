@@ -3,13 +3,13 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace App\Values;
+namespace App\ValuesList;
 
 /**
  * Classe statique sur les unités des quantités.
@@ -39,10 +39,10 @@ class Unity implements \Stringable
     public const MLITRE = 'ml';
 
     /**
-     * @var array<mixed>
+     * @var array<string,array<string,string|float>>
      */
     private static array $unities = [
-        self::NUMBER => ['type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '',      'conversion' => null],
+        self::NUMBER => ['type' => self::TNUMBER,   'label' => 'nombre',               'symbol' => '',      'conversion' => 0],
         self::KILO => ['type' => self::WEIGHT,    'label' => 'kilo(s)',              'symbol' => 'Kg',    'conversion' => 1000],
         self::GRAM => ['type' => self::WEIGHT,    'label' => 'gramme(s)',            'symbol' => 'g',     'conversion' => 1],
         self::OUNCE => ['type' => self::WEIGHT,    'label' => 'ounce(s)',             'symbol' => 'oz',    'conversion' => 28.34],
@@ -64,7 +64,7 @@ class Unity implements \Stringable
     public function __construct(string $unity)
     {
         if (!array_key_exists($unity, self::$unities)) {
-            throw new \Exception('La valeur "'.$unity.'" est inconue, Valeur possible : '.implode(',', array_keys(self::$unities)));
+            throw new \Exception('La valeur "'.$unity.'" est inconnue, Valeur possible : '.implode(',', array_keys(self::$unities)));
         }
         $this->unity = $unity;
     }
@@ -87,7 +87,7 @@ class Unity implements \Stringable
     }
 
     /**
-     * Retoune la valeur.
+     * Retourne la valeur.
      */
     public function getValue(): string
     {
@@ -99,7 +99,7 @@ class Unity implements \Stringable
      */
     public function getLabel(): string
     {
-        return self::$unities[$this->unity]['label'];
+        return (string) self::$unities[$this->unity]['label'];
     }
 
     /**
@@ -107,21 +107,21 @@ class Unity implements \Stringable
      */
     public function getSymbol(): string
     {
-        return self::$unities[$this->unity]['symbol'];
+        return (string) self::$unities[$this->unity]['symbol'];
     }
 
     /**
      * Retourne la conversion en grammes.
      */
-    public function getConversion(): ?float
+    public function getConversion(): float
     {
-        return self::$unities[$this->unity]['conversion'];
+        return (float) self::$unities[$this->unity]['conversion'];
     }
 
     /**
-     * Retourne la liste des niveaux de cout.
+     * Retourne la liste des unité.
      *
-     * @return array<mixed>
+     * @return array<string,array<string,string|float>>
      */
     public static function getConstants(): array
     {
@@ -145,10 +145,8 @@ class Unity implements \Stringable
 
     /**
      * Retourne le grammage à partir d'une quantité.
-     *
-     * @param float $quantity
      */
-    public function getInGram(?float $quantity): float
+    public function getInGram(float $quantity): float
     {
         if ($this->isNumber()) {
             throw new \Exception('Impossible de convertir un nombre en gramme');
@@ -163,11 +161,11 @@ class Unity implements \Stringable
      * @param float  $quantity : Quantité à convertir
      * @param string $unity    : Unité cible convertie
      */
-    public function convert(?float $quantity, $unity): float
+    public function convert(float $quantity, string $unity): float
     {
         $target = new self($unity);
 
-        if ($this->isNumber() || $target->isNumber()) {
+        if ($this->isNumber() || $target->isNumber() || 0.0 === $target->getConversion()) {
             throw new \Exception('Impossible de convertir un nombre');
         }
         $gram = $this->getInGram($quantity);

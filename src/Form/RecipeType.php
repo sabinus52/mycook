@@ -3,20 +3,20 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Recipe;
-use App\Values\Difficulty;
-use App\Values\Rate;
+use App\ValuesList\Difficulty;
+use App\ValuesList\Rate;
 use Olix\BackOfficeBundle\Form\Type\CollectionType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Olix\BackOfficeBundle\Form\Type\Select2EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -34,6 +34,8 @@ use Symfony\Component\Validator\Constraints\Image;
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.StaticAccess)
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class RecipeType extends AbstractType
 {
@@ -70,7 +72,7 @@ class RecipeType extends AbstractType
             ->add('timeCooking', IntegerType::class, [
                 'label' => 'Temps de cuisson',
             ])
-            ->add('category', EntityType::class, [
+            ->add('category', Select2EntityType::class, [
                 'label' => 'Catégories',
                 'class' => Category::class,
                 'choice_label' => 'name',
@@ -106,7 +108,7 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('steps', CollectionType::class, [
-                'label' => 'Etapes de la préparation',
+                'label' => 'Étapes de la préparation',
                 'button_label_add' => 'Nouvelle étape',
                 'entry_type' => StepType::class,
                 'entry_options' => ['label' => false],

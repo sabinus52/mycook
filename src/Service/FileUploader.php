@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
@@ -47,7 +47,10 @@ abstract class FileUploader
      */
     protected function move(UploadedFile $sourceFile, string $targetFile): bool
     {
-        $fileTmp = $targetFile.'.'.$sourceFile->guessExtension();
+        $extension = $sourceFile->guessExtension();
+        // Si pas d'extension
+        $extension ??= 'jpg';
+        $fileTmp = $targetFile.'.'.$extension;
         try {
             $sourceFile->move(sys_get_temp_dir(), $fileTmp);
             $this->transformToJPEG(sys_get_temp_dir().'/'.$fileTmp, $this->rootDir.$this->directory.'/'.$targetFile.'.jpg');

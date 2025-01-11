@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
@@ -34,7 +34,7 @@ class Idea
      */
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    private ?string $name = null;
+    private string $name = '';
 
     /**
      * Lien vers le site.
@@ -75,7 +75,7 @@ class Idea
         return $this;
     }
 
-    public function getLink(): string
+    public function getLink(): ?string
     {
         return $this->link;
     }
@@ -99,7 +99,7 @@ class Idea
         return $this;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }

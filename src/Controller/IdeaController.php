@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Controleur de la gestion des idées de recettes.
+ * Contrôleur de la gestion des idées de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -55,12 +55,12 @@ class IdeaController extends AbstractController
             $entityManager->persist($idea);
             $entityManager->flush();
 
-            $this->addFlash('success', 'L\'idée de recette <strong>'.$idea->getName().'</strong> a été ajouté avec succès');
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été ajouté avec succès', $idea->getName()));
 
             return $this->redirectToRoute('idea_index');
         }
 
-        return $this->renderForm('idea/edit.html.twig', [
+        return $this->render('idea/edit.html.twig', [
             'idea' => $idea,
             'form' => $form,
         ]);
@@ -79,12 +79,12 @@ class IdeaController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', 'L\'idée de recette <strong>'.$idea->getName().'</strong> a été modifié avec succès');
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été modifié avec succès', $idea->getName()));
 
             return $this->redirectToRoute('idea_index');
         }
 
-        return $this->renderForm('idea/edit.html.twig', [
+        return $this->render('idea/edit.html.twig', [
             'idea' => $idea,
             'form' => $form,
         ]);
@@ -97,18 +97,18 @@ class IdeaController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$idea->getId(), (string) $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.(int) $idea->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($idea);
 
             try {
                 $entityManager->flush();
             } catch (\Exception) {
-                $this->addFlash('danger', 'L\'idée recette <strong>'.$idea->getName().'</strong> ne peut pas être supprimé');
+                $this->addFlash('danger', sprintf('L\'idée de recette <strong>%s</strong> ne peut pas être supprimé', $idea->getName()));
 
                 return $this->redirectToRoute('idea_index');
             }
 
-            $this->addFlash('success', 'L\'idée recette <strong>'.$idea->getName().'</strong> a été supprimé avec succès');
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été supprimé avec succès', $idea->getName()));
         }
 
         return $this->redirectToRoute('idea_index');

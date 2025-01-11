@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Ingredient;
-use App\Values\Unity;
+use App\ValuesList\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Données initiales de l'applicaton.
+ * Données initiales de l’application.
  *
  * @author Olivier <sabinus52@gmail.com>
  *
@@ -74,7 +74,7 @@ class AppFixtures extends Fixture
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
-        $ingredient->setName('Crème fraiche')->setCalorie(300)->setUnity(new Unity(Unity::GRAM));
+        $ingredient->setName('Crème fraîche')->setCalorie(300)->setUnity(new Unity(Unity::GRAM));
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
@@ -102,7 +102,7 @@ class AppFixtures extends Fixture
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
-        $ingredient->setName('Fromage rapée')->setCalorie(376)->setUnity(new Unity(Unity::GRAM));
+        $ingredient->setName('Fromage râpée')->setCalorie(376)->setUnity(new Unity(Unity::GRAM));
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
@@ -130,7 +130,7 @@ class AppFixtures extends Fixture
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();
-        $ingredient->setName('Echalotte')->setCalorie(63)->setUnity(new Unity(Unity::GRAM))->setConversion(25);
+        $ingredient->setName('Échalote')->setCalorie(63)->setUnity(new Unity(Unity::GRAM))->setConversion(25);
         $manager->persist($ingredient);
 
         $ingredient = new Ingredient();

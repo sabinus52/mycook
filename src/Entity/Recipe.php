@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
 use App\Repository\RecipeRepository;
-use App\Values\Difficulty;
-use App\Values\Rate;
+use App\ValuesList\Difficulty;
+use App\ValuesList\Rate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -48,7 +48,7 @@ class Recipe
     #[Assert\NotNull]
     #[Assert\Type(type: 'integer')]
     #[Assert\Range(min: 1, max: 12)]
-    private ?int $person = 4;
+    private int $person = 4;
 
     /**
      * Niveau de difficulté de la recette.
@@ -136,7 +136,7 @@ class Recipe
         return $this;
     }
 
-    public function getPerson(): ?int
+    public function getPerson(): int
     {
         return $this->person;
     }
@@ -209,7 +209,7 @@ class Recipe
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<int,Category>
      */
     public function getCategory(): Collection
     {
@@ -233,7 +233,7 @@ class Recipe
     }
 
     /**
-     * @return Collection|Step[]
+     * @return Collection<int,Step>
      */
     public function getSteps(): Collection
     {
@@ -260,7 +260,7 @@ class Recipe
     }
 
     /**
-     * @return Collection|RecipeIngredient[]
+     * @return Collection<int,RecipeIngredient>
      */
     public function getIngredients(): Collection
     {

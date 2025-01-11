@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
- * Controleur de la gestion des recettes.
+ * Contrôleur de la gestion des recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -61,7 +61,7 @@ class RecipeController extends AbstractController
 
             $image = $form->get('image')->getData();
             if ($image) {
-                $fileUploader->upload($image, $recipe);
+                $fileUploader->upload($image, $recipe); // @phpstan-ignore argument.type
             }
 
             $this->setPopularityUnityToIngredient($entityManager);
@@ -102,7 +102,7 @@ class RecipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $image = $form->get('image')->getData();
             if ($image) {
-                $fileUploader->upload($image, $recipe);
+                $fileUploader->upload($image, $recipe); // @phpstan-ignore argument.type
             }
 
             $entityManager->flush();
@@ -129,7 +129,7 @@ class RecipeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), (string) $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.(int) $recipe->getId(), (string) $request->request->get('_token'))) {
             $entityManager->remove($recipe);
             $entityManager->flush();
         }
@@ -164,6 +164,7 @@ class RecipeController extends AbstractController
                 continue;
             }
 
+            /** @psalm-suppress PossiblyNullArrayOffset */
             $unity = $ingredientsByUnity[$ingredient->getId()];
             // Si changement d'unité, on met à jour l'unité la plus utilisée
             if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {

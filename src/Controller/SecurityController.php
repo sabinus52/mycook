@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * Controleur de la sécurité de l'application.
+ * Contrôleur de la sécurité de l'application.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -75,14 +75,14 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // Update datas of this user
-            $user->setAvatar($gravatar->get($user->getEmail()));
-            $manager->setUser($form->getData())->update();
+            $user->setAvatar($gravatar->get((string) $user->getEmail()));
+            $manager->setUser($form->getData())->update(); // @phpstan-ignore argument.type
             $this->addFlash('success', 'La modification des informations a bien été prise en compte');
 
             return $this->redirectToRoute('app_profile');
         }
 
-        return $this->renderForm('security/profile.html.twig', [
+        return $this->render('security/profile.html.twig', [
             'form' => $form,
         ]);
     }
@@ -110,20 +110,20 @@ class SecurityController extends AbstractController
                 $form->addError(new FormError('Nouveau mot de passe incorrect'));
                 $isError = true;
             }
-            if (!$manager->isPasswordValid($form->get('oldPassword')->getData())) {
+            if (!$manager->isPasswordValid((string) $form->get('oldPassword')->getData())) { // @phpstan-ignore cast.string
                 $form->addError(new FormError('Ancien mot de passe incorrect'));
                 $isError = true;
             }
             if (!$isError) {
                 // Change password for this user
-                $manager->update($form->get('password')->getData());
+                $manager->update((string) $form->get('password')->getData()); // @phpstan-ignore cast.string
                 $this->addFlash('success', 'La modification du mot de passe a bien été prise en compte');
 
                 return $this->redirectToRoute('app_change_password');
             }
         }
 
-        return $this->renderForm('security/password.html.twig', [
+        return $this->render('security/password.html.twig', [
             'form' => $form,
         ]);
     }

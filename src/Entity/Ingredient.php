@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
-use App\Values\Unity;
+use App\ValuesList\Unity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,13 +41,13 @@ class Ingredient
     private ?string $name = null;
 
     /**
-     * Unité par défaur.
+     * Unité par défaut.
      */
     #[ORM\Column(type: 'unity')]
-    private ?Unity $unity = null;
+    private Unity $unity;
 
     /**
-     * Conversion.
+     * Conversion: pour 1 unité combien cela représente en gramme.
      */
     #[ORM\Column(nullable: true)]
     private ?int $conversion = null;
@@ -89,12 +89,12 @@ class Ingredient
         return $this;
     }
 
-    public function getUnity(): ?Unity
+    public function getUnity(): Unity
     {
         return $this->unity;
     }
 
-    public function setUnity(?Unity $unity): static
+    public function setUnity(Unity $unity): static
     {
         $this->unity = $unity;
 
@@ -126,7 +126,7 @@ class Ingredient
     }
 
     /**
-     * @return Collection|RecipeIngredient[]
+     * @return Collection<int,RecipeIngredient>
      */
     public function getRecipes(): Collection
     {
@@ -150,46 +150,5 @@ class Ingredient
         }
 
         return $this;
-    }
-
-    /**
-     * Retourne le poids en gramme de l'ingrédient à partir d'une certaine quantité.
-     *
-     * @param float $quantity : Quantity de l'ingrédient
-     * @param Unity $source   : Unité de la quantité
-     */
-    public function getInGram(?float $quantity, Unity $source): ?float
-    {
-        if (!$source->isNumber()) {
-            // Si pas un nombre, on peut convertir directement en gramme
-            return $source->getInGram($quantity);
-        }
-        // Si un nombre, on vérifie si on peut convertir
-        if (null === $this->conversion) {
-            return null;
-        }
-
-        return round($this->conversion * $quantity);
-    }
-
-    /**
-     * Retourne le nombre de calorie de l'ingrédient à partir d'une certaine quantité.
-     *
-     * @param float $quantity : Quantity de l'ingrédient
-     * @param Unity $source   : Unité de la quantité
-     */
-    public function getCalories(?float $quantity, Unity $source): ?int
-    {
-        if (null === $this->calorie) {
-            return null;
-        }
-
-        // Poids en gramme de l'ingrédient
-        $mass = $this->getInGram($quantity, $source);
-        if (null === $mass) {
-            return null;
-        }
-
-        return (int) round($mass * $this->calorie / 100);
     }
 }

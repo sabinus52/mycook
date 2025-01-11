@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form;
 
 use App\Entity\Ingredient;
-use App\Values\Unity;
+use App\ValuesList\Unity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -28,6 +28,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @SuppressWarnings(PHPMD.StaticAccess)
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class IngredientType extends AbstractType
 {
@@ -49,7 +51,7 @@ class IngredientType extends AbstractType
                 'choice_label' => 'label',
             ])
             ->add('conversion', NumberType::class, [
-                'label' => 'Poigs en gramme pour 1 ingrédient',
+                'label' => 'Poids en gramme pour 1 ingrédient',
                 'html5' => true,
             ])
         ;

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Doctrine\Type;
 
-use App\Values\Difficulty;
+use App\ValuesList\Difficulty;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
@@ -27,7 +27,7 @@ class DifficultyType extends Type
     public const DIFFICULTY = 'difficulty';
 
     #[\Override]
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         return 'smallint';
     }
@@ -39,13 +39,13 @@ class DifficultyType extends Type
             return null;
         }
 
-        return new Difficulty((int) $value);
+        return new Difficulty((int) $value); // @phpstan-ignore cast.int
     }
 
     #[\Override]
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): mixed
     {
-        if (null === $value) {
+        if (!$value instanceof Difficulty) {
             return null;
         }
 

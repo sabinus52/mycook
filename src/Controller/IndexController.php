@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Controleur de la page principale.
+ * Contrôleur de la page principale.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -33,13 +33,13 @@ class IndexController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         // Les catégories où il y a le plus de recettes
-        $categories = $entityManager->getRepository(Category::class)->findMostRecipes(6); /** @phpstan-ignore-line */
+        $categories = $entityManager->getRepository(Category::class)->findMostRecipes(6); /** @phpstan-ignore method.notFound */
 
         // Les recettes les plus populaires
-        $recipes = $entityManager->getRepository(Recipe::class)->findMostPopular(6); /** @phpstan-ignore-line */
+        $recipes = $entityManager->getRepository(Recipe::class)->findMostPopular(6); /** @phpstan-ignore method.notFound */
 
         // Recette au hasard
-        $recipeRandom = $entityManager->getRepository(Recipe::class)->findOneRandom(); /** @phpstan-ignore-line */
+        $recipeRandom = $entityManager->getRepository(Recipe::class)->findOneRandom(); /** @phpstan-ignore method.notFound */
 
         return $this->render('home.html.twig', [
             'random' => $recipeRandom,
@@ -54,7 +54,7 @@ class IndexController extends AbstractController
     #[Route(path: '/autocomplete/{term}', options: ['expose' => true], name: 'autocomplete-search')]
     public function autocompleteRecipe(Request $request, RecipeRepository $recipeRepository): JsonResponse
     {
-        $term = $request->get('term');
+        $term = $request->query->get('term', '');
 
         $query = $recipeRepository->createQueryBuilder('r')
             ->andWhere('r.name LIKE :val')
