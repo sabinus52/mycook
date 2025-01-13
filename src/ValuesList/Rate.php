@@ -11,26 +11,23 @@ declare(strict_types=1);
 
 namespace App\ValuesList;
 
-use Olix\BackOfficeBundle\Values\ValuesAbstract;
+use Olix\BackOfficeBundle\ValuesList\ValuesListAbstract;
 
 /**
  * Classe statique sur les niveaux de coûts.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
-class Rate extends ValuesAbstract
+class Rate extends ValuesListAbstract
 {
-    /**
-     * Constantes des niveaux de difficulté.
-     */
     public const CHEAP = 1;
     public const MEDIUM = 2;
     public const EXPENSIVE = 3;
 
     /**
-     * @var array<int|string,array<string,string>>
+     * @var array<int,array<string,string>>
      */
-    protected static $values = [
+    protected static array $values = [
         self::CHEAP => ['label' => 'Bon marché'],
         self::MEDIUM => ['label' => 'Moyen'],
         self::EXPENSIVE => ['label' => 'Cher'],

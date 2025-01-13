@@ -49,7 +49,7 @@ class RateType extends Type
             return null;
         }
 
-        return $value->getValue();
+        return $value->getKey();
     }
 
     #[\Override]

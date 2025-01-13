@@ -11,26 +11,23 @@ declare(strict_types=1);
 
 namespace App\ValuesList;
 
-use Olix\BackOfficeBundle\Values\ValuesAbstract;
+use Olix\BackOfficeBundle\ValuesList\ValuesListAbstract;
 
 /**
  * Classe statique sur les niveaux de difficultés.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
-class Difficulty extends ValuesAbstract
+class Difficulty extends ValuesListAbstract
 {
-    /**
-     * Constantes des niveaux de difficulté.
-     */
     public const EASY = 1;
     public const MEDIUM = 2;
     public const HARD = 3;
 
     /**
-     * @var array<int|string,array<string,string>>
+     * @var array<int,array<string,string>>
      */
-    protected static $values = [
+    protected static array $values = [
         self::EASY => ['label' => 'Facile'],
         self::MEDIUM => ['label' => 'Moyen'],
         self::HARD => ['label' => 'Difficile'],
