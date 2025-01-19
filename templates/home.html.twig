@@ -1,46 +1,62 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %}{{ parent() }}{% endblock %}
 
-{% block body %}
-<div class="container">
-
-    <div class="jumbotron my-5">
-        <div class="float-left">
-            <img src="{{ asset(uri_recipe~'/'~random.id~'.jpg') | imagine_filter('thumb') }}" width="400" class="mx-3">
+{% block content %}
+    <section class="cta-area bg-img bg-overlay mt-3" style="background-image: url(images/home.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="cta-content text-center">
+                        <h2>Mes Recettes</h2>
+                        <p>Trouvez ici toutes mes recettes de cuisine. Que se soit des recettes de cuisine traditionnelles, 
+                        de terroir ou de tous les jours ou alors des patisseries pour les gourmands, je vous propose une liste de de recettes pour tous les goûts.</p>
+                        <a href="{{ path('recipe_index') }}" class="btn delicious-btn btn-1">Découvrir toutes les recettes</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <h1 class="display-4">Mes recettes</h1>
-            <p class="lead">Retrouvez toutes mes recettes favorites</p>
-            <hr class="my-4">
-            <p>&nbsp;</p>
-            <a class="btn btn-primary btn-lg" href="{{ path('recipe_index') }}" role="button">Voir toutes les recettes</a>
-        </div>
-    </div>
+    </section>
 
-    <h2 class="my-5">Recettes</h2>
-    <div class="row my-2">
-    {% for item in recipes %}
-        <div class="col-4">
-            <figure class="figure">
-                <a href="{{ path('recipe_show', { id: item.id }) }}" class="img-hover-zoom"><img  src="{{ asset(uri_recipe~'/'~item.id~'.jpg') | imagine_filter('thumb') }}" class="figure-img img-fluid rounded"></a>
-                <figcaption><a href="{{ path('recipe_show', { id: item.id }) }}" class="text-dark d-block mt-1 font-weight-bold">{{ item.name }}</a></figcaption>
-            </figure>
-        </div>
-    {% endfor %}
-    </div>
+    <section class="list-recipe-area mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading">
+                        <h3>Les recettes les plus populaires</h3>
+                    </div>
+                </div>
+            </div>
 
-    <h2 class="my-5">Catégories</h2>
-    <div class="row my-2 text-center">
-    {% for item in categories %}
-        <div class="col-2">
-            <figure class="figure">
-                <a href="{{ path('category_show', {'id': item.0.id}) }}" class="img-hover-zoom rounded-circle"><img src="{{ asset(uri_category~'/'~item.0.id~'.jpg') | imagine_filter('cat') }}" class="figure-img img-fluid rounded-circle"></a>
-                <figcaption><a href="{{ path('category_show', {'id': item.0.id}) }}" class="text-dark d-block mt-1 font-weight-bold">{{ item.0.name }}</a></figcaption>
-            </figure>
+            {% include "recipe/_list.html.twig" %}
         </div>
-    {% endfor %}
-    </div>
+    </section>
 
-</div>
+    <section class="list-category-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading">
+                        <h3>Catégories</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for item in categories %}
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="single-category-area mb-30">
+                            <div class="img-hover-zoom rounded-circle">
+                                <a href="{{ path('category_show', {'id': item.0.id}) }}">
+                                    <img src="{{ asset(uri_category~'/'~item.0.id~'.jpg') | imagine_filter('cat') }}">
+                                </a>
+                            </div>
+                            <div class="category-title">
+                                <a href="{{ path('category_show', {'id': item.0.id}) }}"><h5>{{ item.0.name }}</h5></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 {% endblock %}
