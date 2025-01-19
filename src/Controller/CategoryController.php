@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\Recipe;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use App\Repository\RecipeRepository;
 use App\Service\CategoryUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,14 +72,14 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * Visualiser la catégorie.
+     * Visualiser les recettes de la catégorie.
      */
     #[Route(path: '/{id}', name: 'category_show', methods: ['GET'])]
-    public function show(Category $category, EntityManagerInterface $entityManager): Response
+    public function show(Category $category, RecipeRepository $recipeRepository): Response
     {
-        $recipes = $entityManager->getRepository(Recipe::class)->findBy(['category' => $category]);
+        $recipes = $recipeRepository->findByCategory($category);
 
-        return $this->render('category/show.html.twig', [
+        return $this->render('category/recipes.html.twig', [
             'category' => $category,
             'recipes' => $recipes,
         ]);

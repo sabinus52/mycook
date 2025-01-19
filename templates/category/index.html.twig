@@ -1,27 +1,36 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %} - Les catégories{% endblock %}
 
-{% block body %}
+{% block content %}
 
     {% if is_granted('ROLE_ADMIN') %}
         <div class="float-right">
             <a href="{{ path('category_create') }}" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une catégorie</a>
         </div>
     {% endif %}
-    <h1 class="my-4"><i class="fas fa-tag"></i>&nbsp;Catégories</h1>
 
-    {% include 'include/_flashbag.html.twig' %}
+    {% include 'include/_breadcrumb.html.twig' with {'title': 'Les Catégories'} only %}
 
-    <div class="row my-2 text-center">
-    {% for category in categories %}
-        <div class="col-3">
-            <figure class="figure">
-                <a href="{{ path('category_show', {'id': category.id}) }}" class="img-hover-zoom rounded-circle"><img src="{{ asset(uri_category~'/'~category.id~'.jpg') | imagine_filter('cat') }}" class="figure-img img-fluid rounded-circle"></a>
-                <figcaption><a href="{{ path('category_show', {'id': category.id}) }}" class="text-dark d-block mt-1 font-weight-bold">{{ category.name }}</a></figcaption>
-            </figure>
+    <section class="list-category-area section-padding-80">
+        <div class="container">
+            <div class="row">
+                {% for item in categories %}
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="single-category-area mb-30">
+                            <div class="img-hover-zoom rounded-circle">
+                                <a href="{{ path('category_show', {'id': item.id}) }}">
+                                    <img src="{{ asset(uri_category~'/'~item.id~'.jpg') | imagine_filter('cat') }}">
+                                </a>
+                            </div>
+                            <div class="category-title">
+                                <a href="{{ path('category_show', {'id': item.id}) }}"><h5>{{ item.name }}</h5></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    {% endfor %}
-    </div>
+    </section>
 
 {% endblock %}
