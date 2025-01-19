@@ -43,4 +43,6 @@ export function initializeWindow() {
     if ($.fn.classyNav) {
         $("#deliciousNav").classyNav();
     }
+    // Toast
+    $(".toast").toast("show");
 }
