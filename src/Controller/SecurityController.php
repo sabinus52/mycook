@@ -82,8 +82,9 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_profile');
         }
 
-        return $this->render('security/profile.html.twig', [
+        return $this->render('security/profile-password.html.twig', [
             'form' => $form,
+            'title' => 'Mon profil',
         ]);
     }
 
@@ -123,8 +124,9 @@ class SecurityController extends AbstractController
             }
         }
 
-        return $this->render('security/password.html.twig', [
+        return $this->render('security/profile-password.html.twig', [
             'form' => $form,
+            'title' => 'Changer mon mot de passe',
         ]);
     }
 }
