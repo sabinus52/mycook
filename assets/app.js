@@ -12,4 +12,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap";
 import "./plugins/classyNav.js";
 
+// Attente de la fin de chargement de la page
+import { preLoadWindow } from "./scripts/windows.js";
+window.addEventListener("load", preLoadWindow);
+
 console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");

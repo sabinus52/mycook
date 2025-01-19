@@ -12,6 +12,10 @@
         {% endblock %}
     </head>
     <body>
+        <div id="preloader">
+            <i class="circle-preloader"></i>
+            <img src="{{ asset('preloader.gif') }}" alt="">
+        </div>
         {% include 'include/_search.html.twig' %}
         <header class="header-area">
             {% include 'include/_header.html.twig' %}
