@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Mon livre de recettes">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <title>MyCook !{% block title %}{% endblock %}</title>
+        {% block style_sheets %}
+            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+        {% endblock %}
+    </head>
+    <body>
+        {% include 'include/_search.html.twig' %}
+        <header class="header-area">
+            {% include 'include/_header.html.twig' %}
+            {% include 'include/_navbar.html.twig' %}
+        </header>
+
+        {% block content %}{% endblock %}
+
+        {#% include 'include/_follow.html.twig' %#}
+        <footer class="footer-area">
+            {% include 'include/_footer.html.twig' %}
+        </footer>
+
+        {% include 'include/_toasts.html.twig' %}
+
+        {% block java_scripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </body>
+</html>

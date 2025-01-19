@@ -2,6 +2,15 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
+    "dama/doctrine-test-bundle": {
+        "version": "8.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "7.2",
+            "ref": "896306d79d4ee143af9eadf9b09fd34a8c391b70"
+        }
+    },
     "doctrine/cache": {
         "version": "1.10.2"
     },
@@ -199,6 +208,21 @@
     },
     "symfony/asset": {
         "version": "v4.4.20"
+    },
+    "symfony/asset-mapper": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "5ad1308aa756d58f999ffbe1540d1189f5d7d14a"
+        },
+        "files": [
+            "assets/app.js",
+            "assets/styles/app.css",
+            "config/packages/asset_mapper.yaml",
+            "importmap.php"
+        ]
     },
     "symfony/browser-kit": {
         "version": "v4.4.20"
@@ -502,9 +526,6 @@
     "symfony/stopwatch": {
         "version": "v4.4.20"
     },
-    "symfony/test-pack": {
-        "version": "v1.0.7"
-    },
     "symfony/translation": {
         "version": "6.4",
         "recipe": {
@@ -591,6 +612,9 @@
     },
     "symfony/yaml": {
         "version": "v4.4.21"
+    },
+    "symfonycasts/sass-bundle": {
+        "version": "v0.8.2"
     },
     "twig/extra-bundle": {
         "version": "v3.3.0"

@@ -16,89 +16,25 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
-    'olix-backoffice' => [
-        'version' => '1.0.7',
-    ],
-    '@fortawesome/fontawesome-free/css/all.min.css' => [
-        'version' => '5.15.4',
+    'tom-select/dist/css/tom-select.default.css' => [
+        'version' => '2.4.1',
         'type' => 'css',
     ],
-    'toastr/build/toastr.min.css' => [
-        'version' => '2.1.4',
-        'type' => 'css',
-    ],
-    'icheck-bootstrap/icheck-bootstrap.min.css' => [
-        'version' => '3.0.1',
-        'type' => 'css',
-    ],
-    'select2/dist/css/select2.min.css' => [
-        'version' => '4.0.13',
-        'type' => 'css',
-    ],
-    '@eonasdan/tempus-dominus/dist/css/tempus-dominus.min.css' => [
-        'version' => '6.9.9',
-        'type' => 'css',
-    ],
-    'bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css' => [
-        'version' => '4.0.2',
-        'type' => 'css',
-    ],
-    'datatables.net-bs4/css/dataTables.bootstrap4.min.css' => [
-        'version' => '1.13.11',
-        'type' => 'css',
-    ],
-    'datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' => [
-        'version' => '2.5.1',
-        'type' => 'css',
-    ],
-    'admin-lte/dist/css/adminlte.min.css' => [
-        'version' => '3.2.0',
-        'type' => 'css',
+    'bootstrap' => [
+        'version' => '4.6.2',
     ],
     'jquery' => [
         'version' => '3.7.1',
     ],
-    'bootstrap/dist/js/bootstrap.bundle.min.js' => [
+    'popper.js' => [
+        'version' => '1.16.1',
+    ],
+    'bootstrap/dist/css/bootstrap.min.css' => [
         'version' => '4.6.2',
+        'type' => 'css',
     ],
-    'admin-lte' => [
-        'version' => '3.2.0',
-    ],
-    'datatables.net' => [
-        'version' => '2.1.8',
-    ],
-    'datatables.net-bs4' => [
-        'version' => '1.13.11',
-    ],
-    'datatables.net-responsive' => [
-        'version' => '3.0.3',
-    ],
-    'datatables.net-responsive-bs4' => [
-        'version' => '2.5.1',
-    ],
-    'bootstrap/js/src/modal.js' => [
-        'version' => '4.6.2',
-    ],
-    'bootstrap4-duallistbox' => [
-        'version' => '4.0.2',
-    ],
-    'bootstrap-switch' => [
-        'version' => '3.4.0',
-    ],
-    '@popperjs/core' => [
-        'version' => '2.11.8',
-    ],
-    '@eonasdan/tempus-dominus' => [
-        'version' => '6.9.9',
-    ],
-    'toastr' => [
-        'version' => '2.1.4',
-    ],
-    'select2/dist/js/select2.full.js' => [
-        'version' => '4.0.13',
-    ],
-    'olix-backoffice/olixbo.min.css' => [
-        'version' => '1.0.7',
+    '@fortawesome/fontawesome-free/css/all.min.css' => [
+        'version' => '5.15.4',
         'type' => 'css',
     ],
     '@hotwired/stimulus' => [
@@ -108,13 +44,19 @@ return [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
     'tom-select' => [
-        'version' => '2.3.1',
+        'version' => '2.4.1',
+    ],
+    '@orchidjs/sifter' => [
+        'version' => '1.1.0',
+    ],
+    '@orchidjs/unicode-variants' => [
+        'version' => '1.1.2',
+    ],
+    'tom-select/dist/css/tom-select.default.min.css' => [
+        'version' => '2.4.1',
+        'type' => 'css',
     ],
     'chart.js' => [
         'version' => '3.9.1',
-    ],
-    'tom-select/dist/css/tom-select.default.css' => [
-        'version' => '2.3.1',
-        'type' => 'css',
     ],
 ];
