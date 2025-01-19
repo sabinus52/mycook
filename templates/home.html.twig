@@ -27,8 +27,11 @@
                     </div>
                 </div>
             </div>
-
-            {% include "recipe/_list.html.twig" %}
+            <div class="row">
+                {% for item in recipes %}
+                    {% include 'recipe/_list-one.html.twig' with {'item': item} only %}
+                {% endfor %}
+            </div>
         </div>
     </section>
 

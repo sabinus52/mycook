@@ -1,0 +1,93 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %} - Recette {{ recipe.name }}{% endblock %}
+
+{% block content %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="float-right">
+            <div class="btn-toolbar mb-3" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    <a href="{{ path('recipe_update', {'id': recipe.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la recette</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% include 'include/_breadcrumb.html.twig' with {'title': recipe.name, 'image': asset(uri_recipe~'/'~recipe.id~'.jpg')} only %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="recipe-slider mt-70">
+                    <img  src="{{ asset(uri_recipe~'/'~recipe.id~'.jpg') }}" class="figure-img img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-padding-80">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <div class="recipe-headline my-5">
+                        <span>{{ recipe.categories|join(', ') }}</span>
+                        <h2>{{ recipe.name }}</h2>
+                        <div class="duration">
+                            <h6>{{ include('icons/team-solid.svg') }} Nombre de personnes : <strong>{{ recipe.person }}</strong></h6>
+                            <h6>{{ include('icons/dot-restaurant.svg') }} Temps de préparation : <strong>{{ recipe.timePreparation }} min</strong></h6>
+                            <h6>{{ include('icons/manhole-wide.svg') }} Temps de cuisson : <strong>{{ recipe.timeCooking }} min</strong></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="recipe-ratings text-right my-5">
+                        <div class="rate">
+                        {% for i in 1..3 %}
+                            {% if recipe.rate.key >= loop.index %}
+                                {{ include('icons/euro-symbol.svg', {'color': '#fbb710'}) }}
+                            {% else %}
+                                {{ include('icons/euro-symbol.svg', {'color': '#cccccc'}) }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <a class="btn delicious-btn">{{ include('icons/chef-hat.svg') }} {{ recipe.difficulty }}</a>
+                        <div class="calories">
+                            <span>{{ recipe.calorie }} kcal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Preparation Steps -->
+                <div class="col-12 col-lg-8">
+                {% for item in recipe.steps %}
+                    
+                    <div class="recipe-preparation-step d-flex">
+                        <h4>{{ '%02d'|format(loop.index) }}.</h4>
+                        <p>{{ item.content }}</p>
+                    </div>
+                {% endfor %}
+                </div>
+
+                <!-- Ingredients -->
+                <div class="col-12 col-lg-4">
+                    <div class="recipe-ingredients">
+                        <h4>Ingrédients</h4>
+                        {% for item in recipe.ingredients %}
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck{{ loop.index }}">
+                                <label class="custom-control-label" for="customCheck{{ loop.index }}">{{ item.quantity }} {{ item.unity }} {{ item.ingredient }}</label>
+                                {% if item.note %}<div class="float-right"><small class="text-muted">{{ item.note|e }}</small></div>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
