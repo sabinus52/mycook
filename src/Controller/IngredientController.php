@@ -17,6 +17,7 @@ use App\Entity\RecipeIngredient;
 use App\Form\IngredientHiddenType;
 use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
+use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -142,13 +143,16 @@ class IngredientController extends AbstractController
     }
 
     /**
-     * Visualisation d'un ingrédient.
+     * Visualiser les recettes d'un ingrédient.
      */
     #[Route(path: '/{id}', name: 'ingredient_show', methods: ['GET'])]
-    public function show(Ingredient $ingredient): Response
+    public function show(Ingredient $ingredient, RecipeRepository $recipeRepository): Response
     {
-        return $this->render('ingredient/show.html.twig', [
+        $recipes = $recipeRepository->findByIngredient($ingredient);
+
+        return $this->render('ingredient/recipes.html.twig', [
             'ingredient' => $ingredient,
+            'recipes' => $recipes,
         ]);
     }
 

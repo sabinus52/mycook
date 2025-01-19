@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,6 +44,23 @@ class RecipeRepository extends ServiceEntityRepository
             ->join('recipe.categories', 'category')
             ->andWhere('category.id = :id')
             ->setParameter('id', $category->getId())
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Recherche les recettes par ingrédient.
+     *
+     * @return Recipe[]
+     */
+    public function findByIngredient(Ingredient $ingredient): array
+    {
+        // @phpstan-ignore return.type
+        return $this->createQueryBuilder('recipe')
+            ->join('recipe.ingredients', 'ri')
+            ->andWhere('ri.ingredient = :id')
+            ->setParameter('id', $ingredient->getId())
             ->getQuery()
             ->getResult()
         ;
