@@ -59,4 +59,36 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
+    'olix-backoffice/scripts/modal.js' => [
+        'version' => '1.0.7',
+    ],
+    'bootstrap/js/src/modal.js' => [
+        'version' => '4.6.2',
+    ],
+    'bootstrap4-duallistbox' => [
+        'version' => '4.0.2',
+    ],
+    'bootstrap-switch' => [
+        'version' => '3.4.0',
+    ],
+    '@popperjs/core' => [
+        'version' => '2.11.8',
+    ],
+    '@eonasdan/tempus-dominus' => [
+        'version' => '6.9.11',
+    ],
+    'bootstrap4-duallistbox/dist/bootstrap-duallistbox.min.css' => [
+        'version' => '4.0.2',
+        'type' => 'css',
+    ],
+    '@eonasdan/tempus-dominus/dist/css/tempus-dominus.min.css' => [
+        'version' => '6.9.11',
+        'type' => 'css',
+    ],
+    'olix-backoffice/scripts/select2.js' => [
+        'version' => '1.0.7',
+    ],
+    'select2/dist/js/select2.full.js' => [
+        'version' => '4.0.13',
+    ],
 ];
