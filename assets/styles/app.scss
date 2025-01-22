@@ -475,16 +475,12 @@ img {
         }
         .command {
             display: inline;
-            a {
-                display: inline-block;
-                color: #686868;
-                font-size: 13px;
+            a.btn {
+                padding: .25rem .375rem;
+                font-size: .675rem;
+                line-height: 1.2;
+                border-radius: .1rem;
                 margin-right: 30px;
-                &:hover,
-                &:focus,
-                &.active {
-                    color: $hover-color;
-                }
             }
         }
         .dropdown {

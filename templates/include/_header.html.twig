@@ -11,7 +11,9 @@
             <div class="col-md-6 d-none d-md-block">
                 <div class="text-right">
                     <div class="command">
-                        <a href="#"><i class="fas fa-search" aria-hidden="true"></i> Test</a>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            {{ header_commands|raw }}
+                        {% endif %}
                     </div>
                     <div class="dropdown">
                         <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">

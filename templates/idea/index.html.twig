@@ -2,15 +2,13 @@
 
 {% block title %} - Les idées de recettes à tester{% endblock %}
 
+{% set header_commands %}
+    <a href="{{ path('idea_create') }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Ajouter une idée de recette</a>
+{% endset %}
+
 {% block content %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="float-right">
-            <a href="{{ path('idea_create') }}" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une idée de recette</a>
-        </div>
-    {% endif %}
-    
-    {% include 'include/_breadcrumb.html.twig' with {'title': 'Les idées de recettes à tester'} only %}
+    {% include 'include/_breadcrumb.html.twig' with { title: 'Les idées de recettes à tester' } only %}
 
     <section class="list-idea-area section-padding-80-0">
         <div class="container">
@@ -24,6 +22,10 @@
                             <div class="content">
                                 <span>{{ date()|date("d M Y") }}</span>
                                 <a href="{{ idea.link }}" target="_blank"><h5>{{ idea.name }}</h5></a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Modifier</a>
+                                    <a href="{{ path('idea_delete', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Supprimer</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -31,5 +33,7 @@
             </div>
         </div>
     </section>
+
+    {% include '@OlixBackOffice/Include/modal.html.twig' with { modal: { title: "Chargement du formulaire", class: 'modal-lg' } } %}
 
 {% endblock %}

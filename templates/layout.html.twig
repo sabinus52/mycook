@@ -18,7 +18,7 @@
         </div>
         {% include 'include/_search.html.twig' %}
         <header class="header-area">
-            {% include 'include/_header.html.twig' %}
+            {% include 'include/_header.html.twig' with { 'header_commands': header_commands|default('') } %}
             {% include 'include/_navbar.html.twig' %}
         </header>
 
