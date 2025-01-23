@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Olivier <sabinus52@gmail.com>
  */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-class Category
+class Category implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -48,6 +48,11 @@ class Category
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int
