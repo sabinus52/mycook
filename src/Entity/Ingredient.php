@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
 #[UniqueEntity('name')]
-class Ingredient
+class Ingredient implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -70,6 +70,11 @@ class Ingredient
     {
         $this->unity = new Unity(Unity::NUMBER);
         $this->recipes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int

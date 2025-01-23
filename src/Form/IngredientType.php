@@ -40,19 +40,23 @@ class IngredientType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('calorie', IntegerType::class, [
                 'label' => 'Calories pour 100 g',
+                'required' => false,
             ])
             ->add('unity', ChoiceType::class, [
                 'label' => 'Unité par défaut',
                 'choices' => Unity::getChoices(),
                 'choice_value' => 'value',
                 'choice_label' => 'label',
+                'required' => false,
             ])
             ->add('conversion', NumberType::class, [
                 'label' => 'Poids en gramme pour 1 ingrédient',
                 'html5' => true,
+                'required' => false,
             ])
         ;
     }

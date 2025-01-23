@@ -22,7 +22,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -119,7 +118,7 @@ class IngredientController extends AbstractController
      */
     #[Route(path: '/create', name: 'ingredient_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -133,12 +132,16 @@ class IngredientController extends AbstractController
 
             $this->addFlash('success', sprintf("L'ingrédient <strong>%s</strong> a été ajouté avec succès", (string) $ingredient->getName()));
 
-            return $this->redirectToRoute2((string) $session->get('ingredient.filter.route')); // @phpstan-ignore cast.string
+            return new Response('OK');
         }
 
-        return $this->render('ingredient/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
             'ingredient' => $ingredient,
-            'form' => $form->createView(),
+            'form' => $form,
+            'modal' => [
+                'title' => 'Ajouter un ingrédient',
+                'btnlabel' => 'Ajouter',
+            ],
         ]);
     }
 
@@ -161,7 +164,7 @@ class IngredientController extends AbstractController
      */
     #[Route(path: '/{id}/update', name: 'ingredient_update', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
@@ -171,14 +174,18 @@ class IngredientController extends AbstractController
 
             $this->updateRecipeCalories($ingredient, $entityManager);
 
-            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été modifié avec succès', (string) $ingredient->getName()));
+            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été modifié avec succès', $ingredient));
 
-            return $this->redirectToRoute2((string) $session->get('ingredient.filter.route')); // @phpstan-ignore cast.string
+            return new Response('OK');
         }
 
-        return $this->render('ingredient/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
             'ingredient' => $ingredient,
-            'form' => $form->createView(),
+            'form' => $form,
+            'modal' => [
+                'title' => 'Modifier un ingrédient',
+                'btnlabel' => 'Mettre à jour',
+            ],
         ]);
     }
 
@@ -189,21 +196,27 @@ class IngredientController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.(int) $ingredient->getId(), (string) $request->request->get('_token'))) {
-            $entityManager->remove($ingredient);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->remove($ingredient);
             try {
                 $entityManager->flush();
             } catch (\Exception) {
-                $this->addFlash('danger', sprintf('L\'ingrédient <strong>%s</strong> ne peut pas être supprimé', (string) $ingredient->getName()));
+                $this->addFlash('danger', sprintf('L\'ingrédient <strong>%s</strong> ne peut pas être supprimé', $ingredient));
 
-                return $this->redirectToRoute('ingredient_index');
+                return new Response('OK');
             }
+            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été supprimé avec succès', $ingredient));
 
-            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été supprimé avec succès', (string) $ingredient->getName()));
+            return new Response('OK');
         }
 
-        return $this->redirectToRoute('ingredient_index');
+        return $this->render('@OlixBackOffice/Include/modal-content-delete.html.twig', [
+            'form' => $form,
+            'element' => sprintf('l\'ingrédient <strong>%s</strong>', $ingredient),
+        ]);
     }
 
     /**
@@ -225,15 +238,5 @@ class IngredientController extends AbstractController
         }
 
         $entityManager->flush();
-    }
-
-    /**
-     * Redirection de la route en fonction de la route du filtre enregistré dans la session.
-     */
-    protected function redirectToRoute2(string $route): RedirectResponse
-    {
-        $route = (empty($route)) ? 'ingredient_index' : $route;
-
-        return $this->redirectToRoute($route);
     }
 }

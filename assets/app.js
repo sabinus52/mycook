@@ -19,5 +19,7 @@ import "olix-backoffice/scripts/select2.js";
 import { preLoadWindow, initializeWindow } from "./scripts/windows.js";
 window.addEventListener("load", preLoadWindow);
 initializeWindow();
+import Ingredient from "./scripts/ingredient.js";
+Ingredient.init();
 
 console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");

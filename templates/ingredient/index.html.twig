@@ -2,11 +2,32 @@
 
 {% block title %} - Ingrédients{% endblock %}
 
+{% set header_commands %}
+    <a href="{{ path('ingredient_create') }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Ajouter un ingrédient</a>
+{% endset %}
+
 {% block content %}
 
     {% include 'include/_breadcrumb.html.twig' with {'title': 'Les Ingrédients'} only %}
 
-    <section class="list-category-area section-padding-80">
+    <div class="section-search mt-70 mb-15">
+        <div class="container">
+            <form action="#" method="post">
+                <div class="row">
+                    <div class="col-12 test-select">
+                        <div class="select">
+                            <select name="filterIngredient" id="filterIngredient">
+                                <option value="{{ path('ingredient_index') }}"{% if app.request.pathinfo == path('ingredient_index') %} selected="selected"{% endif %}>Tous les ingrédients</option>
+                                <option value="{{ path('ingredient_index_without_cal') }}"{% if app.request.pathinfo == path('ingredient_index_without_cal') %} selected="selected"{% endif %}>Les ingrédients sans calories</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <section class="list-category-area section-padding-0-80">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -28,10 +49,11 @@
                                 <td class="align-middle">{{ ingredient.unity.label }}</td>
                                 <td class="align-middle">{% if ingredient.conversion %}1 {{ ingredient.name }} -&gt; {{ ingredient.conversion }} g{% endif %}</td>
                                 <td class="align-middle text-right">
-                                    <a href="{{ path('ingredient_show', {'id': ingredient.id}) }}" class="btn mycook-btn btn-small">Découvrir les recettes</a>
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier</a>
+                                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Modifier</a>
+                                        <a href="{{ path('ingredient_delete', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Supprimer</a>
                                     {% endif %}
+                                    <a href="{{ path('ingredient_show', {'id': ingredient.id}) }}" class="btn-mycook btn-small">Découvrir les recettes</a>
                                 </td>
                             </tr>
                         {% else %}
@@ -45,5 +67,7 @@
             </div>
         </div>
     </section>
+
+    {% include '@OlixBackOffice/Include/modal.html.twig' with { modal: { title: "Chargement du formulaire", class: 'modal-lg' } } %}
 
 {% endblock %}
