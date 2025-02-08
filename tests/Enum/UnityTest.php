@@ -9,9 +9,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace App\Tests\ValuesList;
+namespace App\Tests\Enum;
 
-use App\ValuesList\Unity;
+use App\Enum\Unity;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,15 +26,15 @@ final class UnityTest extends TestCase
      */
     public function testUnityAsNumber(): void
     {
-        $unity = new Unity(Unity::NUMBER);
+        $unity = Unity::NUMBER;
 
         self::AssertTrue($unity->isNumber());
-        self::assertSame('', (string) $unity);
-        self::assertSame('', $unity->getSymbol());
-        self::assertSame('nombre', $unity->getLabel());
-        self::assertSame(0.0, $unity->getConversion());
+        self::assertSame('U', $unity->value);
+        self::assertSame('', $unity->symbol());
+        self::assertSame('nombre', $unity->label());
+        self::assertSame(0.0, $unity->conversion());
         $this->expectException(\Exception::class);
-        $unity->getInGram(100);
+        $unity->inGram(100);
         $unity->convert(3, Unity::GRAM);
         $unity->convert(3, Unity::LITRE);
     }
@@ -44,14 +44,14 @@ final class UnityTest extends TestCase
      */
     public function testUnityAsWeight(): void
     {
-        $unity = new Unity(Unity::GRAM);
+        $unity = Unity::GRAM;
 
         self::AssertFalse($unity->isNumber());
-        self::assertSame('g', (string) $unity);
-        self::assertSame('g', $unity->getSymbol());
-        self::assertSame('gramme(s)', $unity->getLabel());
-        self::assertSame(1.0, $unity->getConversion());
-        self::assertSame(100.0, $unity->getInGram(100));
+        self::assertSame('g', $unity->value);
+        self::assertSame('g', $unity->symbol());
+        self::assertSame('gramme(s)', $unity->label());
+        self::assertSame(1.0, $unity->conversion());
+        self::assertSame(100.0, $unity->inGram(100));
         self::assertSame(1.0, $unity->convert(250, Unity::CUP));
         self::assertSame(8.82, $unity->convert(250, Unity::OUNCE));
         self::assertSame(25.0, $unity->convert(250, Unity::CLITRE));
@@ -64,14 +64,14 @@ final class UnityTest extends TestCase
      */
     public function testUnityAsVolume(): void
     {
-        $unity = new Unity(Unity::CLITRE);
+        $unity = Unity::CLITRE;
 
         self::AssertFalse($unity->isNumber());
-        self::assertSame('cl', (string) $unity);
-        self::assertSame('cl', $unity->getSymbol());
-        self::assertSame('centilitre(s)', $unity->getLabel());
-        self::assertSame(10.0, $unity->getConversion());
-        self::assertSame(1000.0, $unity->getInGram(100));
+        self::assertSame('cl', $unity->value);
+        self::assertSame('cl', $unity->symbol());
+        self::assertSame('centilitre(s)', $unity->label());
+        self::assertSame(10.0, $unity->conversion());
+        self::assertSame(1000.0, $unity->inGram(100));
         self::assertSame(10.0, $unity->convert(250, Unity::CUP));
         self::assertSame(88.21, $unity->convert(250, Unity::OUNCE));
         self::assertSame(2.50, $unity->convert(250, Unity::LITRE));

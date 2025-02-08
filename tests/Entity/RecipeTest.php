@@ -44,6 +44,7 @@ final class RecipeTest extends KernelTestCase
      */
     public function testCalculCalories(string $recipe, ?int $calorie): void
     {
+        /** @var Recipe $recipe */
         $recipe = $this->entityManager->getRepository(Recipe::class)->findOneBy(['name' => $recipe]);
         self::assertInstanceOf(Recipe::class, $recipe);
         self::assertSame($recipe->calculCalories(), $calorie);

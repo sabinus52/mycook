@@ -13,7 +13,7 @@ namespace App\Repository;
 
 use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
-use App\ValuesList\Unity;
+use App\Enum\Unity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

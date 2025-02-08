@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Unity;
 use App\Repository\RecipeIngredientRepository;
-use App\ValuesList\Unity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -54,8 +54,8 @@ class RecipeIngredient
     /**
      * Jointure avec l'unité de la quantité de l'ingrédient.
      */
-    #[ORM\Column(type: 'unity')]
-    private Unity $unity;
+    #[ORM\Column(enumType: Unity::class, length: 2)]
+    private Unity $unity = Unity::GRAM;
 
     /**
      * Note supplémentaire.
@@ -65,7 +65,6 @@ class RecipeIngredient
 
     public function __construct()
     {
-        $this->unity = new Unity(Unity::GRAM);
     }
 
     public function getId(): ?int
@@ -169,7 +168,7 @@ class RecipeIngredient
     {
         if (!$this->unity->isNumber()) {
             // Si l'unité choisie n'est pas un nombre, on peut convertir directement en gramme
-            return (int) round($this->unity->getInGram((float) $this->quantity));
+            return (int) round($this->unity->inGram((float) $this->quantity));
         }
 
         // Si un nombre, on vérifie si on peut convertir

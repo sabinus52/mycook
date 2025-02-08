@@ -14,7 +14,7 @@ namespace App\Tests\Entity;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
-use App\ValuesList\Unity;
+use App\Enum\Unity;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -45,7 +45,7 @@ final class RecipeIngredientTest extends KernelTestCase
     /**
      * @dataProvider provideGetCaloriesCases
      */
-    public function testGetCalories(string $name, int $quantity, string $unit, ?int $weight, ?int $calorie): void
+    public function testGetCalories(string $name, int $quantity, Unity $unit, ?int $weight, ?int $calorie): void
     {
         $recipe = new Recipe();
 
@@ -55,14 +55,14 @@ final class RecipeIngredientTest extends KernelTestCase
         $recipeIngredient->setRecipe($recipe);
         $recipeIngredient->setIngredient($ingredient);
         $recipeIngredient->setQuantity($quantity);
-        $recipeIngredient->setUnity(new Unity($unit));
+        $recipeIngredient->setUnity($unit);
 
         self::assertSame($weight, $recipeIngredient->getWeightInGram());
         self::assertSame($calorie, $recipeIngredient->getCalories());
     }
 
     /**
-     * @return array<int,array<string|int|null>>
+     * @return array<int,array<string|int|Unity|null>>
      */
     public static function provideGetCaloriesCases(): iterable
     {

@@ -15,9 +15,9 @@ use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
 use App\Entity\Step;
-use App\ValuesList\Difficulty;
-use App\ValuesList\Rate;
-use App\ValuesList\Unity;
+use App\Enum\Difficulty;
+use App\Enum\Rate;
+use App\Enum\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -44,8 +44,8 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Fondant chocolat mascarpone')
             ->setPerson(12)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::MEDIUM))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::MEDIUM)
             ->setTimePreparation(10)
             ->setTimeCooking(25)
         ;
@@ -54,7 +54,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Chocolat']))
             ->setQuantity(200)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -62,7 +62,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Mascarpone']))
             ->setQuantity(1)
-            ->setUnity(new Unity(Unity::CUP))
+            ->setUnity(Unity::CUP)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -70,7 +70,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Oeuf']))
             ->setQuantity(4)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -78,7 +78,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Farine']))
             ->setQuantity(40)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -86,7 +86,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Sucre']))
             ->setQuantity(0)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
             ->setNote('1 sachet de sucre vanillé')
         ;
         $recipe->addIngredient($ingredient);
@@ -120,8 +120,8 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Saucisse de Morteau aux pommes de terre')
             ->setPerson(4)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::CHEAP))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::CHEAP)
             ->setTimePreparation(15)
             ->setTimeCooking(40)
         ;
@@ -130,7 +130,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Saucisse de Morteau']))
             ->setQuantity(1)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -138,7 +138,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Pomme de terre']))
             ->setQuantity(800)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -146,21 +146,21 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Oignon']))
             ->setQuantity(2)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Sel']))
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Poivre']))
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -183,8 +183,8 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Asperges vertes au jambon et gorgonzola')
             ->setPerson(2)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::CHEAP))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::CHEAP)
             ->setTimePreparation(15)
             ->setTimeCooking(20)
         ;
@@ -193,7 +193,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Asperge verte']))
             ->setQuantity(500)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -201,7 +201,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Jambon']))
             ->setQuantity(3)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -209,7 +209,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Gorgonzola']))
             ->setQuantity(150)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -217,7 +217,7 @@ class RecipeFixtures extends Fixture
         $ingredient
             ->setIngredient($repo->findOneBy(['name' => 'Crème fraîche']))
             ->setQuantity(20)
-            ->setUnity(new Unity(Unity::CLITRE))
+            ->setUnity(Unity::CLITRE)
         ;
         $recipe->addIngredient($ingredient);
 

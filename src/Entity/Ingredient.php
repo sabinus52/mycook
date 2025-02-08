@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Unity;
 use App\Repository\IngredientRepository;
-use App\ValuesList\Unity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,8 +43,8 @@ class Ingredient implements \Stringable
     /**
      * Unité par défaut.
      */
-    #[ORM\Column(type: 'unity')]
-    private Unity $unity;
+    #[ORM\Column(enumType: Unity::class, length: 2)]
+    private Unity $unity = Unity::NUMBER;
 
     /**
      * Conversion: pour 1 unité combien cela représente en gramme.
@@ -68,7 +68,6 @@ class Ingredient implements \Stringable
 
     public function __construct()
     {
-        $this->unity = new Unity(Unity::NUMBER);
         $this->recipes = new ArrayCollection();
     }
 

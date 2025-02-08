@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Difficulty;
+use App\Enum\Rate;
 use App\Repository\RecipeRepository;
-use App\ValuesList\Difficulty;
-use App\ValuesList\Rate;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -53,16 +53,16 @@ class Recipe
     /**
      * Niveau de difficulté de la recette.
      */
-    #[ORM\Column(type: 'difficulty')]
+    #[ORM\Column(type: Types::SMALLINT, enumType: Difficulty::class)]
     #[Assert\NotNull]
-    private ?Difficulty $difficulty = null;
+    private Difficulty $difficulty = Difficulty::MEDIUM;
 
     /**
      * Coût de la recette.
      */
-    #[ORM\Column(type: 'rate')]
+    #[ORM\Column(type: Types::SMALLINT, enumType: Rate::class)]
     #[Assert\NotNull]
-    private ?Rate $rate = null;
+    private Rate $rate = Rate::MEDIUM;
 
     /**
      * Temps de préparation en minutes.
@@ -151,24 +151,24 @@ class Recipe
         return $this;
     }
 
-    public function getDifficulty(): ?Difficulty
+    public function getDifficulty(): Difficulty
     {
         return $this->difficulty;
     }
 
-    public function setDifficulty(?Difficulty $difficulty): static
+    public function setDifficulty(Difficulty $difficulty): static
     {
         $this->difficulty = $difficulty;
 
         return $this;
     }
 
-    public function getRate(): ?Rate
+    public function getRate(): Rate
     {
         return $this->rate;
     }
 
-    public function setRate(?Rate $rate): static
+    public function setRate(Rate $rate): static
     {
         $this->rate = $rate;
 

@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Ingredient;
-use App\ValuesList\Unity;
+use App\Enum\Unity;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,9 +25,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Formulaire des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @SuppressWarnings(PHPMD.StaticAccess)
  *
  * @psalm-suppress MissingTemplateParam
  */
@@ -46,12 +43,10 @@ class IngredientType extends AbstractType
                 'label' => 'Calories pour 100 g',
                 'required' => false,
             ])
-            ->add('unity', ChoiceType::class, [
+            ->add('unity', EnumType::class, [
                 'label' => 'Unité par défaut',
-                'choices' => Unity::getChoices(),
-                'choice_value' => 'value',
+                'class' => Unity::class,
                 'choice_label' => 'label',
-                'required' => false,
             ])
             ->add('conversion', NumberType::class, [
                 'label' => 'Poids en gramme pour 1 ingrédient',

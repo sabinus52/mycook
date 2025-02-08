@@ -11,11 +11,12 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
-use App\Form\DataTransformer\IngredientToNameTransformer;
+use App\Enum\Unity;
 use App\ValuesList\Unity;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,10 +48,12 @@ class RecipeIngredientType extends AbstractType
                     'class' => 'autocomplete',
                 ],
             ])
-            ->add('quantity', IntegerType::class)
-            ->add('unity', ChoiceType::class, [
-                'choices' => Unity::getChoices(),
-                'choice_value' => 'value',
+            ->add('quantity', IntegerType::class, [
+                'required' => false,
+            ]
+            )
+            ->add('unity', EnumType::class, [
+                'class' => Unity::class,
                 'choice_label' => 'label',
                 'attr' => [
                     'class' => 'unity',
