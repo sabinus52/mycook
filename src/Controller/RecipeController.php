@@ -66,7 +66,7 @@ class RecipeController extends AbstractController
 
             $this->setPopularityUnityToIngredient($entityManager);
 
-            return $this->redirectToRoute('recipe_index');
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         $formIngredient = $this->createForm(IngredientHiddenType::class, new Ingredient());
@@ -109,7 +109,7 @@ class RecipeController extends AbstractController
 
             $this->setPopularityUnityToIngredient($entityManager);
 
-            return $this->redirectToRoute('recipe_index');
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         // Formulaire pour la création d'un nouvel ingrédient

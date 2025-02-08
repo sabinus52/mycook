@@ -13,7 +13,6 @@ import "bootstrap";
 import "./plugins/scrollUp.js";
 import "./plugins/classyNav.js";
 import "olix-backoffice/scripts/modal.js";
-import "olix-backoffice/scripts/select2.js";
 
 // Attente de la fin de chargement de la page
 import { preLoadWindow, initializeWindow } from "./scripts/windows.js";
@@ -21,5 +20,8 @@ window.addEventListener("load", preLoadWindow);
 initializeWindow();
 import Ingredient from "./scripts/ingredient.js";
 Ingredient.init();
+
+import Recipe from "./scripts/recipe.js";
+Recipe.init();
 
 console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");

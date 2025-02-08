@@ -2,17 +2,11 @@
 
 {% block title %} - Recette {{ recipe.name }}{% endblock %}
 
-{% block content %}
+{% set header_commands %}
+    <a href="{{ path('recipe_update', {'id': recipe.id}) }}" class="btn btn-secondary">Modifier la recette</a>
+{% endset %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="float-right">
-            <div class="btn-toolbar mb-3" role="toolbar">
-                <div class="btn-group mr-2" role="group">
-                    <a href="{{ path('recipe_update', {'id': recipe.id}) }}" class="btn btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier la recette</a>
-                </div>
-            </div>
-        </div>
-    {% endif %}
+{% block content %}
 
     {% include 'include/_breadcrumb.html.twig' with {'title': recipe.name, 'image': asset(uri_recipe~'/'~recipe.id~'.jpg')} only %}
 

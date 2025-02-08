@@ -46,37 +46,42 @@ class RecipeType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('person', IntegerType::class, [
                 'label' => 'Nombre de personne',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('difficulty', ChoiceType::class, [
                 'label' => 'Niveau de difficulté',
                 'choices' => Difficulty::getChoices(),
-                'choice_value' => 'value',
+                'choice_value' => 'key',
                 'choice_label' => 'label',
                 'empty_data' => '',
             ])
             ->add('rate', ChoiceType::class, [
                 'label' => 'Coût',
                 'choices' => Rate::getChoices(),
-                'choice_value' => 'value',
+                'choice_value' => 'key',
                 'choice_label' => 'label',
                 'empty_data' => '',
             ])
             ->add('timePreparation', IntegerType::class, [
                 'label' => 'Temps de préparation',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('timeCooking', IntegerType::class, [
                 'label' => 'Temps de cuisson',
+                'required' => false,
             ])
-            ->add('category', Select2EntityType::class, [
+            ->add('categories', Select2EntityType::class, [
                 'label' => 'Catégories',
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false,
             ])
             ->add('image', FileType::class, [
                 'label' => 'Photo du plat',

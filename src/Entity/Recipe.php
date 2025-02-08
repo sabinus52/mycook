@@ -141,8 +141,11 @@ class Recipe
         return $this->person;
     }
 
-    public function setPerson(int $person): static
+    public function setPerson(?int $person): static
     {
+        if (null === $person) {
+            $person = 0;
+        }
         $this->person = $person;
 
         return $this;
@@ -211,7 +214,7 @@ class Recipe
     /**
      * @return Collection<int,Category>
      */
-    public function getCategory(): Collection
+    public function getCategories(): Collection
     {
         return $this->categories;
     }

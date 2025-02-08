@@ -3,7 +3,7 @@
  */
 import $ from "jquery";
 
-var Ingredient = {
+export default {
     /**
      * Initialisation de la page
      */
@@ -15,5 +15,3 @@ var Ingredient = {
         });
     },
 };
-
-export default Ingredient;
