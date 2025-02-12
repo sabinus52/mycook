@@ -3,7 +3,7 @@
 {% block title %} - Les idées de recettes à tester{% endblock %}
 
 {% set header_commands %}
-    <a href="{{ path('idea_create') }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Ajouter une idée de recette</a>
+    <a href="{{ path('idea_create') }}" class="btn btn-secondary" data-toggle="olix-modal">Ajouter une idée de recette</a>
 {% endset %}
 
 {% block content %}
@@ -23,8 +23,8 @@
                                 <span>{{ date()|date("d M Y") }}</span>
                                 <a href="{{ idea.link }}" target="_blank"><h5>{{ idea.name }}</h5></a>
                                 {% if is_granted('ROLE_ADMIN') %}
-                                    <a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Modifier</a>
-                                    <a href="{{ path('idea_delete', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Supprimer</a>
+                                    <a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Modifier</a>
+                                    <a href="{{ path('idea_delete', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Supprimer</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -34,6 +34,6 @@
         </div>
     </section>
 
-    {% include '@OlixBackOffice/Include/modal.html.twig' with { modal: { title: "Chargement du formulaire", class: 'modal-lg' } } %}
+    {% include '@OlixBackOffice/Modal/base.html.twig' with { title: "Chargement du formulaire", class: 'modal-lg' } %}
 
 {% endblock %}

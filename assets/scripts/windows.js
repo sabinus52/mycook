@@ -3,6 +3,7 @@
  */
 import $ from "jquery";
 import WOW from "wow.js";
+import Modal from "olix-backoffice/plugins/modal.js";
 
 var browserWindow = $(window);
 
@@ -43,6 +44,10 @@ export function initializeWindow() {
     if ($.fn.classyNav) {
         $("#deliciousNav").classyNav();
     }
+
+    // Modal
+    Modal.initialize();
+
     // Toast
     $(".toast").toast("show");
 }

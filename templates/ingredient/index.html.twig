@@ -3,7 +3,7 @@
 {% block title %} - Ingrédients{% endblock %}
 
 {% set header_commands %}
-    <a href="{{ path('ingredient_create') }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Ajouter un ingrédient</a>
+    <a href="{{ path('ingredient_create') }}" class="btn btn-secondary" data-toggle="olix-modal">Ajouter un ingrédient</a>
 {% endset %}
 
 {% block content %}
@@ -50,8 +50,8 @@
                                 <td class="align-middle">{% if ingredient.conversion %}1 {{ ingredient.name }} -&gt; {{ ingredient.conversion }} g{% endif %}</td>
                                 <td class="align-middle text-right">
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Modifier</a>
-                                        <a href="{{ path('ingredient_delete', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Supprimer</a>
+                                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Modifier</a>
+                                        <a href="{{ path('ingredient_delete', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Supprimer</a>
                                     {% endif %}
                                     <a href="{{ path('ingredient_show', {'id': ingredient.id}) }}" class="btn-mycook btn-small">Découvrir les recettes</a>
                                 </td>
@@ -68,6 +68,6 @@
         </div>
     </section>
 
-    {% include '@OlixBackOffice/Include/modal.html.twig' with { modal: { title: "Chargement du formulaire", class: 'modal-lg' } } %}
+    {% include '@OlixBackOffice/Modal/base.html.twig' with { title: "Chargement du formulaire", class: 'modal-lg' } %}
 
 {% endblock %}

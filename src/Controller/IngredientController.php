@@ -88,14 +88,14 @@ class IngredientController extends AbstractController
         return new JsonResponse([
             'id' => $ingredient->getId(),
             'name' => $ingredient->getName(),
-            'unity' => $ingredient->getUnity()->getValue(),
+            'unity' => $ingredient->getUnity()->value,
         ]);
     }
 
     /**
      * Création d'un nouvel ingrédient depuis le formulaire de la recette.
      */
-    #[Route(path: '/create-ajax', name: 'ingredient_create_from_recipe', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/create-ajax', name: 'ingredient_create_from_recipe', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -135,7 +135,7 @@ class IngredientController extends AbstractController
             return new Response('OK');
         }
 
-        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'ingredient' => $ingredient,
             'form' => $form,
             'modal' => [
@@ -179,7 +179,7 @@ class IngredientController extends AbstractController
             return new Response('OK');
         }
 
-        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'ingredient' => $ingredient,
             'form' => $form,
             'modal' => [

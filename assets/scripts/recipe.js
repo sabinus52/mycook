@@ -3,8 +3,8 @@
  */
 import "select2/dist/css/select2.min.css";
 import $ from "jquery";
-import "olix-backoffice/scripts/select2.js";
-import "olix-backoffice/scripts/collection.js";
+import "olix-backoffice/plugins/select2.js";
+import "olix-backoffice/plugins/collection.js";
 
 export default {
     init: function () {

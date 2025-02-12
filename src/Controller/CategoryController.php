@@ -65,7 +65,7 @@ class CategoryController extends AbstractController
             return new Response('OK');
         }
 
-        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'category' => $category,
             'form' => $form,
             'modal' => [
@@ -110,7 +110,7 @@ class CategoryController extends AbstractController
             return new Response('OK');
         }
 
-        return $this->render('@OlixBackOffice/Include/modal-form-vertical.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'category' => $category,
             'form' => $form,
             'modal' => [
@@ -145,7 +145,7 @@ class CategoryController extends AbstractController
             return new Response('OK');
         }
 
-        return $this->render('@OlixBackOffice/Include/modal-content-delete.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-delete.html.twig', [
             'form' => $form,
             'element' => sprintf('l\'ingrédient <strong>%s</strong>', $category),
         ]);

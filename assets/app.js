@@ -12,12 +12,12 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap";
 import "./plugins/scrollUp.js";
 import "./plugins/classyNav.js";
-import "olix-backoffice/scripts/modal.js";
 
 // Attente de la fin de chargement de la page
 import { preLoadWindow, initializeWindow } from "./scripts/windows.js";
 window.addEventListener("load", preLoadWindow);
 initializeWindow();
+
 import Ingredient from "./scripts/ingredient.js";
 Ingredient.init();
 

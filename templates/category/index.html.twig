@@ -3,7 +3,7 @@
 {% block title %} - Les catégories{% endblock %}
 
 {% set header_commands %}
-    <a href="{{ path('category_create') }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Ajouter une catégorie</a>
+    <a href="{{ path('category_create') }}" class="btn btn-secondary" data-toggle="olix-modal">Ajouter une catégorie</a>
 {% endset %}
 
 {% block content %}
@@ -26,8 +26,8 @@
                             </div>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <div class="text-center">
-                                    <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Modifier</a>
-                                    <a href="{{ path('category_delete', {'id': category.id}) }}" class="btn btn-secondary" data-toggle="olix-modal" data-target="#modalOlix">Supprimer</a>
+                                    <a href="{{ path('category_update', {'id': category.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Modifier</a>
+                                    <a href="{{ path('category_delete', {'id': category.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Supprimer</a>
                                 </div>
                             {% endif %}
                         </div>
@@ -37,6 +37,6 @@
         </div>
     </section>
 
-    {% include '@OlixBackOffice/Include/modal.html.twig' with { modal: { title: "Chargement du formulaire", class: 'modal-lg' } } %}
+    {% include '@OlixBackOffice/Modal/base.html.twig' with { title: "Chargement du formulaire" } %}
 
 {% endblock %}
