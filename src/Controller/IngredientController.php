@@ -74,6 +74,39 @@ class IngredientController extends AbstractController
     }
 
     /**
+     * Autocompletion des Select2 en mode AJAX pour le formulaire de saisie de la recette.
+     */
+    #[Route(path: '/autocomplete', name: 'ingredient_autocomplete_select2')]
+    public function getSearchAutoCompleteSelect2(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        // Paramètres du Request
+        $term = $request->query->get('term', '');
+
+        // Recherche des items
+        /** @var Ingredient[] $ingredients */
+        $ingredients = $ingredientRepository->createQueryBuilder('ingredient')
+            ->andWhere('ingredient.name LIKE :term')
+            ->setParameter('term', '%'.$term.'%')
+            ->orderBy('ingredient.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        // Mapping des résultats
+        $results = [];
+        foreach ($ingredients as $ingredient) {
+            $results[] = [
+                'id' => $ingredient->getId(),
+                'text' => $ingredient->getName(),
+                'unity' => $ingredient->getUnity()->value,
+            ];
+        }
+
+        // Retourne tous les résultats
+        return $this->json($results);
+    }
+
+    /**
      * Retourne si un ingredient existe ou pas.
      */
     #[Route(path: '/is-exists', name: 'ingredient_isexists', options: ['expose' => true])]

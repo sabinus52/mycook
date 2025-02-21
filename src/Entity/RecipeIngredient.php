@@ -41,7 +41,7 @@ class RecipeIngredient
      * Jointure avec les ingrédients.
      */
     #[ORM\JoinColumn(nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Ingredient::class, inversedBy: 'recipes')]
+    #[ORM\ManyToOne(targetEntity: Ingredient::class, inversedBy: 'recipes', cascade: ['persist'])]
     #[Assert\NotBlank]
     private ?Ingredient $ingredient = null;
 

@@ -167,7 +167,7 @@ class RecipeController extends AbstractController
             /** @psalm-suppress PossiblyNullArrayOffset */
             $unity = $ingredientsByUnity[$ingredient->getId()];
             // Si changement d'unité, on met à jour l'unité la plus utilisée
-            if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {
+            if ($unity !== $ingredient->getUnity()) {
                 $ingredient->setUnity($unity);
                 $entityManager->persist($ingredient);
             }

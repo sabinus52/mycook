@@ -14,7 +14,7 @@ namespace App\Form;
 use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
 use App\Enum\Unity;
-use App\ValuesList\Unity;
+use Olix\BackOfficeBundle\Form\Type\Select2AjaxType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -34,19 +34,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RecipeIngredientType extends AbstractType
 {
-    public function __construct(private readonly IngredientToNameTransformer $transformer)
-    {
-    }
-
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ingredient', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'class' => 'autocomplete',
+            ->add('ingredient', Select2AjaxType::class, [
+                'class' => Ingredient::class,
+                'class_label' => 'name',
+                'class_property' => 'name',
+                'allow_add' => true,
+                'ajax' => [
+                    'route' => 'ingredient_autocomplete_select2',
                 ],
+                'required' => false,
             ])
             ->add('quantity', IntegerType::class, [
                 'required' => false,
@@ -59,12 +59,9 @@ class RecipeIngredientType extends AbstractType
                     'class' => 'unity',
                 ],
             ])
-            ->add('note', TextType::class)
-        ;
-
-        // Transformation de l'objet Ingrédient vers son nom
-        $builder->get('ingredient')
-            ->addModelTransformer($this->transformer)
+            ->add('note', TextType::class, [
+                'required' => false,
+            ])
         ;
     }
 
