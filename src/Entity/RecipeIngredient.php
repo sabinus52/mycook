@@ -63,10 +63,6 @@ class RecipeIngredient
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $note = null;
 
-    public function __construct()
-    {
-    }
-
     public function getId(): ?int
     {
         return $this->id;

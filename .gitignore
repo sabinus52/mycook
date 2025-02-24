@@ -34,9 +34,9 @@
 
 ###> My configuration ###
 /.vscode
-/DEVELOP*.md
+/.devdocker
 /*.code-workspace
-/*.conf
-/*.cache
+/drivers
 /.sync.ffs_db
+/workspace
 ###< My configuration ###
