@@ -958,14 +958,41 @@ a.btn {
             height: 32px;
             /*filter: drop-shadow(0 0 1px #fbb710);*/
         }
-        
     }
-    .btn svg {
-        fill: white;
-        width: 32px;
-        height: 32px;
-        text-align: center;
-        padding-right: 5px;
+    .difficulty {
+        display: inline-block;
+        min-width: 150px;
+        height: 50px;
+        color: $white-color;
+        border: none;
+        border-left: 3px solid $border-color;
+        border-radius: 0;
+        padding: 0 30px;
+        font-size: 16px;
+        line-height: 48px;
+        font-weight: 600;
+        @include trans-duration(500ms);
+        text-transform: capitalize;
+        background-color: $bg-default;
+        svg {
+            fill: white;
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            padding-right: 5px;
+        }
+        @media #{$breakpoint-xs} {
+            height: 40px;
+            line-height: 39px;
+        }
+    }
+    .calories {
+        padding: 10px 0px;
+        font-size: 16px;
+        font-weight: 600;
+        strong {
+            font-size: 18px;
+        }
     }
 }
 
@@ -1018,10 +1045,9 @@ a.btn {
         color: #2f2f2f;
     }
     .custom-control-label::after {
-        top: 10px;
-        left: 5px;
-        width: 20px;
-        height: 20px;
+        top: 5px;
+        width: 28px;
+        height: 28px;
     }
     .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
         background-color: $bg-default;

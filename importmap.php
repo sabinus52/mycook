@@ -59,8 +59,16 @@ return [
     'chart.js' => [
         'version' => '3.9.1',
     ],
-    'olix-backoffice/scripts/modal.js' => [
-        'version' => '1.0.7',
+    'animate.css' => [
+        'version' => '3.7.2',
+    ],
+    'animate.css/animate.min.css' => [
+        'version' => '3.7.2',
+        'type' => 'css',
+    ],
+    'wow.js' => [
+        'version' => '1.2.2',
+    ],
     'olix-backoffice/plugins/modal.js' => [
         'version' => '1.1.0',
     ],

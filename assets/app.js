@@ -9,6 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
 import "./styles/classy-nav.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "animate.css/animate.min.css";
 import "bootstrap";
 import "./plugins/scrollUp.js";
 import "./plugins/classyNav.js";

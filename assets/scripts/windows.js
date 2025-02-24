@@ -48,6 +48,10 @@ export function initializeWindow() {
     // Modal
     Modal.initialize();
 
+    if (browserWindow.width() > 767) {
+        new WOW().init();
+    }
+
     // Toast
     $(".toast").toast("show");
 }

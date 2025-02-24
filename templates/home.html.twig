@@ -45,9 +45,27 @@
                 </div>
             </div>
             <div class="row">
-                {% for item in categories %}
+                {% set delay = 2 %}
+                {% for item in categories[:3] %}
+                    {% set delay = delay - 0.5 %}
                     <div class="col-6 col-md-4 col-lg-2">
-                        <div class="single-category-area mb-30">
+                        <div class="single-category-area mb-30 wow bounceInLeft" data-wow-duration="1s" data-wow-delay="{{ delay }}s">
+                            <div class="img-hover-zoom rounded-circle">
+                                <a href="{{ path('category_show', {'id': item.0.id}) }}">
+                                    <img src="{{ asset(uri_category~'/'~item.0.id~'.jpg') | imagine_filter('cat') }}">
+                                </a>
+                            </div>
+                            <div class="category-title">
+                                <a href="{{ path('category_show', {'id': item.0.id}) }}"><h5>{{ item.0.name }}</h5></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% set delay = 0 %}
+                {% for item in categories[3:] %}
+                    {% set delay = delay + 0.5 %}
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="single-category-area mb-30 wow bounceInRight" data-wow-duration="1s" data-wow-delay="{{ delay }}s">
                             <div class="img-hover-zoom rounded-circle">
                                 <a href="{{ path('category_show', {'id': item.0.id}) }}">
                                     <img src="{{ asset(uri_category~'/'~item.0.id~'.jpg') | imagine_filter('cat') }}">

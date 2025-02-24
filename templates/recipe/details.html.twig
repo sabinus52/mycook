@@ -40,16 +40,16 @@
                     <div class="recipe-ratings text-right my-5">
                         <div class="rate">
                         {% for i in 1..3 %}
-                            {% if recipe.rate.key >= loop.index %}
+                            {% if recipe.rate.value >= loop.index %}
                                 {{ include('icons/euro-symbol.svg', {'color': '#fbb710'}) }}
                             {% else %}
                                 {{ include('icons/euro-symbol.svg', {'color': '#cccccc'}) }}
                             {% endif %}
                         {% endfor %}
                         </div>
-                        <a class="btn delicious-btn">{{ include('icons/chef-hat.svg') }} {{ recipe.difficulty }}</a>
+                        <a class="difficulty">{{ include('icons/chef-hat.svg') }} {{ recipe.difficulty.label }}</a>
                         <div class="calories">
-                            <span>{{ recipe.calorie }} kcal</span>
+                            <span><strong>{{ recipe.calorie }}</strong> kcal</span>
                         </div>
                     </div>
                 </div>
@@ -75,8 +75,11 @@
                         {% for item in recipe.ingredients %}
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="customCheck{{ loop.index }}">
-                                <label class="custom-control-label" for="customCheck{{ loop.index }}">{{ item.quantity }} {{ item.unity }} {{ item.ingredient }}</label>
-                                {% if item.note %}<div class="float-right"><small class="text-muted">{{ item.note|e }}</small></div>{% endif %}
+                                <label class="custom-control-label" for="customCheck{{ loop.index }}">
+                                    {% if item.quantity %}{{ item.quantity }} {{ item.unity.symbol }}{% endif %}
+                                    {{ item.ingredient }}
+                                    {% if item.note %}<small class="text-muted">{{ item.note|e }}</small>{% endif %}
+                                </label>
                             </div>
                         {% endfor %}
                     </div>

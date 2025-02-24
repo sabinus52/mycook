@@ -75,6 +75,8 @@ class RecipeRepository extends ServiceEntityRepository
     {
         // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
+            ->addSelect('RANDOM() as HIDDEN rand')
+            ->orderBy('rand')
             ->setMaxResults($count)
             ->getQuery()
             ->getResult()
