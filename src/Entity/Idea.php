@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Olivier <sabinus52@gmail.com>
  */
 #[ORM\Entity(repositoryClass: IdeaRepository::class)]
-class Idea
+class Idea implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -57,6 +57,11 @@ class Idea
     #[Assert\NotBlank]
     #[Assert\Url]
     private ?string $image = null;
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 
     public function getId(): ?int
     {

@@ -1,0 +1,40 @@
+<div class="top-header-area">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center justify-content-between">
+            <div class="col-12 col-sm-6">
+                <div class="subtitle">
+                    <div class="ticker">
+                        Bienvenue sur mon livre de recettes de cuisine !
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-none d-md-block">
+                <div class="text-right">
+                    <div class="command">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            {{ header_commands|raw }}
+                        {% endif %}
+                    </div>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <img class="rounded-circle" src="{{ asset(app.user.avatar) }}"  title="{{ app.user.name }}" width="24" height="24">
+                        {% else %}
+                            <img class="rounded-circle" src="{{ asset('images/avatar.png') }}" width="24" height="24">
+                        {% endif %}
+                        </a>
+                        <div class="dropdown-menu">
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <a class="dropdown-item" href="{{ path('app_profile') }}">Mon profil</a>
+                                <a class="dropdown-item" href="{{ path('app_change_password') }}">Changer mot de passe</a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a>
+                            {% else %}
+                                {{ include('security/_form-login.html.twig') }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

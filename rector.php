@@ -2,60 +2,52 @@
 
 declare(strict_types=1);
 
-/**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
- */
-
+use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
-use Rector\Doctrine\Set\DoctrineSetList;
-use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
-use Rector\Php80\ValueObject\AnnotationToAttribute;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Rector\Symfony\Set\SensiolabsSetList;
+use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 use Rector\Symfony\Set\SymfonySetList;
-use Rector\ValueObject\PhpVersion;
 
-return static function (RectorConfig $rectorConfig): void {
-    $rectorConfig->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__.'/src',
-    ]);
-    $rectorConfig->parallel(120, 16, 10);
-
-    $rectorConfig->phpVersion(PhpVersion::PHP_83);
-
-    $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_83,
-        SetList::CODE_QUALITY,
-        SetList::CODING_STYLE,
-        SetList::DEAD_CODE,
-        SetList::STRICT_BOOLEANS,
+    ])
+    ->withParallel(120, 16, 10)
+    ->withPhpLevel(level: 83)
+    ->withPreparedSets(
+        codeQuality: true,
+        codingStyle: true,
+        deadCode: true,
+        naming: false, /* @experimental */
+        privatization: false, /* @experimental */
+        strictBooleans: true,
+        typeDeclarations: true,
+        earlyReturn: true,
+        instanceOf: true,
+        twig: true,
+        carbon: false, /* @experimental */
+        rectorPreset: true, /* @experimental */
+        doctrineCodeQuality: true,
+        symfonyCodeQuality: true,
+        symfonyConfigs: true,
+        phpunitCodeQuality: true,
+    )
+    ->withSets([
         SetList::GMAGICK_TO_IMAGICK,
-        // SetList::NAMING,
-        // SetList::PRIVATIZATION,
-        SetList::TYPE_DECLARATION,
-        SetList::EARLY_RETURN,
-        SetList::INSTANCEOF,
+        LevelSetList::UP_TO_PHP_83,
         SymfonySetList::SYMFONY_64,
-        SymfonySetList::CONFIGS,
-        SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
-        SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        DoctrineSetList::DOCTRINE_CODE_QUALITY,
-        DoctrineSetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SensiolabsSetList::ANNOTATIONS_TO_ATTRIBUTES,
-    ]);
-
-    $rectorConfig->skip([
-        Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector::class,
-        Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector::class,
-    ]);
-
-    $rectorConfig->ruleWithConfiguration(AnnotationToAttributeRector::class, [
-        new AnnotationToAttribute(Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity::class),
-        new AnnotationToAttribute(Ibericode\Vat\Bundle\Validator\Constraints\VatNumber::class),
-    ]);
-};
+    ])
+    ->withAttributesSets(
+        symfony: true,
+        doctrine: true,
+        phpunit: true,
+        sensiolabs: true,
+    )
+    ->withSkip([
+        DisallowedEmptyRuleFixerRector::class,
+        NewlineAfterStatementRector::class,
+    ])
+;

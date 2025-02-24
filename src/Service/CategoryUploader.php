@@ -30,4 +30,13 @@ class CategoryUploader extends FileUploader
 
         return $this->move($file, (string) $category->getId());
     }
+
+    /**
+     * Suppression de l'image et de la vignette.
+     */
+    public function remove(Category $category): void
+    {
+        $this->removeCacheThumb((string) $category->getId());
+        $this->removeFile((string) $category->getId());
+    }
 }

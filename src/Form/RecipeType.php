@@ -13,12 +13,12 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Recipe;
-use App\ValuesList\Difficulty;
-use App\ValuesList\Rate;
+use App\Enum\Difficulty;
+use App\Enum\Rate;
 use Olix\BackOfficeBundle\Form\Type\CollectionType;
 use Olix\BackOfficeBundle\Form\Type\Select2EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,7 +33,6 @@ use Symfony\Component\Validator\Constraints\Image;
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.StaticAccess)
  *
  * @psalm-suppress MissingTemplateParam
  */
@@ -46,37 +45,38 @@ class RecipeType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('person', IntegerType::class, [
                 'label' => 'Nombre de personne',
                 'empty_data' => '',
+                'required' => false,
             ])
-            ->add('difficulty', ChoiceType::class, [
+            ->add('difficulty', EnumType::class, [
                 'label' => 'Niveau de difficulté',
-                'choices' => Difficulty::getChoices(),
-                'choice_value' => 'value',
+                'class' => Difficulty::class,
                 'choice_label' => 'label',
-                'empty_data' => '',
             ])
-            ->add('rate', ChoiceType::class, [
+            ->add('rate', EnumType::class, [
                 'label' => 'Coût',
-                'choices' => Rate::getChoices(),
-                'choice_value' => 'value',
+                'class' => Rate::class,
                 'choice_label' => 'label',
-                'empty_data' => '',
             ])
             ->add('timePreparation', IntegerType::class, [
                 'label' => 'Temps de préparation',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('timeCooking', IntegerType::class, [
                 'label' => 'Temps de cuisson',
+                'required' => false,
             ])
-            ->add('category', Select2EntityType::class, [
+            ->add('categories', Select2EntityType::class, [
                 'label' => 'Catégories',
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false,
             ])
             ->add('image', FileType::class, [
                 'label' => 'Photo du plat',

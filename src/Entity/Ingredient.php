@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\Unity;
 use App\Repository\IngredientRepository;
-use App\ValuesList\Unity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]
 #[UniqueEntity('name')]
-class Ingredient
+class Ingredient implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,8 +43,8 @@ class Ingredient
     /**
      * Unité par défaut.
      */
-    #[ORM\Column(type: 'unity')]
-    private Unity $unity;
+    #[ORM\Column(enumType: Unity::class, length: 2)]
+    private Unity $unity = Unity::NUMBER;
 
     /**
      * Conversion: pour 1 unité combien cela représente en gramme.
@@ -68,8 +68,12 @@ class Ingredient
 
     public function __construct()
     {
-        $this->unity = new Unity(Unity::NUMBER);
         $this->recipes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int

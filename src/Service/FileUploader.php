@@ -87,4 +87,14 @@ abstract class FileUploader
     {
         $this->imagineCacheManager->remove($this->directory.'/'.$targetFile.'.jpg');
     }
+
+    /**
+     * Supprime le fichier.
+     *
+     * @param string $targetFile : Nom du fichier de destination
+     */
+    protected function removeFile(string $targetFile): void
+    {
+        unlink($this->rootDir.$this->directory.'/'.$targetFile.'.jpg');
+    }
 }

@@ -1,0 +1,12 @@
+<div class="search-wrapper">
+    <div class="close-btn"><i class="fas fa-times" aria-hidden="true"></i></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form>
+                <select name="olix-search" {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', { url: path('ux_entity_autocomplete', { alias: 'recipe' })}) }}></select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

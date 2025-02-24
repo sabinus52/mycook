@@ -55,14 +55,18 @@ class IdeaController extends AbstractController
             $entityManager->persist($idea);
             $entityManager->flush();
 
-            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été ajouté avec succès', $idea->getName()));
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été ajouté avec succès', $idea));
 
-            return $this->redirectToRoute('idea_index');
+            return new Response('OK');
         }
 
-        return $this->render('idea/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'idea' => $idea,
             'form' => $form,
+            'modal' => [
+                'title' => 'Ajouter une nouvelle idée de recette',
+                'btnlabel' => 'Ajouter',
+            ],
         ]);
     }
 
@@ -79,14 +83,18 @@ class IdeaController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été modifié avec succès', $idea->getName()));
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été modifié avec succès', $idea));
 
-            return $this->redirectToRoute('idea_index');
+            return new Response('OK');
         }
 
-        return $this->render('idea/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'idea' => $idea,
             'form' => $form,
+            'modal' => [
+                'title' => 'Modifier une idée de recette',
+                'btnlabel' => 'Mettre à jour',
+            ],
         ]);
     }
 
@@ -97,20 +105,20 @@ class IdeaController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Idea $idea, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.(int) $idea->getId(), (string) $request->request->get('_token'))) {
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->remove($idea);
+            $entityManager->flush();
+            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été supprimé avec succès', $idea));
 
-            try {
-                $entityManager->flush();
-            } catch (\Exception) {
-                $this->addFlash('danger', sprintf('L\'idée de recette <strong>%s</strong> ne peut pas être supprimé', $idea->getName()));
-
-                return $this->redirectToRoute('idea_index');
-            }
-
-            $this->addFlash('success', sprintf('L\'idée de recette <strong>%s</strong> a été supprimé avec succès', $idea->getName()));
+            return new Response('OK');
         }
 
-        return $this->redirectToRoute('idea_index');
+        return $this->render('@OlixBackOffice/Modal/form-delete.html.twig', [
+            'form' => $form,
+            'element' => sprintf('de l\'idée de recette <strong>%s</strong>', $idea),
+        ]);
     }
 }

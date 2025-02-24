@@ -34,6 +34,7 @@ class StepType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'empty_data' => '',
+                'required' => false,
             ])
         ;
     }

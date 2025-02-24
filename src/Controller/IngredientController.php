@@ -17,11 +17,11 @@ use App\Entity\RecipeIngredient;
 use App\Form\IngredientHiddenType;
 use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
+use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -74,6 +74,39 @@ class IngredientController extends AbstractController
     }
 
     /**
+     * Autocompletion des Select2 en mode AJAX pour le formulaire de saisie de la recette.
+     */
+    #[Route(path: '/autocomplete', name: 'ingredient_autocomplete_select2')]
+    public function getSearchAutoCompleteSelect2(Request $request, IngredientRepository $ingredientRepository): JsonResponse
+    {
+        // Paramètres du Request
+        $term = $request->query->get('term', '');
+
+        // Recherche des items
+        /** @var Ingredient[] $ingredients */
+        $ingredients = $ingredientRepository->createQueryBuilder('ingredient')
+            ->andWhere('ingredient.name LIKE :term')
+            ->setParameter('term', '%'.$term.'%')
+            ->orderBy('ingredient.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+
+        // Mapping des résultats
+        $results = [];
+        foreach ($ingredients as $ingredient) {
+            $results[] = [
+                'id' => $ingredient->getId(),
+                'text' => $ingredient->getName(),
+                'unity' => $ingredient->getUnity()->value,
+            ];
+        }
+
+        // Retourne tous les résultats
+        return $this->json($results);
+    }
+
+    /**
      * Retourne si un ingredient existe ou pas.
      */
     #[Route(path: '/is-exists', name: 'ingredient_isexists', options: ['expose' => true])]
@@ -88,14 +121,14 @@ class IngredientController extends AbstractController
         return new JsonResponse([
             'id' => $ingredient->getId(),
             'name' => $ingredient->getName(),
-            'unity' => $ingredient->getUnity()->getValue(),
+            'unity' => $ingredient->getUnity()->value,
         ]);
     }
 
     /**
      * Création d'un nouvel ingrédient depuis le formulaire de la recette.
      */
-    #[Route(path: '/create-ajax', name: 'ingredient_create_from_recipe', methods: ['POST'], options: ['expose' => true])]
+    #[Route(path: '/create-ajax', name: 'ingredient_create_from_recipe', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function createFromRecipe(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -118,7 +151,7 @@ class IngredientController extends AbstractController
      */
     #[Route(path: '/create', name: 'ingredient_create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -132,23 +165,30 @@ class IngredientController extends AbstractController
 
             $this->addFlash('success', sprintf("L'ingrédient <strong>%s</strong> a été ajouté avec succès", (string) $ingredient->getName()));
 
-            return $this->redirectToRoute2((string) $session->get('ingredient.filter.route')); // @phpstan-ignore cast.string
+            return new Response('OK');
         }
 
-        return $this->render('ingredient/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'ingredient' => $ingredient,
-            'form' => $form->createView(),
+            'form' => $form,
+            'modal' => [
+                'title' => 'Ajouter un ingrédient',
+                'btnlabel' => 'Ajouter',
+            ],
         ]);
     }
 
     /**
-     * Visualisation d'un ingrédient.
+     * Visualiser les recettes d'un ingrédient.
      */
     #[Route(path: '/{id}', name: 'ingredient_show', methods: ['GET'])]
-    public function show(Ingredient $ingredient): Response
+    public function show(Ingredient $ingredient, RecipeRepository $recipeRepository): Response
     {
-        return $this->render('ingredient/show.html.twig', [
+        $recipes = $recipeRepository->findByIngredient($ingredient);
+
+        return $this->render('ingredient/recipes.html.twig', [
             'ingredient' => $ingredient,
+            'recipes' => $recipes,
         ]);
     }
 
@@ -157,7 +197,7 @@ class IngredientController extends AbstractController
      */
     #[Route(path: '/{id}/update', name: 'ingredient_update', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SessionInterface $session): Response
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
@@ -167,14 +207,18 @@ class IngredientController extends AbstractController
 
             $this->updateRecipeCalories($ingredient, $entityManager);
 
-            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été modifié avec succès', (string) $ingredient->getName()));
+            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été modifié avec succès', $ingredient));
 
-            return $this->redirectToRoute2((string) $session->get('ingredient.filter.route')); // @phpstan-ignore cast.string
+            return new Response('OK');
         }
 
-        return $this->render('ingredient/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'ingredient' => $ingredient,
-            'form' => $form->createView(),
+            'form' => $form,
+            'modal' => [
+                'title' => 'Modifier un ingrédient',
+                'btnlabel' => 'Mettre à jour',
+            ],
         ]);
     }
 
@@ -185,21 +229,27 @@ class IngredientController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.(int) $ingredient->getId(), (string) $request->request->get('_token'))) {
-            $entityManager->remove($ingredient);
+        $form = $this->createFormBuilder()->getForm();
 
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->remove($ingredient);
             try {
                 $entityManager->flush();
             } catch (\Exception) {
-                $this->addFlash('danger', sprintf('L\'ingrédient <strong>%s</strong> ne peut pas être supprimé', (string) $ingredient->getName()));
+                $this->addFlash('danger', sprintf('L\'ingrédient <strong>%s</strong> ne peut pas être supprimé', $ingredient));
 
-                return $this->redirectToRoute('ingredient_index');
+                return new Response('OK');
             }
+            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été supprimé avec succès', $ingredient));
 
-            $this->addFlash('success', sprintf('L\'ingrédient <strong>%s</strong> a été supprimé avec succès', (string) $ingredient->getName()));
+            return new Response('OK');
         }
 
-        return $this->redirectToRoute('ingredient_index');
+        return $this->render('@OlixBackOffice/Include/modal-content-delete.html.twig', [
+            'form' => $form,
+            'element' => sprintf('l\'ingrédient <strong>%s</strong>', $ingredient),
+        ]);
     }
 
     /**
@@ -221,15 +271,5 @@ class IngredientController extends AbstractController
         }
 
         $entityManager->flush();
-    }
-
-    /**
-     * Redirection de la route en fonction de la route du filtre enregistré dans la session.
-     */
-    protected function redirectToRoute2(string $route): RedirectResponse
-    {
-        $route = (empty($route)) ? 'ingredient_index' : $route;
-
-        return $this->redirectToRoute($route);
     }
 }

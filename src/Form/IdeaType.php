@@ -36,18 +36,22 @@ class IdeaType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
+                'required' => false,
                 'empty_data' => '',
             ])
             ->add('link', UrlType::class, [
                 'label' => 'Site web',
+                'required' => false,
                 'empty_data' => '',
             ])
             ->add('image', UrlType::class, [
                 'label' => 'Image du site',
+                'required' => false,
                 'empty_data' => '',
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'Descriptif',
+                'required' => false,
                 'empty_data' => '',
             ])
         ;

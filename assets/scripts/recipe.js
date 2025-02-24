@@ -1,94 +1,93 @@
 /**
- * Pour la gestion du formulaire des recettes
+ * Script concernant la page Recipe
  */
-
-import 'typeahead.js';
-import Bloodhound from 'bloodhound-js';
-
-import './collection.js';
-require('select2');
-
-var olix = require('./olix.js');
+import "select2/dist/css/select2.min.css";
+import $ from "jquery";
+import "olix-backoffice/plugins/select2.js";
+import "olix-backoffice/plugins/collection.js";
 
 /**
- * Rafraichit et initialise les éléments de l'auto complétion des recettes
+ * Calcule la quantité des ingrédients en fonction du nombre de personnes
+ *
+ * @param {Number} ratio
  */
-var refreshElementIngredientAutoComplete = function() {
-
-    var ingredients = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {
-            url: Routing.generate('ingredient_json', { term: 'QQUERY' }),
-            wildcard: 'QQUERY'
-          }
-    });
-
-    // Initialisation de l'auto complétion
-    $('input.autocomplete').typeahead('destroy');
-    $('input.autocomplete').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-    },
-    {
-        name: 'ingredients',
-        display: 'name',
-        source: ingredients
-    });
-
-    // Suite à la saisie de l'ingrédient, on vérifie qu'il existe sinon on demande sa création
-    $('input.autocomplete').on('focusout', function(_ev) {
-
-        // Si vide alors on ne fait rien
-        console.log('Selection : ' + $(this).val());
-        if ($(this).val() == '') return;
-
-        //Test si l'ingrédient existe
-        $.getJSON(Routing.generate('ingredient_isexists'), { term: $(this).val() })
-            .done(function( json ) {
-                if ( json.id == 0 ) {
-                    // L'ingrédient n'existe pas alors on affiche le modal
-                    $('#confirmCreateIngredient .modal-body').removeClass('text-center').html($('#confirmCreateIngredient .modal-body').data('prototype'));
-                    $('#confirmCreateIngredient .modal-footer').show();
-                    $('#formCreateIngredient input.ingredient').val(json.name);
-                    $('#newIngredient').text(json.name);
-                    $('#confirmCreateIngredient').modal('show');
-                } else {
-                    // L'ingrédient existe alors on remplit automatiquement l'unité
-                    var obj = $(_ev.target).closest('div.form-row').find('.unity').first();
-                    obj.val(json.unity);
-                }
-            });
+var calculQuantity = function (ratio) {
+    var quantity = 0;
+    $("[role='quantity']").each(function () {
+        quantity = parseInt($(this).data("value")) * ratio;
+        $(this).text(parseInt(quantity));
     });
 };
 
+export default {
+    init: function () {
+        // Initialisation de Select2
+        $("[data-toggle='select2']").OlixSelect2();
 
-$(function() {
+        // Initialisation de la collection des ingrédients
+        $("#recipe_ingredients").OlixCollection({
+            onAddItem: function ($prototype, $inputFirst) {
+                console.log("recipe.init.onAddItem");
+                // Initialisation de Select2
+                $inputFirst.OlixSelect2({
+                    tags: true,
+                    templateSelection: function (item) {
+                        if (!item.unity) return item.text;
 
-    // Initialise la liste des catégories
-    $('#recipe_category').select2({
-        theme: 'bootstrap4',
-        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
-        placeholder: $(this).data('placeholder'),
-        allowClear: Boolean($(this).data('allow-clear')),
-        closeOnSelect: !$(this).attr('multiple'),
-    });
+                        // Crée un élément option avec un attribut `data-unity`
+                        let $option = $("<span>")
+                            .text(item.text)
+                            .attr("data-unity", item.unity);
 
-    // Initialise la collection des ingrédients et des étapes
-    $('.collection-widget').olixCollection({
-        onAddItem: function ($prototype, $inputFisrt) {
-            refreshElementIngredientAutoComplete();
-            $inputFisrt.focus();
-        }
-    });
+                        return $option;
+                    },
+                });
+                $inputFirst.focus();
+                $inputFirst.select2("open");
 
-    // Initialise l'auto complétion des ingrédients
-    refreshElementIngredientAutoComplete();
+                // Lorsque l'utilisateur choisi un ingrédient dans la liste
+                $inputFirst.on("select2:select", function (_ev) {
+                    // Objet de l'option sélectionnée
+                    var $selectedOption = $(_ev.target).find(":selected");
+                    if ($selectedOption.data("select2-tag")) {
+                        // Si l'ingrédient est un tag alors on crée un nouvel ingrédient au moment de l'ajout
+                        console.log(
+                            "New ingredient : ",
+                            $selectedOption.text()
+                        );
+                    }
+                    // Si l'ingrédient existe alors on remplit automatiquement l'unité
+                    let selectedData = _ev.params.data;
+                    console.log("selectedData", selectedData);
+                    if (selectedData.unity) {
+                        // Objet de la liste des unités qui sera remplie en fonction de l'ingrédient sélectionné
+                        var $unitySelectForm = $(_ev.target)
+                            .closest("div.form-row")
+                            .find(".unity")
+                            .first();
+                        // Remplissage de la liste des unités
+                        $unitySelectForm.val(selectedData.unity);
+                    }
+                });
+            },
+        });
 
-    // Ouvre le modal pour demander si on doit créer un ingrédient
-    $('#confirmCreateIngredient').on('click', 'button.btn-primary',  function (_ev) {
-        olix.submitFormModalAjax('#confirmCreateIngredient', '#formCreateIngredient', Routing.generate('ingredient_create_from_recipe'));
-    });
+        // Initialisation de la collection des étapes
+        $("#recipe_steps").OlixCollection();
 
-});
+        // Lorsque l'utilisateur clique sur le bouton de calcul de la quantité des ingrédients
+        $("#addPerson").on("click", function () {
+            let nbPerson = parseInt($("#person").text()) + 1;
+            $("#person").text(nbPerson);
+            calculQuantity(nbPerson / parseInt($("#person").data("value")));
+        });
+        $("#removePerson").on("click", function () {
+            let nbPerson = parseInt($("#person").text()) - 1;
+            if (nbPerson < 1) {
+                nbPerson = 1;
+            }
+            $("#person").text(nbPerson);
+            calculQuantity(nbPerson / parseInt($("#person").data("value")));
+        });
+    },
+};

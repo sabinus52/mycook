@@ -66,7 +66,7 @@ class RecipeController extends AbstractController
 
             $this->setPopularityUnityToIngredient($entityManager);
 
-            return $this->redirectToRoute('recipe_index');
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         $formIngredient = $this->createForm(IngredientHiddenType::class, new Ingredient());
@@ -84,7 +84,7 @@ class RecipeController extends AbstractController
     #[Route(path: '/{id}', name: 'recipe_show', methods: ['GET'], options: ['expose' => true])]
     public function show(Recipe $recipe): Response
     {
-        return $this->render('recipe/show.html.twig', [
+        return $this->render('recipe/details.html.twig', [
             'recipe' => $recipe,
         ]);
     }
@@ -109,7 +109,7 @@ class RecipeController extends AbstractController
 
             $this->setPopularityUnityToIngredient($entityManager);
 
-            return $this->redirectToRoute('recipe_index');
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         // Formulaire pour la création d'un nouvel ingrédient
@@ -167,7 +167,7 @@ class RecipeController extends AbstractController
             /** @psalm-suppress PossiblyNullArrayOffset */
             $unity = $ingredientsByUnity[$ingredient->getId()];
             // Si changement d'unité, on met à jour l'unité la plus utilisée
-            if ($unity->getValue() !== $ingredient->getUnity()->getValue()) {
+            if ($unity !== $ingredient->getUnity()) {
                 $ingredient->setUnity($unity);
                 $entityManager->persist($ingredient);
             }

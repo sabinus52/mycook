@@ -12,9 +12,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Entity\Recipe;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use App\Repository\RecipeRepository;
 use App\Service\CategoryUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,24 +62,28 @@ class CategoryController extends AbstractController
                 $fileUploader->upload($image, $category); // @phpstan-ignore argument.type
             }
 
-            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
+            return new Response('OK');
         }
 
-        return $this->render('category/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'category' => $category,
             'form' => $form,
+            'modal' => [
+                'title' => 'Ajouter une catégorie',
+                'btnlabel' => 'Ajouter',
+            ],
         ]);
     }
 
     /**
-     * Visualiser la catégorie.
+     * Visualiser les recettes de la catégorie.
      */
     #[Route(path: '/{id}', name: 'category_show', methods: ['GET'])]
-    public function show(Category $category, EntityManagerInterface $entityManager): Response
+    public function show(Category $category, RecipeRepository $recipeRepository): Response
     {
-        $recipes = $entityManager->getRepository(Recipe::class)->findBy(['category' => $category]);
+        $recipes = $recipeRepository->findByCategory($category);
 
-        return $this->render('category/show.html.twig', [
+        return $this->render('category/recipes.html.twig', [
             'category' => $category,
             'recipes' => $recipes,
         ]);
@@ -103,29 +107,47 @@ class CategoryController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
+            return new Response('OK');
         }
 
-        return $this->render('category/edit.html.twig', [
+        return $this->render('@OlixBackOffice/Modal/form-vertical.html.twig', [
             'category' => $category,
             'form' => $form,
+            'modal' => [
+                'title' => 'Modifier une catégorie',
+                'btnlabel' => 'Mettre à jour',
+            ],
         ]);
     }
 
     /**
      * Supprime une catégorie.
      */
-    #[Route(path: '/{id}', name: 'category_delete', methods: ['POST'])]
+    #[Route(path: '/{id}/delete', name: 'category_delete', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(Request $request, Category $category, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Category $category, EntityManagerInterface $entityManager, CategoryUploader $fileUploader): Response
     {
-        /** @psalm-suppress PossiblyNullOperand */
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), (string) $request->request->get('_token'))) {
+        $form = $this->createFormBuilder()->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->remove($category);
-            $entityManager->flush();
-            $this->addFlash('success', sprintf('La catégorie <strong>%s</strong> a été supprimée avec succès', (string) $category->getName()));
+            try {
+                $fileUploader->remove($category);
+                $entityManager->flush();
+            } catch (\Exception) {
+                $this->addFlash('danger', sprintf('La catégorie <strong>%s</strong> ne peut pas être supprimée', $category));
+
+                return new Response('OK');
+            }
+            $this->addFlash('success', sprintf('La catégorie <strong>%s</strong> a été supprimée avec succès', $category));
+
+            return new Response('OK');
         }
 
-        return $this->redirectToRoute('category_index');
+        return $this->render('@OlixBackOffice/Modal/form-delete.html.twig', [
+            'form' => $form,
+            'element' => sprintf('l\'ingrédient <strong>%s</strong>', $category),
+        ]);
     }
 }
