@@ -48,10 +48,19 @@ export function initializeWindow() {
     // Modal
     Modal.initialize();
 
+    // Effets sur les éléments au moment de leur affichage en scrollant
     if (browserWindow.width() > 767) {
         new WOW().init();
     }
 
     // Toast
     $(".toast").toast("show");
+
+    // Renvoi vers la recette si on clique sur le bouton de recherche
+    $("select[name='olix-search'").on("change", function (e) {
+        if (this.value) {
+            location.href = this.value;
+        }
+        $(this).prop("selectedIndex", 0);
+    });
 }

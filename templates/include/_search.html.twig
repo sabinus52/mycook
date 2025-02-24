@@ -3,9 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <form action="#" method="post">
-                    <input type="search" name="search" placeholder="Rechercher un recette">
-                    <button type="submit"><i class="fas fa-search" aria-hidden="true"></i></button>
+                <form>
+                <select name="olix-search" {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', { url: path('ux_entity_autocomplete', { alias: 'recipe' })}) }}></select>
                 </form>
             </div>
         </div>

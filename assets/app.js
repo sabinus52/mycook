@@ -13,6 +13,7 @@ import "animate.css/animate.min.css";
 import "bootstrap";
 import "./plugins/scrollUp.js";
 import "./plugins/classyNav.js";
+import "./bootstrap.js";
 
 // Attente de la fin de chargement de la page
 import { preLoadWindow, initializeWindow } from "./scripts/windows.js";
