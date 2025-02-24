@@ -6,6 +6,19 @@ import $ from "jquery";
 import "olix-backoffice/plugins/select2.js";
 import "olix-backoffice/plugins/collection.js";
 
+/**
+ * Calcule la quantité des ingrédients en fonction du nombre de personnes
+ *
+ * @param {Number} ratio
+ */
+var calculQuantity = function (ratio) {
+    var quantity = 0;
+    $("[role='quantity']").each(function () {
+        quantity = parseInt($(this).data("value")) * ratio;
+        $(this).text(parseInt(quantity));
+    });
+};
+
 export default {
     init: function () {
         // Initialisation de Select2
@@ -61,5 +74,20 @@ export default {
 
         // Initialisation de la collection des étapes
         $("#recipe_steps").OlixCollection();
+
+        // Lorsque l'utilisateur clique sur le bouton de calcul de la quantité des ingrédients
+        $("#addPerson").on("click", function () {
+            let nbPerson = parseInt($("#person").text()) + 1;
+            $("#person").text(nbPerson);
+            calculQuantity(nbPerson / parseInt($("#person").data("value")));
+        });
+        $("#removePerson").on("click", function () {
+            let nbPerson = parseInt($("#person").text()) - 1;
+            if (nbPerson < 1) {
+                nbPerson = 1;
+            }
+            $("#person").text(nbPerson);
+            calculQuantity(nbPerson / parseInt($("#person").data("value")));
+        });
     },
 };

@@ -29,7 +29,12 @@
                         <span>{{ recipe.categories|join(', ') }}</span>
                         <h2>{{ recipe.name }}</h2>
                         <div class="duration">
-                            <h6>{{ include('icons/team-solid.svg') }} Nombre de personnes : <strong>{{ recipe.person }}</strong></h6>
+                            <h6>
+                                {{ include('icons/team-solid.svg') }} Nombre de personnes : 
+                                <button id="removePerson" type="button" class="btn btn-small btn-outline-secondary"><i class="fas fa-minus"></i></button>
+                                <strong id="person" data-value="{{ recipe.person }}">{{ recipe.person }}</strong>
+                                <button id="addPerson" type="button" class="btn btn-small btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                            </h6>
                             <h6>{{ include('icons/dot-restaurant.svg') }} Temps de préparation : <strong>{{ recipe.timePreparation }} min</strong></h6>
                             <h6>{{ include('icons/manhole-wide.svg') }} Temps de cuisson : <strong>{{ recipe.timeCooking }} min</strong></h6>
                         </div>
@@ -76,7 +81,7 @@
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="customCheck{{ loop.index }}">
                                 <label class="custom-control-label" for="customCheck{{ loop.index }}">
-                                    {% if item.quantity %}{{ item.quantity }} {{ item.unity.symbol }}{% endif %}
+                                    {% if item.quantity %}<span role="quantity" data-value="{{ item.quantity }}">{{ item.quantity }}</span> {{ item.unity.symbol }}{% endif %}
                                     {{ item.ingredient }}
                                     {% if item.note %}<small class="text-muted">{{ item.note|e }}</small>{% endif %}
                                 </label>

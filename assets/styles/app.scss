@@ -945,6 +945,13 @@ a.btn {
             &:last-child {
                 margin-bottom: 0;
             }
+            .btn-small {
+                padding: .15rem .3rem;
+                font-size: .575rem;
+                line-height: 1.5;
+                border-radius: .2rem;
+                margin: 0 5px 0 5px;
+            }
         }
     }
 }
