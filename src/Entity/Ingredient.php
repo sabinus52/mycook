@@ -71,6 +71,7 @@ class Ingredient implements \Stringable
         $this->recipes = new ArrayCollection();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return (string) $this->name;

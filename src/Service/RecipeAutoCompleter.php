@@ -35,6 +35,7 @@ final class RecipeAutoCompleter implements EntityAutocompleterInterface
     {
     }
 
+    #[\Override]
     public function getEntityClass(): string
     {
         return Recipe::class;
@@ -43,6 +44,7 @@ final class RecipeAutoCompleter implements EntityAutocompleterInterface
     /**
      * @psalm-suppress MoreSpecificImplementedParamType
      */
+    #[\Override]
     public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
     {
         return $repository
@@ -57,6 +59,7 @@ final class RecipeAutoCompleter implements EntityAutocompleterInterface
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      */
+    #[\Override]
     public function getLabel(object $entity): string
     {
         return (string) $entity->getName();
@@ -67,11 +70,13 @@ final class RecipeAutoCompleter implements EntityAutocompleterInterface
      *
      * @psalm-suppress MoreSpecificImplementedParamType
      */
+    #[\Override]
     public function getValue(object $entity): string
     {
         return $this->router->generate('recipe_show', ['id' => $entity->getId()]);
     }
 
+    #[\Override]
     public function isGranted(Security $security): bool
     {
         // see the "security" option for details
