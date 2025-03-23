@@ -3,28 +3,27 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Controller;
 
 use App\Entity\User;
-use LogicException;
 use Olix\BackOfficeBundle\Helper\Gravatar;
 use Olix\BackOfficeBundle\Security\UserManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * Controleur de la sécurité de l'application.
+ * Contrôleur de la sécurité de l'application.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
@@ -32,9 +31,8 @@ class SecurityController extends AbstractController
 {
     /**
      * Connexion.
-     *
-     * @Route("/login", name="app_login")
      */
+    #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -50,20 +48,18 @@ class SecurityController extends AbstractController
 
     /**
      * Déconnexion.
-     *
-     * @Route("/logout", name="app_logout")
      */
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     /**
      * Changement des informations du profil.
-     *
-     * @Route("/profile", name="app_profile", methods={"GET", "POST"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
+    #[Route(path: '/profile', name: 'app_profile', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function changeProfile(Request $request, UserManager $manager): Response
     {
         // Utilisation de la classe UserManager
@@ -79,24 +75,24 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // Update datas of this user
-            $user->setAvatar($gravatar->get($user->getEmail()));
-            $manager->setUser($form->getData())->update();
+            $user->setAvatar($gravatar->get((string) $user->getEmail()));
+            $manager->setUser($form->getData())->update(); // @phpstan-ignore argument.type
             $this->addFlash('success', 'La modification des informations a bien été prise en compte');
 
             return $this->redirectToRoute('app_profile');
         }
 
-        return $this->renderForm('security/profile.html.twig', [
+        return $this->render('security/profile-password.html.twig', [
             'form' => $form,
+            'title' => 'Mon profil',
         ]);
     }
 
     /**
      * Changement du password.
-     *
-     * @Route("/change-password", name="app_change_password", methods={"GET", "POST"})
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
+    #[Route(path: '/change-password', name: 'app_change_password', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function changePassword(Request $request, UserManager $manager): Response
     {
         // Utilisation de la classe UserManager
@@ -115,21 +111,22 @@ class SecurityController extends AbstractController
                 $form->addError(new FormError('Nouveau mot de passe incorrect'));
                 $isError = true;
             }
-            if (!$manager->isPasswordValid($form->get('oldPassword')->getData())) {
+            if (!$manager->isPasswordValid((string) $form->get('oldPassword')->getData())) { // @phpstan-ignore cast.string
                 $form->addError(new FormError('Ancien mot de passe incorrect'));
                 $isError = true;
             }
             if (!$isError) {
                 // Change password for this user
-                $manager->update($form->get('password')->getData());
+                $manager->update((string) $form->get('password')->getData()); // @phpstan-ignore cast.string
                 $this->addFlash('success', 'La modification du mot de passe a bien été prise en compte');
 
                 return $this->redirectToRoute('app_change_password');
             }
         }
 
-        return $this->renderForm('security/password.html.twig', [
+        return $this->render('security/profile-password.html.twig', [
             'form' => $form,
+            'title' => 'Changer mon mot de passe',
         ]);
     }
 }

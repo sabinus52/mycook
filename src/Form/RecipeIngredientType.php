@@ -3,19 +3,20 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form;
 
-use App\Constant\Unity;
+use App\Entity\Ingredient;
 use App\Entity\RecipeIngredient;
-use App\Form\DataTransformer\IngredientToNameTransformer;
+use App\Enum\Unity;
+use Olix\BackOfficeBundle\Form\Type\Select2AjaxType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,46 +28,44 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Olivier <sabinus52@gmail.com>
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class RecipeIngredientType extends AbstractType
 {
-    /**
-     * @var IngredientToNameTransformer
-     */
-    private $transformer;
-
-    public function __construct(IngredientToNameTransformer $transformer)
-    {
-        $this->transformer = $transformer;
-    }
-
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ingredient', TextType::class, [
-                'required' => true,
-                'attr' => [
-                    'class' => 'autocomplete',
+            ->add('ingredient', Select2AjaxType::class, [
+                'class' => Ingredient::class,
+                'class_label' => 'name',
+                'class_property' => 'name',
+                'allow_add' => true,
+                'ajax' => [
+                    'route' => 'ingredient_autocomplete_select2',
                 ],
+                'required' => false,
             ])
-            ->add('quantity', IntegerType::class)
-            ->add('unity', ChoiceType::class, [
-                'choices' => Unity::getChoices(),
-                'choice_value' => 'value',
+            ->add('quantity', IntegerType::class, [
+                'required' => false,
+            ]
+            )
+            ->add('unity', EnumType::class, [
+                'class' => Unity::class,
                 'choice_label' => 'label',
                 'attr' => [
                     'class' => 'unity',
                 ],
             ])
-            ->add('note', TextType::class)
-        ;
-
-        // Transformation de l'objet Ingrédient vers son nom
-        $builder->get('ingredient')
-            ->addModelTransformer($this->transformer)
+            ->add('note', TextType::class, [
+                'required' => false,
+            ])
         ;
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -3,15 +3,16 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +22,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Recipe|null findOneBy(array $criteria, array $orderBy = null)
  * @method Recipe[]    findAll()
  * @method Recipe[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Recipe>
  */
 class RecipeRepository extends ServiceEntityRepository
 {
@@ -30,37 +33,34 @@ class RecipeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Retourne la recette avec tous ses ingrédients.
+     * Recherche les recettes par catégorie.
      *
-     * @param int $id : Identifiant de la recette
+     * @return Recipe[]
      */
-    public function findWithIngredients($id): ?Recipe
+    public function findByCategory(Category $category): array
     {
-        return $this->createQueryBuilder('r')
-            ->addSelect('ri')
-            ->addSelect('i')
-            ->leftJoin('r.ingredients', 'ri')
-            ->leftJoin('ri.ingredient', 'i')
-            ->andWhere('r.id = :id')
-            ->setParameter('id', $id)
+        // @phpstan-ignore return.type
+        return $this->createQueryBuilder('recipe')
+            ->join('recipe.categories', 'category')
+            ->andWhere('category.id = :id')
+            ->setParameter('id', $category->getId())
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 
     /**
-     * Recherche les recettes par catégorie.
-     *
-     * @param Category $categorie : Catégorie à filtrer
+     * Recherche les recettes par ingrédient.
      *
      * @return Recipe[]
      */
-    public function findByCategory(Category $categorie): array
+    public function findByIngredient(Ingredient $ingredient): array
     {
+        // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
-            ->join('recipe.categories', 'category')
-            ->andWhere('category.id = :id')
-            ->setParameter('id', $categorie->getId())
+            ->join('recipe.ingredients', 'ri')
+            ->andWhere('ri.ingredient = :id')
+            ->setParameter('id', $ingredient->getId())
             ->getQuery()
             ->getResult()
         ;
@@ -69,35 +69,32 @@ class RecipeRepository extends ServiceEntityRepository
     /**
      * Retourne les recettes les plus populaires.
      *
-     * @param int $count : Nombre d'occ à retourner
-     *
      * @return Recipe[]
      */
-    public function findMostPopular(?int $count = null): array
+    public function findMostPopular(int $count = 6): array
     {
-        $query = $this->createQueryBuilder('recipe');
-
-        if ($count) {
-            $query = $query->setMaxResults(6);
-        }
-
-        return $query->getQuery()->getResult();
+        // @phpstan-ignore return.type
+        return $this->createQueryBuilder('recipe')
+            ->addSelect('RANDOM() as HIDDEN rand')
+            ->orderBy('rand')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     /**
      * Retourne une recette au hasard.
-     *
-     * @return Recipe
      */
     public function findOneRandom(): Recipe
     {
-        $query = $this->createQueryBuilder('recipe')
+        /** @phpstan-ignore return.type */
+        return $this->createQueryBuilder('recipe')
             ->addSelect('RANDOM() as HIDDEN rand')
             ->orderBy('rand')
             ->setMaxResults(1)
             ->getQuery()
+            ->getSingleResult()
         ;
-
-        return $query->getSingleResult();
     }
 }

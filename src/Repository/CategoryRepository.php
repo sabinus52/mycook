@@ -3,16 +3,15 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Repository;
 
 use App\Entity\Category;
-use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +20,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Category|null findOneBy(array $criteria, array $orderBy = null)
  * @method Category[]    findAll()
  * @method Category[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Category>
  */
 class CategoryRepository extends ServiceEntityRepository
 {
@@ -32,23 +33,19 @@ class CategoryRepository extends ServiceEntityRepository
     /**
      * Retourne les catégories où il y a le plus de recettes.
      *
-     * @param int $count : Nombre d'occ à retourner
-     *
-     * @return array<Recipe>
+     * @return Category[]
      */
-    public function findMostRecipes(?int $count = null): array
+    public function findMostRecipes(int $count = 6): array
     {
-        $query = $this->createQueryBuilder('cat')
+        // @phpstan-ignore return.type
+        return $this->createQueryBuilder('cat')
             ->addSelect('COUNT(recipe) AS nb')
             ->join('cat.recipes', 'recipe')
             ->groupBy('cat.id')
             ->orderBy('nb', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
         ;
-
-        if ($count) {
-            $query = $query->setMaxResults(6);
-        }
-
-        return $query->getQuery()->getResult();
     }
 }

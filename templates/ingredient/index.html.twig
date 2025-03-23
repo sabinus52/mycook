@@ -1,67 +1,73 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %} - Ingrédients{% endblock %}
 
-{% block body %}
+{% set header_commands %}
+    <a href="{{ path('ingredient_create') }}" class="btn btn-secondary" data-toggle="olix-modal">Ajouter un ingrédient</a>
+{% endset %}
 
-    <h1 class="my-4"><i class="fas fa-carrot"></i>&nbsp;Ingrédients</h1>
+{% block content %}
 
-    {% include 'include/_flashbag.html.twig' %}
+    {% include 'include/_breadcrumb.html.twig' with {'title': 'Les Ingrédients'} only %}
 
-    
-
-    <div class="row my-2">
-        <div class="col-5">
-            <h3><i class="fas fa-list-alt"></i>&nbsp;Liste des ingrédients</h3>
-        </div>
-        <div class="col-7 text-right">
-            <div class="btn-toolbar justify-content-end" role="toolbar">
-                <div class="input-group mr-2">
-                    <select id="filterIngredient" class="form-control filterIngredient">
-                        <option value="{{ path('ingredient_index') }}"{% if app.request.pathinfo == path('ingredient_index') %} selected="selected"{% endif %}>Tous</option>
-                        <option value="{{ path('ingredient_index_without_cal') }}"{% if app.request.pathinfo == path('ingredient_index_without_cal') %} selected="selected"{% endif %}>Sans calories</option>
-                    </select>
+    <div class="section-search mt-70 mb-15">
+        <div class="container">
+            <form action="#" method="post">
+                <div class="row">
+                    <div class="col-12 test-select">
+                        <div class="select">
+                            <select name="filterIngredient" id="filterIngredient">
+                                <option value="{{ path('ingredient_index') }}"{% if app.request.pathinfo == path('ingredient_index') %} selected="selected"{% endif %}>Tous les ingrédients</option>
+                                <option value="{{ path('ingredient_index_without_cal') }}"{% if app.request.pathinfo == path('ingredient_index_without_cal') %} selected="selected"{% endif %}>Les ingrédients sans calories</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                {% if is_granted('ROLE_ADMIN') %}
-                <div class="btn-group" role="group">
-                    <a href="{{ path('ingredient_create') }}" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter</a>
-                </div>
-                {% endif %}
-            </div>
+            </form>
         </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Calories</th>
-                <th>Unité</th>
-                <th>Converion</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ingredient in ingredients %}
-            <tr>
-                <td>{{ ingredient.id }}</td>
-                <td>{{ ingredient.name }}</td>
-                <td>{% if ingredient.calorie %}{{ ingredient.calorie }} kCal{% endif %}</td>
-                <td>{{ ingredient.unity.label }}</td>
-                <td>{% if ingredient.conversion %}1 {{ ingredient.name }} -&gt; {{ ingredient.conversion }} g{% endif %}</td>
-                <td class="text-right">
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i>&nbsp;Modifier</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucun éléments dans la table</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <section class="list-category-area section-padding-0-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Calories</th>
+                                <th>Unité</th>
+                                <th>Conversion</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for ingredient in ingredients %}
+                            <tr>
+                                <th class="align-middle">{{ ingredient.name }}</th>
+                                <td class="align-middle">{% if ingredient.calorie %}{{ ingredient.calorie }} kCal{% endif %}</td>
+                                <td class="align-middle">{{ ingredient.unity.label }}</td>
+                                <td class="align-middle">{% if ingredient.conversion %}1 {{ ingredient.name }} -&gt; {{ ingredient.conversion }} g{% endif %}</td>
+                                <td class="align-middle text-right">
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('ingredient_update', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Modifier</a>
+                                        <a href="{{ path('ingredient_delete', {'id': ingredient.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Supprimer</a>
+                                    {% endif %}
+                                    <a href="{{ path('ingredient_show', {'id': ingredient.id}) }}" class="btn-mycook btn-small">Découvrir les recettes</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="3">Aucun éléments dans la table</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% include '@OlixBackOffice/Modal/base.html.twig' with { title: "Chargement du formulaire", class: 'modal-lg' } %}
 
 {% endblock %}

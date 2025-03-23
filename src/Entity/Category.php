@@ -3,16 +3,17 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,42 +21,38 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des catégories de recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+class Category implements \Stringable
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de la catégorie.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection<Recipe>
-     *
-     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="categories")
+     * @var Collection<int, Recipe>
      */
-    private $recipes;
+    #[ORM\ManyToMany(targetEntity: Recipe::class, mappedBy: 'categories')]
+    private Collection $recipes;
 
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int
@@ -68,7 +65,7 @@ class Category
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
@@ -76,14 +73,14 @@ class Category
     }
 
     /**
-     * @return ArrayCollection<Recipe>|null
+     * @return Collection<int,Recipe>
      */
-    public function getRecipes()
+    public function getRecipes(): Collection
     {
         return $this->recipes;
     }
 
-    public function addRecipe(Recipe $recipe): self
+    public function addRecipe(Recipe $recipe): static
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes[] = $recipe;
@@ -93,7 +90,7 @@ class Category
         return $this;
     }
 
-    public function removeRecipe(Recipe $recipe): self
+    public function removeRecipe(Recipe $recipe): static
     {
         if ($this->recipes->removeElement($recipe)) {
             $recipe->removeCategory($this);

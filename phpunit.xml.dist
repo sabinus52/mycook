@@ -2,8 +2,10 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="false"
          bootstrap="tests/bootstrap.php"
+         convertDeprecationsToExceptions="false"
          cacheResultFile=".phpunit.result.cache"
          executionOrder="depends,defects"
          forceCoversAnnotation="true"
@@ -23,7 +25,7 @@
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.6" />
     </php>
 
     <testsuites>
@@ -34,11 +36,14 @@
 
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">src</directory>
         </include>
     </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
+
+    <extensions>
+    </extensions>
 </phpunit>

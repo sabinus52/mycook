@@ -18,16 +18,15 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-###> symfony/webpack-encore-bundle ###
-/node_modules/
-/public/build/
-npm-debug.log
-yarn-error.log
-###< symfony/webpack-encore-bundle ###
-
-###> php-cs-fixer ###
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
 /.php-cs-fixer.cache
-###< php-cs-fixer ###
+###< friendsofphp/php-cs-fixer ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
 
 ###> liip/imagine-bundle ###
 /public/datas/cache/
@@ -35,9 +34,9 @@ yarn-error.log
 
 ###> My configuration ###
 /.vscode
-/DEVELOP*.md
+/.devdocker
 /*.code-workspace
-/*.conf
-/*.cache
+/drivers
 /.sync.ffs_db
+/workspace
 ###< My configuration ###

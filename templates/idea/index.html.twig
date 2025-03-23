@@ -1,26 +1,39 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
 {% block title %} - Les idées de recettes à tester{% endblock %}
 
-{% block body %}
+{% set header_commands %}
+    <a href="{{ path('idea_create') }}" class="btn btn-secondary" data-toggle="olix-modal">Ajouter une idée de recette</a>
+{% endset %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="float-right">
-            <a href="{{ path('idea_create') }}" class="btn btn-success"><i class="fas fa-plus"></i>&nbsp;Ajouter une idée de recette</a>
+{% block content %}
+
+    {% include 'include/_breadcrumb.html.twig' with { title: 'Les idées de recettes à tester' } only %}
+
+    <section class="list-idea-area section-padding-80-0">
+        <div class="container">
+            <div class="row">
+                {% for idea in ideas %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="single-idea-area d-flex">
+                            <div class="thumb">
+                                <img src="{{ idea.image }}" alt="">
+                            </div>
+                            <div class="content">
+                                <span>{{ date()|date("d M Y") }}</span>
+                                <a href="{{ idea.link }}" target="_blank"><h5>{{ idea.name }}</h5></a>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Modifier</a>
+                                    <a href="{{ path('idea_delete', {'id': idea.id}) }}" class="btn btn-secondary" data-toggle="olix-modal">Supprimer</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    {% endif %}
-    <h1 class="my-4"><i class="fas fa-tag"></i>&nbsp;Les idées de recettes à tester</h1>
+    </section>
 
-    {% include 'include/_flashbag.html.twig' %}
-
-    <div class="row my-2">
-    {% for idea in ideas %}
-        <div class="col-6">
-            <a href="{{ idea.link }}" target="_blank" class=""><img src="{{ asset(idea.image) }}" class="float-left mr-2" style="width:128px"></a>
-            {% if is_granted('ROLE_ADMIN') %}<a href="{{ path('idea_update', {'id': idea.id}) }}" class="btn btn-primary btn-sm float-right"><i class="fas fa-edit"></i></a>{% endif %}
-            <a href="{{ idea.link }}" class="text-dark font-weight-bold">{{ idea.name }}</a>
-        </div>
-    {% endfor %}
-    </div>
+    {% include '@OlixBackOffice/Modal/base.html.twig' with { title: "Chargement du formulaire", class: 'modal-lg' } %}
 
 {% endblock %}

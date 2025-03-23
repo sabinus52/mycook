@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Repository;
@@ -21,6 +21,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Ingredient|null findOneBy(array $criteria, array $orderBy = null)
  * @method Ingredient[]    findAll()
  * @method Ingredient[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Ingredient>
  */
 class IngredientRepository extends ServiceEntityRepository
 {
@@ -35,10 +37,11 @@ class IngredientRepository extends ServiceEntityRepository
      * @param string             $term : Valeur à rechercher
      * @param 1|2|3|4|5|6|string $mode : Hydratation mode de retour du résultat
      *
-     * @return array<mixed>
+     * @return Ingredient[]
      */
-    public function searchByName($term, $mode = Query::HYDRATE_OBJECT): array
+    public function searchByName(string $term, $mode = Query::HYDRATE_OBJECT): array
     {
+        // @phpstan-ignore return.type
         return $this->createQueryBuilder('i')
             ->where('i.name LIKE :term')
             ->setParameter('term', '%'.$term.'%')
@@ -47,33 +50,4 @@ class IngredientRepository extends ServiceEntityRepository
             ->getResult($mode)
         ;
     }
-
-    // /**
-    //  * @return Ingredient[] Returns an array of Ingredient objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Ingredient
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

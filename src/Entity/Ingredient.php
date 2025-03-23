@@ -3,17 +3,18 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
-use App\Constant\Unity;
+use App\Enum\Unity;
 use App\Repository\IngredientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,67 +23,57 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité des ingrédients.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=IngredientRepository::class)
- * @UniqueEntity("name")
  */
-class Ingredient
+#[ORM\Entity(repositoryClass: IngredientRepository::class)]
+#[UniqueEntity('name')]
+class Ingredient implements \Stringable
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de l'ingrédient.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100, unique=true)
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 100, unique: true)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
-     * @var Unity
-     *
-     * @ORM\Column(type="unity")
+     * Unité par défaut.
      */
-    private $unity;
+    #[ORM\Column(enumType: Unity::class, length: 2)]
+    private Unity $unity = Unity::NUMBER;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
+     * Conversion: pour 1 unité combien cela représente en gramme.
      */
-    private $conversion;
+    #[ORM\Column(nullable: true)]
+    private ?int $conversion = null;
 
     /**
      * Nombre de calorie pour 100 gramme.
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", nullable=true)
      */
-    private $calorie;
+    #[ORM\Column(nullable: true)]
+    private ?int $calorie = null;
 
     /**
      * Jointure avec les recettes.
      *
-     * @var ArrayCollection<RecipeIngredient>
-     *
-     * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="ingredient")
+     * @var Collection<int, RecipeIngredient>
      */
-    private $recipes;
+    #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'ingredient')]
+    private Collection $recipes;
 
     public function __construct()
     {
-        $this->unity = new Unity(Unity::NUMBER);
         $this->recipes = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->name;
     }
 
     public function getId(): ?int
@@ -95,19 +86,19 @@ class Ingredient
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getUnity(): ?Unity
+    public function getUnity(): Unity
     {
         return $this->unity;
     }
 
-    public function setUnity(?Unity $unity): self
+    public function setUnity(Unity $unity): static
     {
         $this->unity = $unity;
 
@@ -119,7 +110,7 @@ class Ingredient
         return $this->conversion;
     }
 
-    public function setConversion(?int $conversion): self
+    public function setConversion(?int $conversion): static
     {
         $this->conversion = $conversion;
 
@@ -131,7 +122,7 @@ class Ingredient
         return $this->calorie;
     }
 
-    public function setCalorie(?int $calorie): self
+    public function setCalorie(?int $calorie): static
     {
         $this->calorie = $calorie;
 
@@ -139,14 +130,14 @@ class Ingredient
     }
 
     /**
-     * @return ArrayCollection<RecipeIngredient>|null
+     * @return Collection<int,RecipeIngredient>
      */
-    public function getRecipes()
+    public function getRecipes(): Collection
     {
         return $this->recipes;
     }
 
-    public function addRecipe(RecipeIngredient $recipe): self
+    public function addRecipe(RecipeIngredient $recipe): static
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes[] = $recipe;
@@ -156,56 +147,12 @@ class Ingredient
         return $this;
     }
 
-    public function removeRecipe(RecipeIngredient $recipe): self
+    public function removeRecipe(RecipeIngredient $recipe): static
     {
-        if ($this->recipes->removeElement($recipe)) {
-            // set the owning side to null (unless already changed)
-            if ($recipe->getIngredient() === $this) {
-                $recipe->setIngredient(null);
-            }
+        if ($this->recipes->removeElement($recipe) && $recipe->getIngredient() === $this) {
+            $recipe->setIngredient(null);
         }
 
         return $this;
-    }
-
-    /**
-     * Retourne le poids en gramme de l'ingrédient à partir d'une certaine quantité.
-     *
-     * @param float $quantity : Quantity de l'ingrédient
-     * @param Unity $source   : Unité de la quantité
-     */
-    public function getInGram(?float $quantity, Unity $source): ?float
-    {
-        if (!$source->isNumber()) {
-            // Si pas un nombre, on peut convertir directement en gramme
-            return $source->getInGram($quantity);
-        }
-        // Si un nombre, on vérifie si on peut convertir
-        if (null === $this->conversion) {
-            return null;
-        }
-
-        return round($this->conversion * $quantity);
-    }
-
-    /**
-     * Retourne le nombre de calorie de l'ingrédient à partir d'une certaine quantité.
-     *
-     * @param float $quantity : Quantity de l'ingrédient
-     * @param Unity $source   : Unité de la quantité
-     */
-    public function getCalories(?float $quantity, Unity $source): ?int
-    {
-        if (null === $this->calorie) {
-            return null;
-        }
-
-        // Poids en gramme de l'ingrédient
-        $mass = $this->getInGram($quantity, $source);
-        if (null === $mass) {
-            return null;
-        }
-
-        return (int) round($mass * $this->calorie / 100);
     }
 }

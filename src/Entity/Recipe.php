@@ -3,18 +3,20 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Entity;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
+use App\Enum\Difficulty;
+use App\Enum\Rate;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,126 +24,96 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entité d'une recette.
  *
  * @author Olivier <sabinus52@gmail.com>
- *
- * @ORM\Entity(repositoryClass=RecipeRepository::class)
- * @ORM\HasLifecycleCallbacks
  */
+#[ORM\Entity(repositoryClass: RecipeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Recipe
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id; /** @phpstan-ignore-line */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
     /**
      * Nom de la recette.
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
      */
-    private $name;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $name = null;
 
     /**
      * Nombre de personne pour les quantités définies dans la recette.
-     *
-     * @var int
-     *
-     * @ORM\Column(type="smallint")
-     * @Assert\NotNull
-     * @Assert\Type(type="integer")
-     * @Assert\Range(min=1, max=12)
      */
-    private $person;
+    #[ORM\Column(type: Types::SMALLINT)]
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'integer')]
+    #[Assert\Range(min: 1, max: 12)]
+    private int $person = 4;
 
     /**
      * Niveau de difficulté de la recette.
-     *
-     * @var Difficulty
-     *
-     * @ORM\Column(type="difficulty")
-     * @Assert\NotNull
      */
-    private $difficulty;
+    #[ORM\Column(type: Types::SMALLINT, enumType: Difficulty::class)]
+    #[Assert\NotNull]
+    private Difficulty $difficulty = Difficulty::MEDIUM;
 
     /**
      * Coût de la recette.
-     *
-     * @var Rate
-     *
-     * @ORM\Column(type="rate")
-     * @Assert\NotNull
      */
-    private $rate;
+    #[ORM\Column(type: Types::SMALLINT, enumType: Rate::class)]
+    #[Assert\NotNull]
+    private Rate $rate = Rate::MEDIUM;
 
     /**
      * Temps de préparation en minutes.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="time_preparation", type="smallint")
-     * @Assert\NotNull
-     * @Assert\Type(type="integer")
      */
-    private $timePreparation;
+    #[ORM\Column(name: 'time_preparation', type: Types::SMALLINT)]
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'integer')]
+    private ?int $timePreparation = null;
 
     /**
      * Temps de cuisson en minutes.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="time_cooking", type="smallint", nullable=true)
-     * @Assert\Type(type="integer")
      */
-    private $timeCooking;
+    #[ORM\Column(name: 'time_cooking', type: Types::SMALLINT, nullable: true)]
+    #[Assert\Type(type: 'integer')]
+    private ?int $timeCooking = null;
 
     /**
      * Nombre de calories de la recette.
-     *
-     * @var int|null
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Type(type="integer")
      */
-    private $calorie;
+    #[ORM\Column(nullable: true)]
+    #[Assert\Type(type: 'integer')]
+    private ?int $calorie = null;
 
     /**
      * Jointure avec les catégories.
      *
-     * @var ArrayCollection<Category>
-     *
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="recipes")
+     * @var Collection<int, Category>
      */
-    private $categories;
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'recipes')]
+    private Collection $categories;
 
     /**
      * Jointure avec les étapes.
      *
-     * @var ArrayCollection<Step>
-     *
-     * @ORM\OneToMany(targetEntity=Step::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
-     * @Assert\Valid
+     * @var Collection<int, Step>
      */
-    private $steps;
+    #[ORM\OneToMany(targetEntity: Step::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
+    #[Assert\Valid]
+    private Collection $steps;
 
     /**
      * Jointure avec les ingrédients.
      *
-     * @var ArrayCollection<RecipeIngredient>
-     *
-     * @ORM\OneToMany(targetEntity=RecipeIngredient::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
-     * @Assert\Valid
+     * @var Collection<int, RecipeIngredient>
      */
-    private $ingredients;
+    #[ORM\OneToMany(targetEntity: RecipeIngredient::class, mappedBy: 'recipe', orphanRemoval: true, cascade: ['persist'])]
+    #[Assert\Valid]
+    private Collection $ingredients;
 
     public function __construct()
     {
-        $this->person = 4;
         $this->categories = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
         $this->steps = new ArrayCollection();
@@ -157,43 +129,46 @@ class Recipe
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getPerson(): ?int
+    public function getPerson(): int
     {
         return $this->person;
     }
 
-    public function setPerson(int $person): self
+    public function setPerson(?int $person): static
     {
+        if (null === $person) {
+            $person = 0;
+        }
         $this->person = $person;
 
         return $this;
     }
 
-    public function getDifficulty(): ?Difficulty
+    public function getDifficulty(): Difficulty
     {
         return $this->difficulty;
     }
 
-    public function setDifficulty(?Difficulty $difficulty): self
+    public function setDifficulty(Difficulty $difficulty): static
     {
         $this->difficulty = $difficulty;
 
         return $this;
     }
 
-    public function getRate(): ?Rate
+    public function getRate(): Rate
     {
         return $this->rate;
     }
 
-    public function setRate(?Rate $rate): self
+    public function setRate(Rate $rate): static
     {
         $this->rate = $rate;
 
@@ -205,7 +180,7 @@ class Recipe
         return $this->timePreparation;
     }
 
-    public function setTimePreparation(?int $timePreparation): self
+    public function setTimePreparation(?int $timePreparation): static
     {
         $this->timePreparation = $timePreparation;
 
@@ -217,7 +192,7 @@ class Recipe
         return $this->timeCooking;
     }
 
-    public function setTimeCooking(?int $timeCooking): self
+    public function setTimeCooking(?int $timeCooking): static
     {
         $this->timeCooking = $timeCooking;
 
@@ -229,7 +204,7 @@ class Recipe
         return $this->calorie;
     }
 
-    public function setCalorie(?int $calorie): self
+    public function setCalorie(?int $calorie): static
     {
         $this->calorie = $calorie;
 
@@ -237,14 +212,14 @@ class Recipe
     }
 
     /**
-     * @return ArrayCollection<Category>|null
+     * @return Collection<int,Category>
      */
-    public function getCategory()
+    public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function addCategory(Category $category): self
+    public function addCategory(Category $category): static
     {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
@@ -253,7 +228,7 @@ class Recipe
         return $this;
     }
 
-    public function removeCategory(Category $category): self
+    public function removeCategory(Category $category): static
     {
         $this->categories->removeElement($category);
 
@@ -261,14 +236,14 @@ class Recipe
     }
 
     /**
-     * @return ArrayCollection<Step>|null
+     * @return Collection<int,Step>
      */
-    public function getSteps()
+    public function getSteps(): Collection
     {
         return $this->steps;
     }
 
-    public function addStep(Step $step): self
+    public function addStep(Step $step): static
     {
         if (!$this->steps->contains($step)) {
             $this->steps[] = $step;
@@ -278,27 +253,24 @@ class Recipe
         return $this;
     }
 
-    public function removeStep(Step $step): self
+    public function removeStep(Step $step): static
     {
-        if ($this->steps->removeElement($step)) {
-            // set the owning side to null (unless already changed)
-            if ($step->getRecipe() === $this) {
-                $step->setRecipe(null);
-            }
+        if ($this->steps->removeElement($step) && $step->getRecipe() === $this) {
+            $step->setRecipe(null);
         }
 
         return $this;
     }
 
     /**
-     * @return ArrayCollection<RecipeIngredient>|null
+     * @return Collection<int,RecipeIngredient>
      */
-    public function getIngredients()
+    public function getIngredients(): Collection
     {
         return $this->ingredients;
     }
 
-    public function addIngredient(RecipeIngredient $ingredient): self
+    public function addIngredient(RecipeIngredient $ingredient): static
     {
         if (!$this->ingredients->contains($ingredient)) {
             $this->ingredients[] = $ingredient;
@@ -308,13 +280,10 @@ class Recipe
         return $this;
     }
 
-    public function removeIngredient(RecipeIngredient $ingredient): self
+    public function removeIngredient(RecipeIngredient $ingredient): static
     {
-        if ($this->ingredients->removeElement($ingredient)) {
-            // set the owning side to null (unless already changed)
-            if ($ingredient->getRecipe() === $this) {
-                $ingredient->setRecipe(null);
-            }
+        if ($this->ingredients->removeElement($ingredient) && $ingredient->getRecipe() === $this) {
+            $ingredient->setRecipe(null);
         }
 
         return $this;
@@ -322,10 +291,9 @@ class Recipe
 
     /**
      * Calcul de nombre de calories de la recette par personne.
-     *
-     * @ORM\PreUpdate
-     * @ORM\PrePersist
      */
+    #[ORM\PreUpdate]
+    #[ORM\PrePersist]
     public function calculCalories(): ?int
     {
         $calories = 0;

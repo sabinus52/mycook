@@ -3,31 +3,32 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\DataFixtures;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
-use App\Constant\Unity;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
 use App\Entity\Step;
+use App\Enum\Difficulty;
+use App\Enum\Rate;
+use App\Enum\Unity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Données initiales de l'applicaton pour les recettes.
+ * Données initiales de l’application pour les recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
  */
 class RecipeFixtures extends Fixture
 {
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $this->loadRecipe1($manager);
@@ -43,49 +44,49 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Fondant chocolat mascarpone')
             ->setPerson(12)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::MEDIUM))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::MEDIUM)
             ->setTimePreparation(10)
             ->setTimeCooking(25)
         ;
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Chocolat')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Chocolat']))
             ->setQuantity(200)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Mascarpone')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Mascarpone']))
             ->setQuantity(1)
-            ->setUnity(new Unity(Unity::CUP))
+            ->setUnity(Unity::CUP)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Oeuf')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Oeuf']))
             ->setQuantity(4)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Farine')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Farine']))
             ->setQuantity(40)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Sucre')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Sucre']))
             ->setQuantity(0)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
             ->setNote('1 sachet de sucre vanillé')
         ;
         $recipe->addIngredient($ingredient);
@@ -101,7 +102,7 @@ class RecipeFixtures extends Fixture
         $step = new Step();
         $recipe->addStep($step->setContent('Versez ensuite le sucre glace et fouettez à nouveau.'));
         $step = new Step();
-        $recipe->addStep($step->setContent('Versez la farine et mélangez délicatement avec une maryse ou un fouet à main. (Il ne faut pas trop rajouter d\'air dans la pâte sinon le gâteau gonflera à la cuisson, il doit rester plat.)'));
+        $recipe->addStep($step->setContent('Versez la farine et mélangez délicatement avec une Maryse ou un fouet à main. (Il ne faut pas trop rajouter d\'air dans la pâte sinon le gâteau gonflera à la cuisson, il doit rester plat.)'));
         $step = new Step();
         $recipe->addStep($step->setContent('Versez la pâte dans le moule et enfournez pour 25 minutes.'));
         $step = new Step();
@@ -119,47 +120,47 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Saucisse de Morteau aux pommes de terre')
             ->setPerson(4)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::CHEAP))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::CHEAP)
             ->setTimePreparation(15)
             ->setTimeCooking(40)
         ;
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Saucisse de Morteau')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Saucisse de Morteau']))
             ->setQuantity(1)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Pomme de terre')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Pomme de terre']))
             ->setQuantity(800)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Oignon')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Oignon']))
             ->setQuantity(2)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Sel')) // @phpstan-ignore-line
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setIngredient($repo->findOneBy(['name' => 'Sel']))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Poivre')) // @phpstan-ignore-line
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setIngredient($repo->findOneBy(['name' => 'Poivre']))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
@@ -182,41 +183,41 @@ class RecipeFixtures extends Fixture
         $recipe
             ->setName('Asperges vertes au jambon et gorgonzola')
             ->setPerson(2)
-            ->setDifficulty(new Difficulty(Difficulty::EASY))
-            ->setRate(new Rate(Rate::CHEAP))
+            ->setDifficulty(Difficulty::EASY)
+            ->setRate(Rate::CHEAP)
             ->setTimePreparation(15)
             ->setTimeCooking(20)
         ;
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Asperge verte')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Asperge verte']))
             ->setQuantity(500)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Jambon')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Jambon']))
             ->setQuantity(3)
-            ->setUnity(new Unity(Unity::NUMBER))
+            ->setUnity(Unity::NUMBER)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Gorgonzola')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Gorgonzola']))
             ->setQuantity(150)
-            ->setUnity(new Unity(Unity::GRAM))
+            ->setUnity(Unity::GRAM)
         ;
         $recipe->addIngredient($ingredient);
 
         $ingredient = new RecipeIngredient();
         $ingredient
-            ->setIngredient($repo->findOneByName('Crème fraiche')) // @phpstan-ignore-line
+            ->setIngredient($repo->findOneBy(['name' => 'Crème fraîche']))
             ->setQuantity(20)
-            ->setUnity(new Unity(Unity::CLITRE))
+            ->setUnity(Unity::CLITRE)
         ;
         $recipe->addIngredient($ingredient);
 

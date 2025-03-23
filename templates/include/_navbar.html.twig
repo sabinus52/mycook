@@ -1,0 +1,39 @@
+<div class="delicious-main-menu">
+    <div class="classy-nav-container breakpoint-off">
+        <div class="container">
+            <nav class="classy-navbar justify-content-between" id="deliciousNav">
+
+                <a class="nav-brand" href="{{ path('index_home') }}">
+                    <img src="{{ asset('apple-touch-icon.png') }}" alt="logo">
+                </a>
+
+                <div class="classy-navbar-toggler">
+                    <span class="navbarToggler"><span></span><span></span><span></span></span>
+                </div>
+
+                <div class="classy-menu">
+
+                    <div class="classycloseIcon">
+                        <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                    </div>
+
+                    {% set menuActiv = app.request.attributes.get('_route')|split('_')[0] %}
+                    <div class="classynav">
+                        <ul>
+                            <li{% if menuActiv == 'index' %} class="active" {% endif %}><a href="{{ path('index_home') }}">Accueil</a></li>
+                            <li{% if menuActiv == 'recipe' %} class="active" {% endif %}><a href="{{ path('recipe_index') }}">Recettes</a></li>
+                            <li{% if menuActiv == 'category' %} class="active" {% endif %}><a href="{{ path('category_index') }}">Catégories</a></li>
+                            <li{% if menuActiv == 'ingredient' %} class="active" {% endif %}><a href="{{ path('ingredient_index') }}">Ingrédients</a></li>
+                            <li{% if menuActiv == 'idea' %} class="active" {% endif %}><a href="{{ path('idea_index') }}">Idées recettes</a></li>
+                        </ul>
+
+                        <div class="search-btn">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>

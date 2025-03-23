@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Form;
 
-use App\Constant\Difficulty;
-use App\Constant\Rate;
 use App\Entity\Category;
 use App\Entity\Recipe;
+use App\Enum\Difficulty;
+use App\Enum\Rate;
 use Olix\BackOfficeBundle\Form\Type\CollectionType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Olix\BackOfficeBundle\Form\Type\Select2EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,46 +33,50 @@ use Symfony\Component\Validator\Constraints\Image;
  *
  * @SuppressWarnings(PHPMD.UnusedFormalParameter)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class RecipeType extends AbstractType
 {
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('person', IntegerType::class, [
                 'label' => 'Nombre de personne',
                 'empty_data' => '',
+                'required' => false,
             ])
-            ->add('difficulty', ChoiceType::class, [
+            ->add('difficulty', EnumType::class, [
                 'label' => 'Niveau de difficulté',
-                'choices' => Difficulty::getChoices(),
-                'choice_value' => 'value',
+                'class' => Difficulty::class,
                 'choice_label' => 'label',
-                'empty_data' => '',
             ])
-            ->add('rate', ChoiceType::class, [
+            ->add('rate', EnumType::class, [
                 'label' => 'Coût',
-                'choices' => Rate::getChoices(),
-                'choice_value' => 'value',
+                'class' => Rate::class,
                 'choice_label' => 'label',
-                'empty_data' => '',
             ])
             ->add('timePreparation', IntegerType::class, [
                 'label' => 'Temps de préparation',
                 'empty_data' => '',
+                'required' => false,
             ])
             ->add('timeCooking', IntegerType::class, [
                 'label' => 'Temps de cuisson',
+                'required' => false,
             ])
-            ->add('category', EntityType::class, [
+            ->add('categories', Select2EntityType::class, [
                 'label' => 'Catégories',
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'multiple' => true,
+                'required' => false,
             ])
             ->add('image', FileType::class, [
                 'label' => 'Photo du plat',
@@ -104,7 +108,7 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('steps', CollectionType::class, [
-                'label' => 'Etapes de la préparation',
+                'label' => 'Étapes de la préparation',
                 'button_label_add' => 'Nouvelle étape',
                 'entry_type' => StepType::class,
                 'entry_options' => ['label' => false],
@@ -120,6 +124,7 @@ class RecipeType extends AbstractType
         ;
     }
 
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

@@ -3,31 +3,30 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Tests\Entity;
 
 use App\Entity\Recipe;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * Tests unitaires des Ingrédients.
+ * Tests unitaires des recettes.
  *
  * @author Olivier <sabinus52@gmail.com>
  *
  * @internal
+ *
  * @coversNothing
  */
 final class RecipeTest extends KernelTestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     protected function setUp(): void
     {
@@ -41,24 +40,22 @@ final class RecipeTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider additionProviderCalorie
-     *
-     * @param mixed $recipe
-     * @param mixed $calorie
+     * @dataProvider provideCalculCaloriesCases
      */
-    public function testCalculCalories($recipe, $calorie): void
+    public function testCalculCalories(string $recipe, ?int $calorie): void
     {
-        /** @phpstan-ignore-next-line */
-        $recipe = $this->entityManager->getRepository(Recipe::class)->findOneByName($recipe);
-        static::assertSame($recipe->calculCalories(), $calorie);
+        /** @var Recipe $recipe */
+        $recipe = $this->entityManager->getRepository(Recipe::class)->findOneBy(['name' => $recipe]);
+        self::assertInstanceOf(Recipe::class, $recipe);
+        self::assertSame($recipe->calculCalories(), $calorie);
     }
 
     /**
      * Données pour test des calculs de calories.
      *
-     * @return array<mixed>
+     * @return array<int,array<string|int|null>>
      */
-    public function additionProviderCalorie(): array
+    public static function provideCalculCaloriesCases(): iterable
     {
         return [
             ['Fondant chocolat mascarpone', 205],
@@ -70,8 +67,6 @@ final class RecipeTest extends KernelTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        // doing this is recommended to avoid memory leaks
         $this->entityManager->close();
     }
 }

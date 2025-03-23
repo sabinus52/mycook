@@ -1,0 +1,95 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %} - Recette {{ recipe.name }}{% endblock %}
+
+{% set header_commands %}
+    <a href="{{ path('recipe_update', {'id': recipe.id}) }}" class="btn btn-secondary">Modifier la recette</a>
+{% endset %}
+
+{% block content %}
+
+    {% include 'include/_breadcrumb.html.twig' with {'title': recipe.name, 'image': asset(uri_recipe~'/'~recipe.id~'.jpg')} only %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="recipe-slider mt-70">
+                    <img  src="{{ asset(uri_recipe~'/'~recipe.id~'.jpg') }}" class="figure-img img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-padding-80">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <div class="recipe-headline my-5">
+                        <span>{{ recipe.categories|join(', ') }}</span>
+                        <h2>{{ recipe.name }}</h2>
+                        <div class="duration">
+                            <h6>
+                                {{ include('icons/team-solid.svg') }} Nombre de personnes : 
+                                <button id="removePerson" type="button" class="btn btn-small btn-outline-secondary"><i class="fas fa-minus"></i></button>
+                                <strong id="person" data-value="{{ recipe.person }}">{{ recipe.person }}</strong>
+                                <button id="addPerson" type="button" class="btn btn-small btn-outline-secondary"><i class="fas fa-plus"></i></button>
+                            </h6>
+                            <h6>{{ include('icons/dot-restaurant.svg') }} Temps de préparation : <strong>{{ recipe.timePreparation }} min</strong></h6>
+                            <h6>{{ include('icons/manhole-wide.svg') }} Temps de cuisson : <strong>{{ recipe.timeCooking }} min</strong></h6>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="recipe-ratings text-right my-5">
+                        <div class="rate">
+                        {% for i in 1..3 %}
+                            {% if recipe.rate.value >= loop.index %}
+                                {{ include('icons/euro-symbol.svg', {'color': '#fbb710'}) }}
+                            {% else %}
+                                {{ include('icons/euro-symbol.svg', {'color': '#cccccc'}) }}
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                        <a class="difficulty">{{ include('icons/chef-hat.svg') }} {{ recipe.difficulty.label }}</a>
+                        <div class="calories">
+                            <span><strong>{{ recipe.calorie }}</strong> kcal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Preparation Steps -->
+                <div class="col-12 col-lg-8">
+                {% for item in recipe.steps %}
+                    
+                    <div class="recipe-preparation-step d-flex">
+                        <h4>{{ '%02d'|format(loop.index) }}.</h4>
+                        <p>{{ item.content }}</p>
+                    </div>
+                {% endfor %}
+                </div>
+
+                <!-- Ingredients -->
+                <div class="col-12 col-lg-4">
+                    <div class="recipe-ingredients">
+                        <h4>Ingrédients</h4>
+                        {% for item in recipe.ingredients %}
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="customCheck{{ loop.index }}">
+                                <label class="custom-control-label" for="customCheck{{ loop.index }}">
+                                    {% if item.quantity %}<span role="quantity" data-value="{{ item.quantity }}">{{ item.quantity }}</span> {{ item.unity.symbol }}{% endif %}
+                                    {{ item.ingredient }}
+                                    {% if item.note %}<small class="text-muted">{{ item.note|e }}</small>{% endif %}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

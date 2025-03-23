@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- *  This file is part of MyCook Application.
- *  (c) Sabinus52 <sabinus52@gmail.com>
- *  For the full copyright and license information, please view the LICENSE
- *  file that was distributed with this source code.
+ * This file is part of MyCook Application.
+ * (c) Sabinus52 <sabinus52@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace App\Service;
@@ -25,34 +25,18 @@ use Symfony\Component\HttpKernel\KernelInterface;
 abstract class FileUploader
 {
     /**
-     * Dossier de destination des images.
-     *
-     * @var string
-     */
-    private $directory;
-
-    /**
      * Dossier racine de la zone publique.
-     *
-     * @var string
      */
-    private $rootDir;
-
-    /**
-     * @var CacheManager
-     */
-    protected $imagineCacheManager;
+    private readonly string $rootDir;
 
     /**
      * Constructeur.
      *
-     * @param string $directory : Dossier de destination
+     * @param string $directory : Dossier de destination des images
      */
-    public function __construct(string $directory, KernelInterface $kernel, CacheManager $imagineCacheManager)
+    public function __construct(private readonly string $directory, KernelInterface $kernel, protected CacheManager $imagineCacheManager)
     {
-        $this->directory = $directory;
         $this->rootDir = $kernel->getProjectDir().'/public';
-        $this->imagineCacheManager = $imagineCacheManager;
     }
 
     /**
@@ -63,11 +47,14 @@ abstract class FileUploader
      */
     protected function move(UploadedFile $sourceFile, string $targetFile): bool
     {
-        $fileTmp = $targetFile.'.'.$sourceFile->guessExtension();
+        $extension = $sourceFile->guessExtension();
+        // Si pas d'extension
+        $extension ??= 'jpg';
+        $fileTmp = $targetFile.'.'.$extension;
         try {
             $sourceFile->move(sys_get_temp_dir(), $fileTmp);
             $this->transformToJPEG(sys_get_temp_dir().'/'.$fileTmp, $this->rootDir.$this->directory.'/'.$targetFile.'.jpg');
-        } catch (FileException $e) {
+        } catch (FileException) {
             return false;
         }
 
@@ -86,7 +73,7 @@ abstract class FileUploader
         $imagine->open($source)->save($target, ['jpeg_quality' => 85]);
         try {
             unlink($source);
-        } catch (\Throwable $th) {
+        } catch (\Throwable) {
             return;
         }
     }
@@ -99,5 +86,15 @@ abstract class FileUploader
     protected function removeCacheThumb(string $targetFile): void
     {
         $this->imagineCacheManager->remove($this->directory.'/'.$targetFile.'.jpg');
+    }
+
+    /**
+     * Supprime le fichier.
+     *
+     * @param string $targetFile : Nom du fichier de destination
+     */
+    protected function removeFile(string $targetFile): void
+    {
+        unlink($this->rootDir.$this->directory.'/'.$targetFile.'.jpg');
     }
 }

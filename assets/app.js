@@ -1,20 +1,29 @@
 /*
  * Welcome to your app's main JavaScript file!
  *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
+ * This file will be included onto the page via the importmap() Twig function,
+ * which should already be in your base.html.twig.
  */
+//import "./styles/style.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles/app.scss";
+import "./styles/classy-nav.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "animate.css/animate.min.css";
+import "bootstrap";
+import "./plugins/scrollUp.js";
+import "./plugins/classyNav.js";
+import "./bootstrap.js";
 
-// any CSS you import will output into a single css file (app.css in this case)
-import './styles/app.scss';
+// Attente de la fin de chargement de la page
+import { preLoadWindow, initializeWindow } from "./scripts/windows.js";
+window.addEventListener("load", preLoadWindow);
+initializeWindow();
 
-import $ from 'jquery';
-window.$ = window.jQuery = $;
+import Ingredient from "./scripts/ingredient.js";
+Ingredient.init();
 
-require('bootstrap');
+import Recipe from "./scripts/recipe.js";
+Recipe.init();
 
-// Setting Routing as global there
-import Routing from "./scripts/routing.js";
-global.Routing = Routing;
-
-import './scripts/global.js';
+console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");
