@@ -1,3 +1,9 @@
+# Version 2.0.0
+
+- **Nouvelle interface**
+- Migration vers Symfony 6.4
+- Migration vers PHP 8.3
+
 # Version 1.1.0
 
 - Migration ves Symfony 5.4
