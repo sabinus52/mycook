@@ -58,6 +58,7 @@ class Idea implements \Stringable
     #[Assert\Url]
     private ?string $image = null;
 
+    #[\Override]
     public function __toString(): string
     {
         return $this->name;
