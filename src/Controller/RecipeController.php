@@ -150,8 +150,6 @@ class RecipeController extends AbstractController
 
         /**
          * Récupération par ingrédient l'unité la plus utilisée.
-         *
-         * @phpstan-ignore-next-line
          */
         $ingredientsByUnity = $entityManager
             ->getRepository(RecipeIngredient::class)

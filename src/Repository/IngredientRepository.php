@@ -41,7 +41,6 @@ class IngredientRepository extends ServiceEntityRepository
      */
     public function searchByName(string $term, $mode = Query::HYDRATE_OBJECT): array
     {
-        // @phpstan-ignore return.type
         return $this->createQueryBuilder('i')
             ->where('i.name LIKE :term')
             ->setParameter('term', '%'.$term.'%')
