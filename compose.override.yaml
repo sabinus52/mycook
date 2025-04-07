@@ -1,0 +1,28 @@
+# Development environment override
+services:
+  webapp:
+    build:
+      context: .
+      target: frankenphp_dev
+      args:
+        - VERSION_PHP=${VERSION_PHP:-8.3}
+    volumes:
+      - ./:/app
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docker/conf.d/20-app.dev.ini:/usr/local/etc/php/app.conf.d/20-app.dev.ini:ro
+      # If you develop on Mac or Windows you can remove the vendor/ directory
+      #  from the bind-mount for better performance by enabling the next line:
+      #- /app/vendor
+      # Si on veut utiliser les bundles de sabinus52
+      #- ../sfbundles:/sfbundles
+      #- ../sfbundles/BackOfficeBundle/assets:/app/vendor/sabinus52/BackOfficeBundle/assets/
+      # Si on utilise une base de données SQLite
+      #- ./var/data.db:/app/var/data.db
+    environment:
+      # See https://xdebug.org/docs/all_settings#mode
+      XDEBUG_MODE: "${XDEBUG_MODE:-debug}"
+      APP_ENV: "${APP_ENV:-dev}"
+    extra_hosts:
+      # Ensure that host.docker.internal is correctly defined on Linux
+      - host.docker.internal:host-gateway
+    tty: true

@@ -1,0 +1,13 @@
+# Production environment override
+services:
+  webapp:
+    build:
+      context: .
+      target: frankenphp_prod
+      args:
+        - VERSION_PHP=${VERSION_PHP:-8.3}
+    environment:
+      APP_SECRET: ${APP_SECRET}
+    volumes:
+      - ./datas/mycook.sqlite:/app/var/data.db
+      - ./public/datas:/app/public/datas
