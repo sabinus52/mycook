@@ -39,7 +39,6 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function findByCategory(Category $category): array
     {
-        // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
             ->join('recipe.categories', 'category')
             ->andWhere('category.id = :id')
@@ -56,7 +55,6 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function findByIngredient(Ingredient $ingredient): array
     {
-        // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
             ->join('recipe.ingredients', 'ri')
             ->andWhere('ri.ingredient = :id')
@@ -73,7 +71,6 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function findMostPopular(int $count = 6): array
     {
-        // @phpstan-ignore return.type
         return $this->createQueryBuilder('recipe')
             ->addSelect('RANDOM() as HIDDEN rand')
             ->orderBy('rand')
@@ -88,7 +85,6 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function findOneRandom(): Recipe
     {
-        /** @phpstan-ignore return.type */
         return $this->createQueryBuilder('recipe')
             ->addSelect('RANDOM() as HIDDEN rand')
             ->orderBy('rand')

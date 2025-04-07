@@ -37,7 +37,6 @@ class CategoryRepository extends ServiceEntityRepository
      */
     public function findMostRecipes(int $count = 6): array
     {
-        // @phpstan-ignore return.type
         return $this->createQueryBuilder('cat')
             ->addSelect('COUNT(recipe) AS nb')
             ->join('cat.recipes', 'recipe')
