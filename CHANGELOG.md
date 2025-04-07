@@ -1,3 +1,8 @@
+# Version 2.1.0
+
+- Implémentation de l'image FrankenPHP
+- Fix
+
 # Version 2.0.0
 
 - **Nouvelle interface**
